@@ -1,26 +1,40 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
-use App\Http\Controllers\ttc_teling_controllers\data_potensi;
+
+// Alias untuk data_potensi dari dua namespace berbeda
+use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
 use App\Http\Controllers\ttc_teling_controllers\checklist;
 
-
+use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 
 Route::prefix('ttc_teling')->group(function () {
     Route::prefix('checklist')->group(function () {
         Route::get('/ChecklistPUE', [checklist::class, 'checklistPUE']);
     });
     Route::prefix('data_potensi')->group(function () {
-        Route::get('/hello', [data_potensi::class, 'hello']);
-        Route::get('/generate_datapotensi/{table}', [data_potensi::class, 'generateDatapotensi']);
-        Route::get('/generate_columns/{table}', [data_potensi::class, 'generateColumns']);
-        Route::get('/list_dp_tables', [data_potensi::class, 'listDpTables']);
-        Route::post('/update_datapotensi/{table}', [data_potensi::class, 'updateDatapotensi']);
-        ;
+        Route::get('/hello', [DataPotensiTeling::class, 'hello']);
+        Route::get('/generate_datapotensi/{table}', [DataPotensiTeling::class, 'generateDatapotensi']);
+        Route::get('/generate_columns/{table}', [DataPotensiTeling::class, 'generateColumns']);
+        Route::get('/list_dp_tables', [DataPotensiTeling::class, 'listDpTables']);
+        Route::post('/update_datapotensi/{table}', [DataPotensiTeling::class, 'updateDatapotensi']);
     });
-     Route::get('/hello', [data_potensi::class, 'hello']);
+    Route::get('/hello', [DataPotensiTeling::class, 'hello']);
+});
+
+Route::prefix('ttc_paniki')->group(function () {
+    Route::prefix('checklist')->group(function () {
+        Route::get('/ChecklistPUE', [checklist::class, 'checklistPUE']);
+    });
+    Route::prefix('data_potensi')->group(function () {
+        Route::get('/hello', [DataPotensiPaniki::class, 'hello']);
+        Route::get('/generate_datapotensi/{table}', [DataPotensiPaniki::class, 'generateDatapotensi']);
+        Route::get('/generate_columns/{table}', [DataPotensiPaniki::class, 'generateColumns']);
+        Route::get('/list_dp_tables', [DataPotensiPaniki::class, 'listDpTables']);
+        Route::post('/update_datapotensi/{table}', [DataPotensiPaniki::class, 'updateDatapotensi']);
+    });
+    Route::get('/hello', [DataPotensiPaniki::class, 'hello']);
 });
