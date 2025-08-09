@@ -24,6 +24,7 @@ Route::prefix('ttc_teling')->group(function () {
         Route::post('/update_datapotensi/{table}', [DataPotensiTeling::class, 'updateDatapotensi']);
     });
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
+    ///
 });
 
 Route::prefix('ttc_paniki')->group(function () {
