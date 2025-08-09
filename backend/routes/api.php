@@ -10,7 +10,7 @@ use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTelin
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
-use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListPaniki;
+use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
 
 Route::prefix('ttc_teling')->group(function () {
     Route::prefix('checklist')->group(function () {
