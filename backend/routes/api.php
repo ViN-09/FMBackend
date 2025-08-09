@@ -7,13 +7,14 @@ use Carbon\Carbon;
 
 // Alias untuk data_potensi dari dua namespace berbeda
 use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
-use App\Http\Controllers\ttc_teling_controllers\checklist;
+use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
+use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListPaniki;
 
 Route::prefix('ttc_teling')->group(function () {
     Route::prefix('checklist')->group(function () {
-        Route::get('/ChecklistPUE', [checklist::class, 'checklistPUE']);
+        Route::get('/ChecklistPUE', [CheckListTeling::class, 'checklistPUE']);
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);
@@ -27,7 +28,7 @@ Route::prefix('ttc_teling')->group(function () {
 
 Route::prefix('ttc_paniki')->group(function () {
     Route::prefix('checklist')->group(function () {
-        Route::get('/ChecklistPUE', [checklist::class, 'checklistPUE']);
+        Route::get('/ChecklistPUE', [CheckListPaniki::class, 'checklistPUE']);
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiPaniki::class, 'hello']);
