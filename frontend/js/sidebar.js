@@ -10,9 +10,12 @@ function appendToMain(content) {
 
 function createSidebar() {
     const sidebarHTML = `
+        <div id="loader">
+  <div class="spinner"></div>
+</div>
         <div id="hamburgerbar">
             <div>
-                <i class="bi bi-list"></i>
+                <i class="bi bi-list" style="font-weight: 800;"></i>
             </div>
             <div>
                 <img src="asset/logo-telkomsel-baru.DYhv_uL8_1T5nit-removebg-preview.png" alt="Menu" style="width: auto; height: 40px;" /> 
@@ -20,12 +23,18 @@ function createSidebar() {
         </div>
 
         <div class="sidebar" id="sidebar">
-            <div class="close-btn" id="closeBtn"><i class="fa fa-times"></i></div>
-            <img src="asset/logo-telkomsel-baru.DYhv_uL8_1T5nit.webp" alt="Menu" style="width: 180px; height: auto;margin-bottom: 10px;" />
-            <a href="#">Dashboard</a>
-            <a href="#">Profile</a>
-            <a href="#">Settings</a>
-            <a href="#">Logout</a>
+            <div class="close-btn" id="closeBtn"><i class="bi bi-x-lg"></i></div>
+           <img src="asset/logo-telkomsel-baru.DYhv_uL8_1T5nit-removebg-preview.png"
+     alt="Menu"
+     style="width: 180px; height: auto; margin-bottom: 10px; filter: brightness(0) invert(1); padding-bottom: 10px;" />
+        <div id="main-menu">
+            <a href="#"><i class="bi bi-display"></i> Dashboard</a>
+            <a href="#"><i class="bi bi-clipboard-data"></i> Data Tracking</a>
+            <a href="checklist.html"><i class="bi bi-database-gear"></i> Checklist</a>
+            <a href="#rumah"><i class="bi bi-database-gear"></i> Data Potensi</a>
+            <a href="#"><i class="bi bi-file-earmark-post"></i> Profile</a>
+            <a href="#"><i class="bi bi-person-circle"></i> User</a>
+        </div>  
         </div>
     `;
 
@@ -57,5 +66,12 @@ function createSidebar() {
         }
     });
 }
+
+  window.addEventListener("load", function() {
+    // Paksa loading minimal 3 detik
+    setTimeout(() => {
+      document.getElementById("loader").style.display = "none";
+    }, 1500);
+  });
 
 createSidebar();
