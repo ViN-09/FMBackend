@@ -12,15 +12,15 @@ use Carbon\Carbon;
 class checklist extends Controller
 {
 
-public function getChecklistData($table_name, $kolom_name, $value)
-{
-    // Ambil satu data sesuai parameter
-    return DB::table($table_name)
-        ->where($kolom_name, $value)
-        ->first();
-}
+    public function getChecklistData($table_name, $kolom_name, $value)
+    {
+        // Ambil satu data sesuai parameter
+        return DB::table($table_name)
+            ->where($kolom_name, $value)
+            ->first();
+    }
 
-public function checklistPUE(Request $request)
+    public function checklistPUE(Request $request)
     {
         $jenisReport = $request->query('jenis_report');
         $tanggal = $request->query('tanggal'); // format: YYYY-MM-DD
@@ -52,14 +52,22 @@ public function checklistPUE(Request $request)
             $suhu = $this->getChecklistData('report_suhu', 'id_report_suhu', $id);
 
             $tegangan_lvmdp1 = $lvmdp1 ? [
-                $lvmdp1->L1N, $lvmdp1->L2N, $lvmdp1->L3N,
-                $lvmdp1->R1N, $lvmdp1->R2N, $lvmdp1->R3N
+                $lvmdp1->L1N,
+                $lvmdp1->L2N,
+                $lvmdp1->L3N,
+                $lvmdp1->R1N,
+                $lvmdp1->R2N,
+                $lvmdp1->R3N
             ] : [];
             $tegangan_lvmdp1_final = count($tegangan_lvmdp1) ? max($tegangan_lvmdp1) : null;
 
             $tegangan_lvmdp2 = $lvmdp2 ? [
-                $lvmdp2->L1N, $lvmdp2->L2N, $lvmdp2->L3N,
-                $lvmdp2->R1N, $lvmdp2->R2N, $lvmdp2->R3N
+                $lvmdp2->L1N,
+                $lvmdp2->L2N,
+                $lvmdp2->L3N,
+                $lvmdp2->R1N,
+                $lvmdp2->R2N,
+                $lvmdp2->R3N
             ] : [];
             $tegangan_lvmdp2_final = count($tegangan_lvmdp2) ? max($tegangan_lvmdp2) : null;
 
@@ -125,4 +133,14 @@ public function checklistPUE(Request $request)
 
         return response()->json($DialyChecklist);
     }
+
+    public function getDivisionData($table_name, $kolom_name, $value)
+{
+    $data = DB::table($table_name)
+        ->where($kolom_name, $value)
+        ->get();
+
+    return response()->json($data);
+}
+
 }

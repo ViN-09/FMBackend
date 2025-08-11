@@ -15,12 +15,12 @@ use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
 Route::prefix('ttc_teling')->group(function () {
     Route::prefix('checklist')->group(function () {
         Route::get('/ChecklistPUE', [CheckListTeling::class, 'checklistPUE']);
+        Route::get('/list_dp_tables/{table_name}/{kolom_name}/{value}', [CheckListTeling::class, 'getDivisionData']);
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);
         Route::get('/generate_datapotensi/{table}', [DataPotensiTeling::class, 'generateDatapotensi']);
         Route::get('/generate_columns/{table}', [DataPotensiTeling::class, 'generateColumns']);
-        Route::get('/list_dp_tables', [DataPotensiTeling::class, 'listDpTables']);
         Route::post('/update_datapotensi/{table}', [DataPotensiTeling::class, 'updateDatapotensi']);
     });
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);

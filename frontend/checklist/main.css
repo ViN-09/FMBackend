@@ -1,0 +1,29 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+main{
+    height: 100vh;
+    width: 100vw;
+    background-color: aqua;
+    display: grid;
+    grid-template-rows: 10% 90%;
+}
+
+#body{
+ 
+}
+
+.baris_report{
+width: 100%;
+background-color: red;
+display: flex;
+    flex-wrap: wrap; /* Biar kalau penuh, turun ke bawah */
+    gap: 10px; /* Jarak antar child */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column; /* Biar vertikal */
+  gap: 5px; /* Jarak antara label dan input */
+}

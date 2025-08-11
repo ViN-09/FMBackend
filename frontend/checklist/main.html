@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css" />
+    <title>CHECKLIST</title>
+</head>
+
+<body>
+    <main>
+        <h1>Form Checklist</h1>
+        <div id="body">
+            <form>
+                <div class="baris_report" id="body-staff-info">
+
+                </div>
+                <div class="baris_report" id="test">
+
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+    <script>
+        async function loadStaffInfoForm(url, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error(`Element dengan id "${containerId}" gak ketemu!`);
+    return;
+  }
+  container.innerHTML = ''; // clear dulu
+
+  // Ambil data petugas ME dulu
+  let petugasOptions = [];
+  try {
+    const resPetugas = await fetch('http://127.0.0.1:8000/api/ttc_teling/checklist/list_dp_tables/user_bio/jabatan/ME');
+    if (!resPetugas.ok) throw new Error('Gagal ambil data petugas ME');
+    petugasOptions = await resPetugas.json();
+  } catch (err) {
+    console.warn('Gagal ambil data petugas ME:', err);
+  }
+
+  // Opsi jenis report statis
+  const jenisReportOptions = ['Ceklist', 'KWH & LBP', 'Genset 1', 'Genset 2'];
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Gagal ambil data kolom');
+    const columns = await res.json();
+
+    for (const col of columns) {
+      const name = col.COLUMN_NAME;
+      const type = col.DATA_TYPE;
+
+      if (name === 'no_report') continue;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'form-group mb-3';
+
+      const label = document.createElement('label');
+      label.textContent = name.replace(/_/g, ' ').toUpperCase();
+      label.setAttribute('for', name);
+
+      let field;
+
+      if (['petugasME', 'petugasME2', 'petugasME3', 'petugasME4'].includes(name)) {
+        field = document.createElement('select');
+        field.name = name;
+        field.id = name;
+        field.className = 'form-control';
+
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.textContent = '-- Pilih --';
+        field.appendChild(defaultOpt);
+
+        petugasOptions.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = p.Nama;
+          field.appendChild(opt);
+        });
+
+      } else if (name === 'jenis_report') {
+        field = document.createElement('select');
+        field.name = name;
+        field.id = name;
+        field.className = 'form-control';
+
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.textContent = '-- Pilih --';
+        field.appendChild(defaultOpt);
+
+        jenisReportOptions.forEach(optVal => {
+          const opt = document.createElement('option');
+          opt.value = optVal;
+          opt.textContent = optVal;
+          field.appendChild(opt);
+        });
+
+      } else {
+        let inputType = 'text';
+        if (type.includes('date')) inputType = 'datetime-local';
+        else if (type.includes('int') || type.includes('decimal')) inputType = 'number';
+
+        field = document.createElement('input');
+        field.type = inputType;
+        field.name = name;
+        field.id = name;
+        field.className = 'form-control';
+      }
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(field);
+      container.appendChild(wrapper);
+    }
+
+    // Tombol Gas
+    const btnGas = document.createElement('button');
+    btnGas.type = 'button';
+    btnGas.className = 'btn btn-primary mt-3';
+    btnGas.textContent = 'Gas';
+    container.appendChild(btnGas);
+
+  } catch (err) {
+    container.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+  }
+}
+
+
+
+        loadStaffInfoForm('http://127.0.0.1:8000/api/ttc_teling/data_potensi/generate_columns/report_info', 'body-staff-info');
+         loadStaffInfoForm('http://127.0.0.1:8000/api/ttc_teling/data_potensi/generate_columns/dcpdu_1', 'test');
+
+    </script>
+</body>
+
+</html>

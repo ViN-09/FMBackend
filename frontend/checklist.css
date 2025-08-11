@@ -1,5 +1,173 @@
-#bodychecklist{
-    height: 100%;
-    width: 100%;
-    background-color: whitesmoke;
+  #bodychecklist {
+      height: 100vh;
+      width: 100%;
+      background-color: whitesmoke;
+      display: grid;
+      grid-template-rows: 15% 5% 80%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    #bodychecklist-header {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 10px;
+  border-radius: 8px;
+  user-select: none;
 }
+
+/* Supaya child terakhir (extra buttons) menempel kanan */
+#bodychecklist-header > :last-child {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+/* Styling input tanggal */
+#tanggalPicker.form-control {
+  width: 200px;
+  padding: 8px 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+#tanggalPicker.form-control:focus {
+  border-color: #f35525; /* warna aksen oranye */
+  outline: none;
+  box-shadow: 0 0 5px rgba(243, 85, 37, 0.5);
+}
+
+/* Base style tombol */
+button.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: white;
+}
+
+/* Tombol Search - biru */
+button.btn-primary {
+  background-color: #007bff;
+  box-shadow: 0 4px 8px rgba(0,123,255,0.4);
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3;
+  box-shadow: 0 6px 12px rgba(0,86,179,0.5);
+}
+
+/* Tombol Tambah - hijau */
+button.btn-success {
+  background-color: #28a745;
+  box-shadow: 0 4px 8px rgba(40,167,69,0.4);
+}
+
+button.btn-success:hover {
+  background-color: #218838;
+  box-shadow: 0 6px 12px rgba(33,136,56,0.5);
+}
+
+/* Tombol Export - kuning */
+button.btn-warning {
+  background-color: #ffc107;
+  box-shadow: 0 4px 8px rgba(255,193,7,0.4);
+  color: #212529;
+}
+
+button.btn-warning:hover {
+  background-color: #e0a800;
+  box-shadow: 0 6px 12px rgba(224,168,0,0.5);
+}
+
+/* Icon bootstrap di tombol */
+button.btn i {
+  font-size: 18px;
+  pointer-events: none; /* ikon gak ganggu klik */
+}
+
+
+    #bodychecklist-body {
+      width: 100%;
+      height: 100%;
+      overflow-x: auto;
+      overflow-y: auto;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    #bodychecklist-body table {
+  width: 100%;
+  border-collapse: separate; /* supaya bisa pakai border-radius */
+  border-spacing: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden; /* supaya border-radius efektif */
+}
+
+#bodychecklist-body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+
+
+#bodychecklist-body thead th {
+  position: sticky;
+  top: 0;
+  background:#ce0000;
+  color: white;
+  font-weight: 600;
+  padding: 12px 16px;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  user-select: none;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+#bodychecklist-body tbody td {
+  border-top: 1px solid #eee;
+  padding: 12px 16px;
+  color: #333;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+}
+
+#bodychecklist-body tbody tr:hover {
+  background-color: rgba(243, 81, 34, 0.15);
+  cursor: pointer;
+}
+
+#bodychecklist-body tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+#bodychecklist-body tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+
+    input[type="date"].form-control {
+      width: 200px;
+    }
+
+    button.btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
