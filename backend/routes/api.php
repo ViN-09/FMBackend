@@ -15,6 +15,7 @@ use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
 Route::prefix('ttc_teling')->group(function () {
     Route::prefix('checklist')->group(function () {
         Route::get('/ChecklistPUE', [CheckListTeling::class, 'checklistPUE']);
+        Route::get('/tableReportList', [CheckListTeling::class, 'tableReportList']);
         Route::get('/list_dp_tables/{table_name}/{kolom_name}/{value}', [CheckListTeling::class, 'getDivisionData']);
     });
     Route::prefix('data_potensi')->group(function () {

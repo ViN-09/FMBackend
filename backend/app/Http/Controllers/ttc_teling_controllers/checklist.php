@@ -20,6 +20,15 @@ class checklist extends Controller
             ->first();
     }
 
+    public function tableReportList()
+    {
+        // Ambil satu data sesuai parameter
+        $data=['report_info','trafof_c','report_kwh','report_suhu','report_lvmdp1','report_lvmdp2','load_trafo','rec1','rec2','rec3','rec4','rec5','rec6','rec7','rec8','rec9','ups1','ups2','dcpdu_1','dcpdu_2','dcpdu_3','dcpdu_4','pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9','pac10'];
+
+        return response()->json($data);
+
+    }
+
     public function checklistPUE(Request $request)
     {
         $jenisReport = $request->query('jenis_report');
