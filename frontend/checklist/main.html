@@ -17,10 +17,13 @@
   </main>
 
   <script>
+    let ttc = localStorage.getItem('ttc');
+    console.log(ttc);
+
     async function getPetugasME() {
       try {
         const res = await fetch(
-          'http://127.0.0.1:8000/api/ttc_teling/checklist/list_dp_tables/user_bio/jabatan/ME'
+          `http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
         );
         if (!res.ok) throw new Error('Gagal ambil data petugas ME');
         return await res.json();
@@ -128,7 +131,7 @@
     async function appendFromAPI() {
       try {
         const [response, petugasOptions] = await Promise.all([
-          fetch("http://127.0.0.1:8000/api/ttc_teling/checklist/tableReportList"),
+          fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`),
           getPetugasME()
         ]);
 
@@ -159,7 +162,7 @@
 
           // Load form kolom di dalam div tersebut
           await loadStaffInfoForm(
-            `http://127.0.0.1:8000/api/ttc_teling/data_potensi/generate_columns/${item}`,
+            `http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${item}`,
             item,
             petugasOptions
           );

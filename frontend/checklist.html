@@ -36,6 +36,9 @@
 
     <script src="js/sidebar.js"></script>
     <script>
+        let ttc = localStorage.getItem('ttc');
+        console.log(ttc);
+
         const container = document.getElementById('bodychecklist-body');
         const tanggalInput = document.getElementById('tanggalPicker');
         const btnSearch = document.getElementById('btnSearch');
@@ -48,7 +51,7 @@
         }
 
         async function loadChecklistTable(tanggal) {
-            const apiURL = `http://127.0.0.1:8000/api/ttc_teling/checklist/ChecklistPUE?jenis_report=Ceklist&tanggal=${tanggal}`;
+            const apiURL = `http://127.0.0.1:8000/api/${ttc}/checklist/ChecklistPUE?jenis_report=Ceklist&tanggal=${tanggal}`;
             try {
                 const response = await fetch(apiURL);
                 if (!response.ok) throw new Error('Gagal ambil data');
@@ -123,23 +126,23 @@
         });
 
         document.getElementById('btnExport').addEventListener('click', () => {
-  // Cari elemen tabel yang mau di-export
-  const table = document.querySelector('#bodychecklist-body table');
-  if (!table) {
-    alert('Data tabel belum tersedia untuk diexport!');
-    return;
-  }
+            // Cari elemen tabel yang mau di-export
+            const table = document.querySelector('#bodychecklist-body table');
+            if (!table) {
+                alert('Data tabel belum tersedia untuk diexport!');
+                return;
+            }
 
-  // Konversi tabel HTML ke workbook SheetJS
-  const workbook = XLSX.utils.table_to_book(table, { sheet: "Checklist" });
+            // Konversi tabel HTML ke workbook SheetJS
+            const workbook = XLSX.utils.table_to_book(table, { sheet: "Checklist" });
 
-  // Simpan workbook jadi file Excel dan trigger download
-  XLSX.writeFile(workbook, 'checklist_export_' + new Date().toISOString().slice(0,10) + '.xlsx');
-});
+            // Simpan workbook jadi file Excel dan trigger download
+            XLSX.writeFile(workbook, 'checklist_export_' + new Date().toISOString().slice(0, 10) + '.xlsx');
+        });
 
-document.getElementById('btnCreate').addEventListener('click', () => {
-  window.location.href = 'checklist/main.html';
-});
+        document.getElementById('btnCreate').addEventListener('click', () => {
+            window.location.href = 'checklist/main.html';
+        });
     </script>
 </body>
 

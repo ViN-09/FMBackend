@@ -75,3 +75,4 @@ function createSidebar() {
   });
 
 createSidebar();
+localStorage.setItem('ttc', 'ttc_paniki');
