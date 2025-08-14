@@ -23,11 +23,24 @@ class checklist extends Controller
     public function tableReportList()
     {
         // Ambil satu data sesuai parameter
-        $data=['report_info','trafof_c','report_kwh','report_suhu','report_lvmdp1','report_lvmdp2','load_trafo','rec1','rec2','rec3','rec4','rec5','rec6','rec7','rec8','rec9','ups1','ups2','dcpdu_1','dcpdu_2','dcpdu_3','dcpdu_4','pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9','pac10'];
+        $data=['staffform' => ['report_info'],'suhu_kwh'=>['report_kwh','report_suhu'], 'power'=>['trafof_c','report_lvmdp1','report_lvmdp2','load_trafo'],'it_load' => ['rec1','rec2','rec3','rec4','rec5','rec6','rec7','rec8','rec9','ups1','ups2','dcpdu_1','dcpdu_2','dcpdu_3','dcpdu_4'], 'coling_system' =>['pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9','pac10'], 'genset'=> ['genset1','genset2']];
 
         return response()->json($data);
 
     }
+
+    public function reciveReportInfo(Request $request) {
+    // Ambil semua data dari body
+    $data = $request->all();
+
+    // Bisa langsung debug
+    \Log::info('Received data:', $data);
+
+    return response()->json([
+        'status' => 'success',
+        'received' => $data
+    ], 200);
+}
 
     public function checklistPUE(Request $request)
     {

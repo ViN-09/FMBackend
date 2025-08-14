@@ -1,35 +1,154 @@
-body{
-    padding: 0;
-    margin: 0;
-}
-main{
-    height: 100vh;
-    width: 100vw;
-    max-height: 100vh;
-    max-width: 100vw;
-    background-color: aqua;
-    display: grid;
-    grid-template-rows: 10% 90%;
-    overflow: hidden;
+:root {
+  --color-primary: #ce0000;
+  --color-back: whitesmoke;
+  --color-secondary: #333;
+  --font-main: 'Poppins', sans-serif;
 }
 
-#bodyform{
-    width: 100%;
- height: 100%;
- overflow: hidden;
- background-color: brown;
+body {
+  margin: 0;
+  font-family: var(--font-main);
 }
 
-.baris_report{
-width: 100%;
-background-color: red;
-display: flex;
-    flex-wrap: wrap; /* Biar kalau penuh, turun ke bawah */
-    gap: 10px; /* Jarak antar child */
+main {
+  height: 100vh;
+  width: 100vw;
+  max-height: 100vh;
+  max-width: 100vw;
+  display: grid;
+  grid-template-rows: 10% 90%;
+  overflow: hidden;
+  background-color: var(--color-back);
 }
 
-.form-group {
+#body {
+  background-color: aquamarine;
+  height: 100%;
+  width: 100%;
   display: flex;
-  flex-direction: column; /* Biar vertikal */
-  gap: 5px; /* Jarak antara label dan input */
+  justify-content: center;
+  align-items: center;
+}
+
+/* FORM WRAPPER */
+#myForm {
+  width: max-content;
+  margin: 40px auto;
+  padding: 50px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* FORM TITLE (Opsional) */
+#myForm h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* LABEL */
+#myForm label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  display: block;
+  color: #444;
+  text-transform: capitalize;
+}
+
+/* FORM GROUP */
+#myForm .mb-3 {
+  margin-bottom: 18px;
+  max-width: 350px; /* Batasi lebar group agar rapi */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* INPUT & SELECT */
+#myForm input,
+#myForm select {
+  box-sizing: border-box; /* penting agar padding + border tidak membuat input terlalu lebar */
+  width: 100%;
+  max-width: 350px; /* maksimal lebar agar tetap rapi */
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #333;
+  background: #f9fafb;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Khusus input tanggal dan datetime */
+#myForm input[type="date"],
+#myForm input[type="datetime-local"] {
+  max-width: 250px; /* lebih kecil supaya tidak terlalu melebar */
+}
+
+/* HOVER EFFECT */
+#myForm input:hover,
+#myForm select:hover {
+  border-color: #999;
+  background: #fff;
+}
+
+/* FOCUS EFFECT */
+#myForm input:focus,
+#myForm select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  background: #fff;
+}
+
+/* BUTTON STYLE */
+#myForm button {
+  display: block;
+  width: 100%;
+  max-width: 350px; /* supaya button tidak terlalu lebar */
+  padding: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 15px;
+}
+
+#myForm button:hover {
+  background: #1e4fd3;
+}
+
+/* HEADER H1 */
+h1 {
+  padding-top: 30px;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: var(--font-main);
+}
+
+/* LOGO POSISI */
+.logo {
+  position: absolute;
+  top: 5px;       /* jarak dari atas */
+  left: 5px;      /* jarak dari kiri */
+  width: 250px;   /* opsional, atur ukuran */
+  height: auto;   /* biar proporsional */
+}
+
+/* BARIS REPORT (jika ada) */
+.baris_report {
+  width: 100%;
+  background-color: red;
+  display: flex;
+  flex-wrap: wrap; /* Biar kalau penuh, turun ke bawah */
+  gap: 10px;       /* Jarak antar child */
 }

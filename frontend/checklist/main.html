@@ -10,173 +10,230 @@
 
 <body>
   <main>
+    <img src="../asset/logo-telkomsel-baru.DYhv_uL8_1T5nit-removebg-preview.png" alt="Logo Telkomsel" class="logo">
     <h1>Form Checklist</h1>
     <div id="body">
-      <form id="myForm"></form>
+      <form id="myForm">
+
+      </form>
     </div>
   </main>
 
-  <script>
-    let ttc = localStorage.getItem('ttc');
-    console.log(ttc);
 
-    async function getPetugasME() {
-      try {
-        const res = await fetch(
-          `http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
-        );
-        if (!res.ok) throw new Error('Gagal ambil data petugas ME');
-        return await res.json();
-      } catch (err) {
-        console.warn(err);
-        return [];
+  <!-- `http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
+`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${item}`
+`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList` -->
+
+  <script>
+    fetch("http://127.0.0.1:8000/api/ttc_teling/checklist/tableReportList")
+      .then(res => res.json())
+      .then(data => {
+        const staffformArray = data.staffform;
+        const form = document.getElementById("myForm");
+
+        staffformArray.forEach(value => {
+          // Buat div untuk section
+          const div = document.createElement("div");
+          div.id = value; // id = value dari array
+
+          // Tambahkan heading <h2> ke dalam div
+          const heading = document.createElement("h2");
+          heading.textContent = value; // teks heading = value dari array
+          div.appendChild(heading);
+
+          // Masukkan div ke form
+          form.appendChild(div);
+
+          // Generate input untuk div tersebut
+          generateInputRow(value).then(() => {
+            appendButton("myForm", "Kirim Data", () => submitFormDataNested("myForm"));
+          });
+        });
+      })
+      .catch(err => console.error("Error:", err));
+
+
+
+    function getInputType(dataType) {
+      // Mapping tipe data dari API ke tipe input HTML
+      switch (dataType) {
+        case "datetime":
+          return "datetime-local";
+        case "int":
+          return "number";
+        case "varchar":
+        default:
+          return "text";
       }
     }
 
-    async function loadStaffInfoForm(url, containerId, petugasOptions) {
-      const container = document.getElementById(containerId);
-      if (!container) {
-        console.error(`Element dengan id "${containerId}" gak ketemu!`);
-        return;
-      }
-      container.innerHTML = '';
-
-      const jenisReportOptions = ['Ceklist', 'KWH & LBP', 'Genset 1', 'Genset 2'];
-
+    async function generateInputRow(idParent) {
       try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Gagal ambil data kolom (${url})`);
-        const columns = await res.json();
+        const form = document.getElementById(idParent);
 
-        for (const col of columns) {
-          const name = col.COLUMN_NAME;
-          const type = col.DATA_TYPE;
+        // Ambil struktur kolom
+        const resCols = await fetch("http://127.0.0.1:8000/api/ttc_teling/data_potensi/generate_columns/report_info");
+        const columns = await resCols.json();
 
-          if (name === 'no_report') continue;
+        // Ambil data petugas ME
+        const resUsers = await fetch("http://127.0.0.1:8000/api/ttc_teling/checklist/list_dp_tables/user_bio/jabatan/ME");
+        const users = await resUsers.json();
 
-          const wrapper = document.createElement('div');
-          wrapper.className = 'form-group mb-3';
+        columns.forEach(col => {
+          // Skip kolom no_report
+          if (col.COLUMN_NAME === "no_report") return;
+          if (col.COLUMN_NAME === "status") return;
 
-          const label = document.createElement('label');
-          label.textContent = name.replace(/_/g, ' ').toUpperCase();
-          label.setAttribute('for', `${name}_from_${containerId}`);
+          const label = document.createElement("label");
+          label.setAttribute("for", col.COLUMN_NAME);
+          label.className = "form-label";
+          label.textContent = col.COLUMN_NAME;
 
-          let field;
+          let inputElement;
 
-          if (['petugasME', 'petugasME2', 'petugasME3', 'petugasME4'].includes(name)) {
-            field = document.createElement('select');
-            field.name = name;
-            field.id = `${name}_from_${containerId}`;
-            field.className = 'form-control';
+          if (["petugasME", "petugasME2", "petugasME3", "petugasME4"].includes(col.COLUMN_NAME)) {
+            // Select dari API ME
+            inputElement = document.createElement("select");
+            inputElement.name = col.COLUMN_NAME;
+            inputElement.id = col.COLUMN_NAME;
+            inputElement.className = "form-select";
 
-            const defaultOpt = document.createElement('option');
-            defaultOpt.value = '';
-            defaultOpt.textContent = '-- Pilih --';
-            field.appendChild(defaultOpt);
+            const defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "-- Pilih Petugas --";
+            inputElement.appendChild(defaultOpt);
 
-            petugasOptions.forEach(p => {
-              const opt = document.createElement('option');
-              opt.value = p.id;
-              opt.textContent = p.Nama;
-              field.appendChild(opt);
+            users.forEach(user => {
+              const opt = document.createElement("option");
+              opt.value = user.id;
+              opt.textContent = user.Nama;
+              inputElement.appendChild(opt);
             });
 
-          } else if (name === 'jenis_report') {
-            field = document.createElement('select');
-            field.name = name;
-            field.id = `${name}_from_${containerId}`;
-            field.className = 'form-control';
+          } else if (col.COLUMN_NAME === "jenis_report") {
+            // Select dengan opsi tetap
+            inputElement = document.createElement("select");
+            inputElement.name = col.COLUMN_NAME;
+            inputElement.id = col.COLUMN_NAME;
+            inputElement.className = "form-select";
 
-            const defaultOpt = document.createElement('option');
-            defaultOpt.value = '';
-            defaultOpt.textContent = '-- Pilih --';
-            field.appendChild(defaultOpt);
+            const options = ["KWH & Suhu", "Checklist", "Genset1", "Genset2"];
 
-            jenisReportOptions.forEach(optVal => {
-              const opt = document.createElement('option');
-              opt.value = optVal;
-              opt.textContent = optVal;
-              field.appendChild(opt);
+            const defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "-- Pilih Jenis Report --";
+            inputElement.appendChild(defaultOpt);
+
+            options.forEach(optValue => {
+              const opt = document.createElement("option");
+              opt.value = optValue;
+              opt.textContent = optValue;
+              inputElement.appendChild(opt);
             });
 
           } else {
-            let inputType = 'text';
-            if (type.includes('date')) inputType = 'datetime-local';
-            else if (type.includes('int') || type.includes('decimal')) inputType = 'number';
-
-            field = document.createElement('input');
-            field.type = inputType;
-            field.name = name;
-            field.id = `${name}_from_${containerId}`;
-            field.className = 'form-control';
+            // Input biasa
+            inputElement = document.createElement("input");
+            inputElement.type = getInputType(col.DATA_TYPE);
+            inputElement.name = col.COLUMN_NAME;
+            inputElement.id = col.COLUMN_NAME;
+            inputElement.className = "form-control";
           }
 
-          wrapper.appendChild(label);
-          wrapper.appendChild(field);
-          container.appendChild(wrapper);
-        }
-
-        // Tombol Gas
-        const btnGas = document.createElement('button');
-        btnGas.type = 'button';
-        btnGas.className = 'btn btn-primary mt-3';
-        btnGas.textContent = 'Gas';
-        container.appendChild(btnGas);
-
-      } catch (err) {
-        container.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
-      }
-    }
-
-    async function appendFromAPI() {
-      try {
-        const [response, petugasOptions] = await Promise.all([
-          fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`),
-          getPetugasME()
-        ]);
-
-        const data = await response.json();
-
-        if (!Array.isArray(data)) {
-          console.error("Data bukan array:", data);
-          return;
-        }
-
-        const form = document.querySelector("form");
-
-        // Proses satu per satu agar server gak kebanjiran (hindari 429)
-        for (const item of data) {
-          // Buat container div untuk tiap tabel
           const div = document.createElement("div");
-          div.id = item;
-          div.style.border = '1px solid #ccc';
-          div.style.padding = '10px';
-          div.style.marginBottom = '15px';
-
-          // Judul
-          const h3 = document.createElement('h3');
-          h3.textContent = item.toUpperCase();
-          div.appendChild(h3);
+          div.className = "mb-3";
+          div.appendChild(label);
+          div.appendChild(inputElement);
 
           form.appendChild(div);
-
-          // Load form kolom di dalam div tersebut
-          await loadStaffInfoForm(
-            `http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${item}`,
-            item,
-            petugasOptions
-          );
-
-          await new Promise(r => setTimeout(r, 300)); // delay 300ms antar request biar aman
-        }
+        });
 
       } catch (err) {
-        console.error("Gagal fetch API:", err);
+        console.error("Error:", err);
       }
     }
 
-    // Mulai proses
-    appendFromAPI();
+
+    function appendButton(idParent, buttonText = "Submit", onClickHandler = null) {
+      const form = document.getElementById(idParent);
+      if (!form) {
+        console.error("Form not found:", idParent);
+        return;
+      }
+
+      const btn = document.createElement("button");
+      btn.type = "button"; // bisa diubah jadi "submit" kalau mau submit form biasa
+      btn.textContent = buttonText;
+      btn.className = "btn btn-primary w-100"; // styling Bootstrap, sesuaikan kalau pakai CSS sendiri
+
+      if (typeof onClickHandler === "function") {
+        btn.addEventListener("click", onClickHandler);
+      }
+
+      form.appendChild(btn);  // <<< ini yang kurang
+    }
+
+
+    function submitFormDataNested(formId) {
+      const form = document.getElementById(formId);
+      if (!form) return console.error("Form not found:", formId);
+
+      const formData = {};
+
+      // Ambil semua div langsung di dalam form
+      const sections = form.querySelectorAll(":scope > div");
+
+      sections.forEach(section => {
+        const sectionId = section.id;
+        if (!sectionId) return;
+
+        const sectionData = {};
+        // Ambil semua input/select/textarea dalam section itu
+        section.querySelectorAll("input, select, textarea").forEach(el => {
+          if (!el.name) return;
+          sectionData[el.name] = el.value;
+        });
+
+        formData[sectionId] = sectionData;
+      });
+
+      console.log("Nested Form Data:", formData);
+
+      // Kirim ke API
+      fetch("http://127.0.0.1:8000/api/ttc_teling/checklist/sendInfoReport", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      })
+        .then(res => res.json())
+        .then(response => {
+          console.log("Response from API:", response);
+
+          // Ambil jenis_report
+          // Misal formData dikirim sebagai key 'report_info'
+          const jenisReport = response.received.report_info.jenis_report;
+
+          console.log("Jenis Report:", jenisReport);
+          sessionStorage.setItem('jenisReport', jenisReport);
+          switch (jenisReport) {
+            case 'Genset1':
+              window.location.href = "genset.html";
+              break;
+            case 'Genset2':
+              window.location.href = "genset.html";
+              break;
+            default:
+              window.location.href = "kwhSuhu.html";
+              break;
+          }
+        })
+        .catch(err => console.error("Error sending data:", err));
+    }
+
+
+
+
+
   </script>
 </body>
 
