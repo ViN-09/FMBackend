@@ -23,9 +23,12 @@
   <!-- `http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
 `http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${item}`
 `http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList` -->
-
+  <script src="loder.js"></script>
   <script>
-    fetch("http://127.0.0.1:8000/api/ttc_teling/checklist/tableReportList")
+    const ttc = localStorage.getItem('ttc');
+    console.log(ttc);
+
+    fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
       .then(res => res.json())
       .then(data => {
         const staffformArray = data.staffform;
@@ -72,11 +75,11 @@
         const form = document.getElementById(idParent);
 
         // Ambil struktur kolom
-        const resCols = await fetch("http://127.0.0.1:8000/api/ttc_teling/data_potensi/generate_columns/report_info");
+        const resCols = await fetch(`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/report_info`);
         const columns = await resCols.json();
 
         // Ambil data petugas ME
-        const resUsers = await fetch("http://127.0.0.1:8000/api/ttc_teling/checklist/list_dp_tables/user_bio/jabatan/ME");
+        const resUsers = await fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`);
         const users = await resUsers.json();
 
         columns.forEach(col => {
@@ -117,7 +120,7 @@
             inputElement.id = col.COLUMN_NAME;
             inputElement.className = "form-select";
 
-            const options = ["KWH & Suhu", "Checklist", "Genset1", "Genset2"];
+            const options = ["KWH & Suhu", "Ceklist", "Genset1", "Genset2"];
 
             const defaultOpt = document.createElement("option");
             defaultOpt.value = "";
@@ -200,7 +203,7 @@
       console.log("Nested Form Data:", formData);
 
       // Kirim ke API
-      fetch("http://127.0.0.1:8000/api/ttc_teling/checklist/sendInfoReport", {
+      fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/sendInfoReport`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
