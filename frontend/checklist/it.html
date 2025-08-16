@@ -12,8 +12,8 @@
     <main>
         <img src="../asset/logo-telkomsel-baru.DYhv_uL8_1T5nit-removebg-preview.png" alt="Logo Telkomsel" class="logo">
         <h1>Form Checklist</h1>
-        <div id="body">
-            <form id="myForm" class="form_power">
+        <div id="body" class="bodyIT">
+            <form id="myForm" class="form_it">
 
             </form>
         </div>
@@ -30,30 +30,52 @@
     console.log(jenisReport);
 
 
-    fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
-  .then(res => res.json())
-  .then(data => {
-    const form = document.getElementById("myForm");
+  const data_perangkat = {};
 
-    // Ambil semua item di suhu_kwh
+// Ambil daftar tableReportList
+fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
+  .then(res => res.json())
+  .then(async data => {
+    const form = document.getElementById("myForm");
     const suhuItems = data.it_load;
 
-    suhuItems.forEach(item => {
+    for (let i = 0; i < suhuItems.length; i++) {
+      const item = suhuItems[i];
+      
+      // Buat div parent
       const div = document.createElement("div");
       div.id = item;
+      div.className = "it";
 
       const heading = document.createElement("h2");
       heading.textContent = formatLabel(item);
       div.appendChild(heading);
 
       form.appendChild(div);
-    });
 
-    // Generate input untuk setiap item di suhu_kwh
-    Promise.all(suhuItems.map(item => generateInputRow(item)))
-      .then(() => {
-        appendButton("myForm", "Kirim Data", () => submitFormDataNested("myForm"));
-      });
+      // --- FETCH DETAIL DATA PERANGKAT DAN SIMPAN KE data_perangkat ---
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/ttc_teling/checklist/${item}/id`);
+        const detailData = await response.json();
+
+        // Simpan ke global object
+        data_perangkat[item] = detailData;
+
+        // Console log untuk preview
+        console.log(`Data perangkat [${item}]:`, data_perangkat[item]);
+      } catch (err) {
+        console.error(`Gagal fetch data perangkat [${item}]:`, err);
+      }
+
+      // Tunggu generateInputRow selesai
+      await generateInputRow(item);
+
+      // Delay 1 detik sebelum item berikutnya
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+
+    // Tambah tombol kirim
+    appendButton("myForm", "Kirim Data", () => submitFormDataNested("myForm"));
   })
   .catch(err => console.error("Error:", err));
 
@@ -101,8 +123,7 @@ async function generateInputRow(idParent) {
         const users = await resUsers.json();
 
         columns.forEach(col => {
-            // Skip kolom tertentu
-            if (["no_report", "status", "id" , "liter_harian", "liter_bulanan","id_report_suhu","id_report_kwh","date_time","dokumentasi","indikator", "id_report_lvmdp2","id_report_lvmdp1"].includes(col.COLUMN_NAME)) return;
+            if (["no_report", "status", "id" , "liter_harian", "liter_bulanan","id_report_suhu","id_report_kwh","date_time","dokumentasi","indikator", "id_report_lvmdp2","id_report_lvmdp1","dateTime","Time","date"].includes(col.COLUMN_NAME)) return;
 
             const label = document.createElement("label");
             label.setAttribute("for", col.COLUMN_NAME);
@@ -111,8 +132,8 @@ async function generateInputRow(idParent) {
 
             let inputElement;
 
+            // --- SELECT PETUGAS ME ---
             if (["petugasME", "petugasME2", "petugasME3", "petugasME4"].includes(col.COLUMN_NAME)) {
-                // Select dari API ME
                 inputElement = document.createElement("select");
                 inputElement.name = col.COLUMN_NAME;
                 inputElement.id = col.COLUMN_NAME;
@@ -127,18 +148,23 @@ async function generateInputRow(idParent) {
                     const opt = document.createElement("option");
                     opt.value = user.id;
                     opt.textContent = user.Nama;
+
+                    // --- set selected dari data_perangkat ---
+                    if (data_perangkat[idParent] && data_perangkat[idParent][col.COLUMN_NAME] == user.id) {
+                        opt.selected = true;
+                    }
+
                     inputElement.appendChild(opt);
                 });
 
+            // --- SELECT PROSSES ---
             } else if (col.COLUMN_NAME === "prosses") {
-                // Select dengan opsi tetap
                 inputElement = document.createElement("select");
                 inputElement.name = col.COLUMN_NAME;
                 inputElement.id = col.COLUMN_NAME;
                 inputElement.className = "form-select";
 
                 const options = ["PLN Off", "Auto Reharsal", "Manual Reharsal"];
-
                 const defaultOpt = document.createElement("option");
                 defaultOpt.value = "";
                 defaultOpt.textContent = "-- Pilih Jenis Report --";
@@ -148,20 +174,28 @@ async function generateInputRow(idParent) {
                     const opt = document.createElement("option");
                     opt.value = optValue;
                     opt.textContent = optValue;
+
+                    // --- set selected dari data_perangkat ---
+                    if (data_perangkat[idParent] && data_perangkat[idParent][col.COLUMN_NAME] == optValue) {
+                        opt.selected = true;
+                    }
+
                     inputElement.appendChild(opt);
                 });
 
+            // --- INPUT BIASA ---
             } else {
-                // Input biasa
                 inputElement = document.createElement("input");
                 inputElement.type = getInputType(col.DATA_TYPE);
                 inputElement.name = col.COLUMN_NAME;
                 inputElement.id = col.COLUMN_NAME;
                 inputElement.className = "form-control";
 
-                // Kalau tipe data float → bisa desimal
-                if (col.DATA_TYPE === "float") {
-                    inputElement.step = "any";
+                if (col.DATA_TYPE === "float") inputElement.step = "any";
+
+                // --- set value dari data_perangkat ---
+                if (data_perangkat[idParent] && data_perangkat[idParent][col.COLUMN_NAME] !== undefined) {
+                    inputElement.value = data_perangkat[idParent][col.COLUMN_NAME];
                 }
             }
 
@@ -177,6 +211,7 @@ async function generateInputRow(idParent) {
         console.error("Error:", err);
     }
 }
+
 
 
 
@@ -234,7 +269,15 @@ async function generateInputRow(idParent) {
                 .then(res => res.json())
                 .then(response => {
                     console.log("Response from API:", response);
-
+                    window.addEventListener("load", function() {
+    // Paksa loading minimal 3 detik
+    setTimeout(() => {
+      document.getElementById("loader").style.display = "none";
+    }, 5000);
+  });
+                    const receivedObj = response.received;
+                    sessionStorage.setItem('it', JSON.stringify(receivedObj));
+                    window.location.href = "collingsystem.html";
 
                     // switch (jenisReport) {
                     //     case 'KWH & Suhu':

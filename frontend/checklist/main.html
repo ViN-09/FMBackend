@@ -215,9 +215,14 @@
           // Ambil jenis_report
           // Misal formData dikirim sebagai key 'report_info'
           const jenisReport = response.received.report_info.jenis_report;
+          const receivedObj = response.received;
 
           console.log("Jenis Report:", jenisReport);
           sessionStorage.setItem('jenisReport', jenisReport);
+          sessionStorage.setItem('report_info', JSON.stringify(receivedObj));
+
+          const received = JSON.parse(sessionStorage.getItem('report_info'));
+          console.log(received);
           switch (jenisReport) {
             case 'Genset1':
               window.location.href = "genset.html";

@@ -33,7 +33,6 @@ main {
 
 /* FORM WRAPPER */
 #myForm {
-  width: max-content;
   max-height: 85%;
   overflow: auto;
   margin: 40px auto;
@@ -51,6 +50,12 @@ main {
   font-size: 1.5rem;
   font-weight: 600;
   color: #333;
+}
+
+.bodyIT{
+  .btn{
+    grid-column: span 4;
+  }
 }
 
 /* LABEL */
@@ -203,19 +208,40 @@ h1 {
 
 .form_it{
   display: grid;
-  grid-template-columns: repeat(5,1fr);
-  gap:30px;
-
-  button{
-    grid-column: span 2;
-  }
+  grid-template-columns: repeat(4,1fr);
+  gap:30px;  
+  width: 90%;
 }
+
+
+
+.it{
+  border : 1px rgba(173, 173, 173, 0.514) solid;
+  border-radius: 10px;
+  padding: 25px;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 5px;
+  h2{
+    grid-column: span 3;
+  }}
+
+.cooling{
+  border : 1px rgba(173, 173, 173, 0.514) solid;
+  border-radius: 10px;
+  padding: 25px;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 5px;
+  h2{
+    grid-column: span 3;
+  }}
 
 .form_power{
   display: grid;
   grid-template-columns: repeat(2,1fr);
   gap:30px;
-
+  max-width: 80%;
   button{
     grid-column: span 2;
   }
@@ -226,10 +252,10 @@ h1 {
   border-radius: 10px;
   padding: 25px;
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  grid-template-columns: repeat(3,1fr);
   gap: 5px;
   h2{
-    grid-column: span 2;
+    grid-column: span 3;
   }}
 
 #trafof_c{
@@ -239,7 +265,6 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4,1fr);
   gap: 5px;
-  grid-column: span 2;
   h2{
     grid-column: span 4;
   }}
@@ -252,12 +277,8 @@ h1 {
   border-radius: 10px;
   padding: 25px;
   display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 5px;
-  grid-column: span 2;
-  h2{
-    grid-column: span 3;
-  }}
+  grid-template-rows: repeat(3,1fr);
+  gap: 5px;}
 #loader {
   position: fixed;
   top: 0;

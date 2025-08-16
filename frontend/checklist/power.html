@@ -13,7 +13,7 @@
         <img src="../asset/logo-telkomsel-baru.DYhv_uL8_1T5nit-removebg-preview.png" alt="Logo Telkomsel" class="logo">
         <h1>Form Checklist</h1>
         <div id="body">
-            <form id="myForm" class="form_it">
+            <form id="myForm" class="form_power">
 
             </form>
         </div>
@@ -97,7 +97,7 @@ async function generateInputRow(idParent) {
         const columns = await resCols.json();
 
         columns.forEach(col => {
-            if (["no_report", "status", "id", "liter_harian", "liter_bulanan", "id_report_suhu", "id_report_kwh", "date_time", "dokumentasi", "indikator", "id_report_lvmdp2", "id_report_lvmdp1"].includes(col.COLUMN_NAME)) return;
+            if (["no_report", "status", "id", "liter_harian", "liter_bulanan", "id_report_suhu", "Date","id_report_kwh", "date_time", "dokumentasi", "indikator", "id_report_lvmdp2", "id_report_lvmdp1"].includes(col.COLUMN_NAME)) return;
 
             const label = document.createElement("label");
             label.setAttribute("for", col.COLUMN_NAME);
@@ -204,13 +204,15 @@ async function generateInputRow(idParent) {
                 .then(res => res.json())
                 .then(response => {
                     console.log("Response from API:", response);
-
+                    const receivedObj = response.received;
+                    sessionStorage.setItem('power', JSON.stringify(receivedObj));
 
                     // switch (jenisReport) {
                     //     case 'KWH & Suhu':
                     //         window.location.href = "../checklist.html";
                     //         break;
                     //     case 'Ceklist':
+
                             window.location.href = "it.html";
                     //         break;
                     // }
