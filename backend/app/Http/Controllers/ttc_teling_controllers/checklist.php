@@ -40,27 +40,125 @@ class checklist extends Controller
             'suhu_kwh' => ['report_kwh', 'report_suhu'],
             'power' => ['trafof_c', 'load_trafo', 'report_lvmdp1', 'report_lvmdp2'],
             'it_load' => [
-                'rec1','rec2','rec3','rec4','rec5','rec6','rec7','rec8','rec9',
-                'ups1','ups2','dcpdu_1','dcpdu_2','dcpdu_3','dcpdu_4'
+                'rec1',
+                'rec2',
+                'rec3',
+                'rec4',
+                'rec5',
+                'rec6',
+                'rec7',
+                'rec8',
+                'rec9',
+                'ups1',
+                'ups2',
+                'dcpdu_1',
+                'dcpdu_2',
+                'dcpdu_3',
+                'dcpdu_4'
             ],
-            'coling_system' => ['pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9','pac10'],
-            'genset' => ['genset1','genset2']
+            'coling_system' => ['pac1', 'pac2', 'pac3', 'pac4', 'pac5', 'pac6', 'pac7', 'pac8', 'pac9', 'pac10'],
+            'genset' => ['genset1', 'genset2']
         ];
 
         return response()->json($data);
     }
 
     // Terima laporan dari frontend
+    // public function reciveReportInfo(Request $request)
+    // {
+    //     $data = $request->all();
+    //     \Log::info('Received data:', $data);
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'received' => $data
+    //     ], 200);
+    // }
+
+
+    //ini mantepppppppppppppp
+
+    //     public function reciveReportInfo(Request $request)
+// {
+//     $data = $request->all();
+//     $inserted = [];
+
+    //     try {
+//         foreach ($data as $tableName => $columns) {
+//             \DB::table($tableName)->insert($columns);
+//             $inserted[$tableName] = $columns;
+//         }
+
+    //         return response()->json([
+//             'status'   => 'success',
+//             'message'  => "Data berhasil disimpan",
+//             'received' => $data,
+//             'inserted' => $inserted
+//         ], 200);
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'status'  => 'error',
+//             'message' => $e->getMessage()
+//         ], 500);
+//     }
+// }
+
     public function reciveReportInfo(Request $request)
     {
         $data = $request->all();
-        \Log::info('Received data:', $data);
+        $inserted = [];
+        $idHolderJson = $this->getChecklistDataToJSON('report_info', 'no_report');
+        $idHolder = $idHolderJson->getData(); // ambil object dari JsonResponse
+        $id = $idHolder->no_report ?? null;
 
-        return response()->json([
-            'status' => 'success',
-            'received' => $data
-        ], 200);
+        try {
+            foreach ($data as $tableName => $columns) {
+
+                // 🔽 DISINI kamu taruh switch-case untuk olah data sebelum insert
+                switch ($tableName) {
+                    case 'genset1':
+                        $columns['id'] = $id;
+                        $literBulanan = (((90 ** 2) * acos((90 - $columns['tanki_bulanan']) / 90)
+                            - ((90 - $columns['tanki_bulanan']) * sqrt((2 * 90 * $columns['tanki_bulanan']) - ($columns['tanki_bulanan'] ** 2)))) * 400) / 1000;
+
+                        $literHarian = (((50 ** 2) * acos((50 - $columns['tangki_harian']) / 50)
+                            - ((50 - $columns['tangki_harian']) * sqrt((2 * 50 * $columns['tangki_harian']) - ($columns['tangki_harian'] ** 2)))) * 200) / 1000;
+
+                        $columns['liter_harian'] = round($literHarian, 2);
+                        $columns['liter_bulanan'] = round($literBulanan, 2);
+                        break;
+                    case 'genset2':
+                        $columns['id'] = $id;
+                        $columns['liter_harian'] = (((42.5 ** 2) * acos((42.5 - $columns['tangki_harian']) / 42.5) - ((42.5 - $columns['tangki_harian']) * sqrt((2 * 42.5 * $columns['tangki_harian']) - ($columns['tangki_harian'] ** 2)))) * 180) / 1000;
+                        $columns['liter_bulanan'] = (((80 ** 2) * acos((80 - $columns['tanki_bulanan']) / 80) - ((80 - $columns['tanki_bulanan']) * sqrt((2 * 80 * $columns['tanki_bulanan']) - ($columns['tanki_bulanan'] ** 2)))) * 500) / 1000;
+                        break;
+                    default:
+                        // kalau gak ada perlakuan khusus, biarin aja
+                        break;
+                }
+                // 🔼 sampe sini logic suntikan data
+
+                // lakukan insert ke database
+                \DB::table($tableName)->insert($columns);
+
+                // simpan hasil ke response
+                $inserted[$tableName] = $columns;
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Data berhasil disimpan",
+                'received' => $data,
+                'inserted' => $inserted
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     // Ambil daily checklist PUE
     public function checklistPUE(Request $request)
@@ -95,12 +193,22 @@ class checklist extends Controller
             $suhu = $this->getChecklistData('report_suhu', 'id_report_suhu', $id);
 
             $tegangan_lvmdp1 = $lvmdp1 ? [
-                $lvmdp1->L1N,$lvmdp1->L2N,$lvmdp1->L3N,$lvmdp1->R1N,$lvmdp1->R2N,$lvmdp1->R3N
+                $lvmdp1->L1N,
+                $lvmdp1->L2N,
+                $lvmdp1->L3N,
+                $lvmdp1->R1N,
+                $lvmdp1->R2N,
+                $lvmdp1->R3N
             ] : [];
             $tegangan_lvmdp1_final = count($tegangan_lvmdp1) ? max($tegangan_lvmdp1) : null;
 
             $tegangan_lvmdp2 = $lvmdp2 ? [
-                $lvmdp2->L1N,$lvmdp2->L2N,$lvmdp2->L3N,$lvmdp2->R1N,$lvmdp2->R2N,$lvmdp2->R3N
+                $lvmdp2->L1N,
+                $lvmdp2->L2N,
+                $lvmdp2->L3N,
+                $lvmdp2->R1N,
+                $lvmdp2->R2N,
+                $lvmdp2->R3N
             ] : [];
             $tegangan_lvmdp2_final = count($tegangan_lvmdp2) ? max($tegangan_lvmdp2) : null;
 
@@ -139,7 +247,7 @@ class checklist extends Controller
             $DialyChecklist[$i]['total_it_load'] = number_format($total_it_load, 2) ?: null;
             $DialyChecklist[$i]['load_facility'] = number_format($load_facility, 2) ?: null;
 
-            $DialyChecklist[$i]['pue'] = ($DialyChecklist[$i]['total_it_load'] != 0 && $DialyChecklist[$i]['total_it_load'] !== null) 
+            $DialyChecklist[$i]['pue'] = ($DialyChecklist[$i]['total_it_load'] != 0 && $DialyChecklist[$i]['total_it_load'] !== null)
                 ? number_format($DialyChecklist[$i]['total_load_pln'] / $DialyChecklist[$i]['total_it_load'], 2)
                 : 'N/A';
 
