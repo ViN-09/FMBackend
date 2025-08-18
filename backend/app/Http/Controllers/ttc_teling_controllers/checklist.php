@@ -132,6 +132,24 @@ class checklist extends Controller
                         $columns['liter_harian'] = (((42.5 ** 2) * acos((42.5 - $columns['tangki_harian']) / 42.5) - ((42.5 - $columns['tangki_harian']) * sqrt((2 * 42.5 * $columns['tangki_harian']) - ($columns['tangki_harian'] ** 2)))) * 180) / 1000;
                         $columns['liter_bulanan'] = (((80 ** 2) * acos((80 - $columns['tanki_bulanan']) / 80) - ((80 - $columns['tanki_bulanan']) * sqrt((2 * 80 * $columns['tanki_bulanan']) - ($columns['tanki_bulanan'] ** 2)))) * 500) / 1000;
                         break;
+                    case 'report_kwh':
+                        $columns['id_report_kwh'] = $id;
+                        break;
+                    case 'report_suhu':
+                        $columns['id_report_suhu'] = $id;
+                        break;
+                    case 'trafof_c':
+                        $columns['id'] = $id;
+                        break;
+                    case 'report_lvmdp2':
+                        $columns['id_report_lvmdp2'] = $id;
+                    break;
+                    case 'report_lvmdp1':
+                        $columns['id_report_lvmdp1'] = $id;
+                    break;
+                    case 'load_trafo':
+                        $columns['id'] = $id;
+                    break;
                     default:
                         // kalau gak ada perlakuan khusus, biarin aja
                         break;

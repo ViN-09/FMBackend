@@ -238,18 +238,12 @@
                     sessionStorage.setItem('suhu_kwh', JSON.stringify(receivedObj));
                     switch (jenisReport) {
                         case 'KWH & Suhu':
-                            const received = JSON.parse(sessionStorage.getItem('report_info'));
-                            const received2 = JSON.parse(sessionStorage.getItem('suhu_kwh'));
-                            const payload = {
-                                report_info: received,
-                                suhu_kwh: received2
-                            };
                             fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/sendInfoReport`, {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
                                 },
-                                body: JSON.stringify(payload)
+                                body: JSON.stringify(response)
                             })
                                 .then(res => res.json())
                                 .then(data => {
@@ -258,7 +252,7 @@
                                 .catch(err => {
                                     console.error("Error kirim data:", err);
                                 });
-                            // window.location.href = "../checklist.html";
+                            window.location.href = "../checklist.html";
                             break;
                         case 'Ceklist':
                             window.location.href = "power.html";

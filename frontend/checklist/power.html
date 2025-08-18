@@ -25,20 +25,17 @@
 `http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList` -->
     <script src="loder.js"></script>
     <script>
-    const ttc = localStorage.getItem('ttc');
-    const jenisReport = sessionStorage.getItem('jenisReport');
-    console.log(jenisReport);
+const ttc = localStorage.getItem('ttc');
+const jenisReport = sessionStorage.getItem('jenisReport');
+console.log(jenisReport);
 
-
-    fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
+fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
   .then(res => res.json())
-  .then(data => {
+  .then(async data => {
     const form = document.getElementById("myForm");
-
-    // Ambil semua item di suhu_kwh
     const suhuItems = data.power;
 
-    suhuItems.forEach(item => {
+    for (const item of suhuItems) {
       const div = document.createElement("div");
       div.id = item;
 
@@ -47,183 +44,185 @@
       div.appendChild(heading);
 
       form.appendChild(div);
-    });
 
-    // Generate input untuk setiap item di suhu_kwh
-    Promise.all(suhuItems.map(item => generateInputRow(item)))
-      .then(() => {
-        appendButton("myForm", "Kirim Data", () => submitFormDataNested("myForm"));
-      });
+      // generate input
+      await generateInputRow(item);
+
+      // >>> hanya untuk parent trafo_c & load_trafo ambil value dari API
+      if (["trafof_c", "load_trafo"].includes(item)) {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/${item}/id`);
+          const detailData = await response.json();
+
+          console.log(`Data perangkat [${item}] :`, detailData);
+
+          // isi input sesuai value API
+          Object.keys(detailData).forEach(key => {
+            const el = div.querySelector(`[name="${key}"]`);
+            if (el) {
+              el.value = detailData[key];
+            }
+          });
+        } catch (err) {
+          console.error(`Gagal fetch data perangkat [${item}]:`, err);
+        }
+      }
+    }
+
+    appendButton("myForm", "Kirim Data", () => submitFormDataNested("myForm"));
   })
   .catch(err => console.error("Error:", err));
 
 
+// ================== fungsi ==================
 
-
-
-
-        function getInputType(dataType) {
-    // Mapping tipe data dari API ke tipe input HTML
-    switch (dataType) {
-        case "date":
-            return "date";
-        case "time":
-            return "time";
-        case "datetime":
-            return "datetime-local";
-        case "int":
-            return "number";
-        case "float":
-            return "number"; // step=any nanti ditambah di generateInputRow
-        case "varchar":
-        default:
-            return "text";
-    }
+function getInputType(dataType) {
+  switch (dataType) {
+    case "date": return "date";
+    case "time": return "time";
+    case "datetime": return "datetime-local";
+    case "int": return "number";
+    case "float": return "number";
+    case "varchar":
+    default: return "text";
+  }
 }
 
 function formatLabel(text) {
-    // Ubah snake_case atau nama kolom jadi Kapital Awal Tiap Kata
-    return text
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase());
+  return text.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
 }
 
 async function generateInputRow(idParent) {
-    try {
-        const form = document.getElementById(idParent);
+  try {
+    const form = document.getElementById(idParent);
+    const resCols = await fetch(`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${idParent}`);
+    const columns = await resCols.json();
 
-        // Ambil struktur kolom
-        const resCols = await fetch(`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${idParent}`);
-        const columns = await resCols.json();
+    columns.forEach(col => {
+      if (["no_report","status","id","liter_harian","liter_bulanan","id_report_suhu","Date","id_report_kwh","date_time","dokumentasi","indikator","id_report_lvmdp2","id_report_lvmdp1"].includes(col.COLUMN_NAME)) return;
 
-        columns.forEach(col => {
-            if (["no_report", "status", "id", "liter_harian", "liter_bulanan", "id_report_suhu", "Date","id_report_kwh", "date_time", "dokumentasi", "indikator", "id_report_lvmdp2", "id_report_lvmdp1"].includes(col.COLUMN_NAME)) return;
+      const label = document.createElement("label");
+      label.setAttribute("for", col.COLUMN_NAME);
+      label.className = "form-label";
+      label.textContent = formatLabel(col.COLUMN_NAME);
 
-            const label = document.createElement("label");
-            label.setAttribute("for", col.COLUMN_NAME);
-            label.className = "form-label";
-            label.textContent = formatLabel(col.COLUMN_NAME);
+      let inputElement;
 
-            let inputElement;
+      // === khusus cuaca jadi select ===
+      if (col.COLUMN_NAME === "cuaca") {
+        inputElement = document.createElement("select");
+        inputElement.name = col.COLUMN_NAME;
+        inputElement.id = col.COLUMN_NAME;
+        inputElement.className = "form-select";
 
-            if (col.COLUMN_NAME === "prosses") {
-                inputElement = document.createElement("select");
-                inputElement.name = col.COLUMN_NAME;
-                inputElement.id = col.COLUMN_NAME;
-                inputElement.className = "form-select";
-
-                const defaultOpt = document.createElement("option");
-                defaultOpt.value = "";
-                defaultOpt.textContent = "-- Pilih Jenis Report --";
-                inputElement.appendChild(defaultOpt);
-
-                ["PLN Off", "Auto Reharsal", "Manual Reharsal"].forEach(optValue => {
-                    const opt = document.createElement("option");
-                    opt.value = optValue;
-                    opt.textContent = optValue;
-                    inputElement.appendChild(opt);
-                });
-
-            } else {
-                inputElement = document.createElement("input");
-                inputElement.type = getInputType(col.DATA_TYPE);
-                inputElement.name = col.COLUMN_NAME;
-                inputElement.id = col.COLUMN_NAME;
-                inputElement.className = "form-control";
-
-                if (col.DATA_TYPE === "float") {
-                    inputElement.step = "any";
-                }
-            }
-
-            const div = document.createElement("div");
-            div.className = "mb-3";
-            div.appendChild(label);
-            div.appendChild(inputElement);
-
-            form.appendChild(div);
+        ["Cerah", "Hujan", "Mendung"].forEach(optValue => {
+          const opt = document.createElement("option");
+          opt.value = optValue;
+          opt.textContent = optValue;
+          inputElement.appendChild(opt);
         });
 
-    } catch (err) {
-        console.error("Error:", err);
-    }
+      } else if (col.COLUMN_NAME === "prosses") {
+        inputElement = document.createElement("select");
+        inputElement.name = col.COLUMN_NAME;
+        inputElement.id = col.COLUMN_NAME;
+        inputElement.className = "form-select";
+
+        const defaultOpt = document.createElement("option");
+        defaultOpt.value = "";
+        defaultOpt.textContent = "-- Pilih Jenis Report --";
+        inputElement.appendChild(defaultOpt);
+
+        ["PLN Off", "Auto Reharsal", "Manual Reharsal"].forEach(optValue => {
+          const opt = document.createElement("option");
+          opt.value = optValue;
+          opt.textContent = optValue;
+          inputElement.appendChild(opt);
+        });
+
+      } else {
+        inputElement = document.createElement("input");
+        inputElement.type = getInputType(col.DATA_TYPE);
+        inputElement.name = col.COLUMN_NAME;
+        inputElement.id = col.COLUMN_NAME;
+        inputElement.className = "form-control";
+
+        if (col.DATA_TYPE === "float") {
+          inputElement.step = "any";
+        }
+      }
+
+      const div = document.createElement("div");
+      div.className = "mb-3";
+      div.appendChild(label);
+      div.appendChild(inputElement);
+
+      form.appendChild(div);
+    });
+
+  } catch (err) {
+    console.error("Error:", err);
+  }
 }
 
+function appendButton(idParent, buttonText = "Submit", onClickHandler = null) {
+  const form = document.getElementById(idParent);
+  if (!form) {
+    console.error("Form not found:", idParent);
+    return;
+  }
 
-        function appendButton(idParent, buttonText = "Submit", onClickHandler = null) {
-            const form = document.getElementById(idParent);
-            if (!form) {
-                console.error("Form not found:", idParent);
-                return;
-            }
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.textContent = buttonText;
+  btn.className = "btn btn-primary w-100";
 
-            const btn = document.createElement("button");
-            btn.type = "button"; // bisa diubah jadi "submit" kalau mau submit form biasa
-            btn.textContent = buttonText;
-            btn.className = "btn btn-primary w-100"; // styling Bootstrap, sesuaikan kalau pakai CSS sendiri
+  if (typeof onClickHandler === "function") {
+    btn.addEventListener("click", onClickHandler);
+  }
 
-            if (typeof onClickHandler === "function") {
-                btn.addEventListener("click", onClickHandler);
-            }
+  form.appendChild(btn);
+}
 
-            form.appendChild(btn);  // <<< ini yang kurang
-        }
+function submitFormDataNested(formId) {
+  const form = document.getElementById(formId);
+  if (!form) return console.error("Form not found:", formId);
 
+  const formData = {};
+  const sections = form.querySelectorAll(":scope > div");
 
-        function submitFormDataNested(formId) {
-            const form = document.getElementById(formId);
-            if (!form) return console.error("Form not found:", formId);
+  sections.forEach(section => {
+    const sectionId = section.id;
+    if (!sectionId) return;
 
-            const formData = {};
+    const sectionData = {};
+    section.querySelectorAll("input, select, textarea").forEach(el => {
+      if (!el.name) return;
+      sectionData[el.name] = el.value;
+    });
 
-            // Ambil semua div langsung di dalam form
-            const sections = form.querySelectorAll(":scope > div");
+    formData[sectionId] = sectionData;
+  });
 
-            sections.forEach(section => {
-                const sectionId = section.id;
-                if (!sectionId) return;
+  console.log("Nested Form Data:", formData);
 
-                const sectionData = {};
-                // Ambil semua input/select/textarea dalam section itu
-                section.querySelectorAll("input, select, textarea").forEach(el => {
-                    if (!el.name) return;
-                    sectionData[el.name] = el.value;
-                });
+  fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/sendInfoReport`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData)
+  })
+    .then(res => res.json())
+    .then(response => {
+      console.log("Response from API:", response);
+      const receivedObj = response.received;
+      sessionStorage.setItem('power', JSON.stringify(receivedObj));
+      if(response.error=='success'){
+          window.location.href = "it.html";
+      }
+    })
+    .catch(err => console.error("Error sending data:", err));
+}
+</script>
 
-                formData[sectionId] = sectionData;
-            });
-
-            console.log("Nested Form Data:", formData);
-
-            // Kirim ke API
-            fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/sendInfoReport`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            })
-                .then(res => res.json())
-                .then(response => {
-                    console.log("Response from API:", response);
-                    const receivedObj = response.received;
-                    sessionStorage.setItem('power', JSON.stringify(receivedObj));
-
-                    // switch (jenisReport) {
-                    //     case 'KWH & Suhu':
-                    //         window.location.href = "../checklist.html";
-                    //         break;
-                    //     case 'Ceklist':
-
-                            window.location.href = "it.html";
-                    //         break;
-                    // }
-                })
-                .catch(err => console.error("Error sending data:", err));
-        }
-
-
-
-
-
-    </script>
 </body>
 </html>
