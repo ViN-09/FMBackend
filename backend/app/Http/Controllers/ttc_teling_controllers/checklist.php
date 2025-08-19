@@ -5,34 +5,184 @@ namespace App\Http\Controllers\ttc_teling_controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
-
 
 class checklist extends Controller
 {
+    // Pakai koneksi database mysql2
+    protected $connection = 'mysql';
 
+    // Ambil satu data sesuai kolom
     public function getChecklistData($table_name, $kolom_name, $value)
     {
-        // Ambil satu data sesuai parameter
-        return DB::table($table_name)
+        return DB::connection($this->connection)
+            ->table($table_name)
             ->where($kolom_name, $value)
             ->first();
     }
 
-    public function tableReportList()
+    // Ambil data terbaru berdasarkan kolom
+    public function getChecklistDataToJSON($table_name, $kolom_name)
     {
-        // Ambil satu data sesuai parameter
-        $data=['report_info','trafof_c','report_kwh','report_suhu','report_lvmdp1','report_lvmdp2','load_trafo','rec1','rec2','rec3','rec4','rec5','rec6','rec7','rec8','rec9','ups1','ups2','dcpdu_1','dcpdu_2','dcpdu_3','dcpdu_4','pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9','pac10'];
+        $data = DB::connection($this->connection)
+            ->table($table_name)
+            ->orderByDesc($kolom_name)
+            ->first();
 
         return response()->json($data);
-
     }
 
+    // List tabel dan sub-item untuk laporan
+    public function tableReportList()
+    {
+        $data = [
+            'staffform' => ['report_info'],
+            'suhu_kwh' => ['report_kwh', 'report_suhu'],
+            'power' => ['trafof_c', 'load_trafo', 'report_lvmdp1', 'report_lvmdp2'],
+            'it_load' => [
+                'rec1',
+                'rec2',
+                'rec3',
+                'rec4',
+                'rec5',
+                'rec6',
+                'rec7',
+                'rec8',
+                'rec9',
+                'ups1',
+                'ups2',
+                'dcpdu_1',
+                'dcpdu_2',
+                'dcpdu_3',
+                'dcpdu_4'
+            ],
+            'coling_system' => ['pac1', 'pac2', 'pac3', 'pac4', 'pac5', 'pac6', 'pac7', 'pac8', 'pac9', 'pac10'],
+            'genset' => ['genset1', 'genset2']
+        ];
+
+        return response()->json($data);
+    }
+
+    // Terima laporan dari frontend
+    // public function reciveReportInfo(Request $request)
+    // {
+    //     $data = $request->all();
+    //     \Log::info('Received data:', $data);
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'received' => $data
+    //     ], 200);
+    // }
+
+
+    //ini mantepppppppppppppp
+
+    //     public function reciveReportInfo(Request $request)
+// {
+//     $data = $request->all();
+//     $inserted = [];
+
+    //     try {
+//         foreach ($data as $tableName => $columns) {
+//             \DB::table($tableName)->insert($columns);
+//             $inserted[$tableName] = $columns;
+//         }
+
+    //         return response()->json([
+//             'status'   => 'success',
+//             'message'  => "Data berhasil disimpan",
+//             'received' => $data,
+//             'inserted' => $inserted
+//         ], 200);
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'status'  => 'error',
+//             'message' => $e->getMessage()
+//         ], 500);
+//     }
+// }
+
+    public function reciveReportInfo(Request $request)
+    {
+        $data = $request->all();
+        $inserted = [];
+        $idHolderJson = $this->getChecklistDataToJSON('report_info', 'no_report');
+        $idHolder = $idHolderJson->getData(); // ambil object dari JsonResponse
+        $id = $idHolder->no_report ?? null;
+
+        try {
+            foreach ($data as $tableName => $columns) {
+
+                // 🔽 DISINI kamu taruh switch-case untuk olah data sebelum insert
+                switch ($tableName) {
+                    case 'genset1':
+                        $columns['id'] = $id;
+                        $literBulanan = (((90 ** 2) * acos((90 - $columns['tanki_bulanan']) / 90)
+                            - ((90 - $columns['tanki_bulanan']) * sqrt((2 * 90 * $columns['tanki_bulanan']) - ($columns['tanki_bulanan'] ** 2)))) * 400) / 1000;
+
+                        $literHarian = (((50 ** 2) * acos((50 - $columns['tangki_harian']) / 50)
+                            - ((50 - $columns['tangki_harian']) * sqrt((2 * 50 * $columns['tangki_harian']) - ($columns['tangki_harian'] ** 2)))) * 200) / 1000;
+
+                        $columns['liter_harian'] = round($literHarian, 2);
+                        $columns['liter_bulanan'] = round($literBulanan, 2);
+                        break;
+                    case 'genset2':
+                        $columns['id'] = $id;
+                        $columns['liter_harian'] = (((42.5 ** 2) * acos((42.5 - $columns['tangki_harian']) / 42.5) - ((42.5 - $columns['tangki_harian']) * sqrt((2 * 42.5 * $columns['tangki_harian']) - ($columns['tangki_harian'] ** 2)))) * 180) / 1000;
+                        $columns['liter_bulanan'] = (((80 ** 2) * acos((80 - $columns['tanki_bulanan']) / 80) - ((80 - $columns['tanki_bulanan']) * sqrt((2 * 80 * $columns['tanki_bulanan']) - ($columns['tanki_bulanan'] ** 2)))) * 500) / 1000;
+                        break;
+                    case 'report_kwh':
+                        $columns['id_report_kwh'] = $id;
+                        break;
+                    case 'report_suhu':
+                        $columns['id_report_suhu'] = $id;
+                        break;
+                    case 'trafof_c':
+                        $columns['id'] = $id;
+                        break;
+                    case 'report_lvmdp2':
+                        $columns['id_report_lvmdp2'] = $id;
+                    break;
+                    case 'report_lvmdp1':
+                        $columns['id_report_lvmdp1'] = $id;
+                    break;
+                    case 'load_trafo':
+                        $columns['id'] = $id;
+                    break;
+                    default:
+                        // kalau gak ada perlakuan khusus, biarin aja
+                        break;
+                }
+                // 🔼 sampe sini logic suntikan data
+
+                // lakukan insert ke database
+                \DB::table($tableName)->insert($columns);
+
+                // simpan hasil ke response
+                $inserted[$tableName] = $columns;
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Data berhasil disimpan",
+                'received' => $data,
+                'inserted' => $inserted
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    // Ambil daily checklist PUE
     public function checklistPUE(Request $request)
     {
         $jenisReport = $request->query('jenis_report');
-        $tanggal = $request->query('tanggal'); // format: YYYY-MM-DD
+        $tanggal = $request->query('tanggal');
 
         if (!$jenisReport || !$tanggal) {
             return response()->json(['error' => 'Parameter jenis_report dan tanggal wajib diisi.'], 400);
@@ -41,7 +191,8 @@ class checklist extends Controller
         $startOfMonth = Carbon::parse($tanggal)->startOfMonth();
         $endOfMonth = Carbon::parse($tanggal)->endOfMonth();
 
-        $data = DB::table('report_info')
+        $data = DB::connection($this->connection)
+            ->table('report_info')
             ->where('jenis_report', $jenisReport)
             ->whereBetween('date_time', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
             ->orderBy('date_time')
@@ -51,7 +202,6 @@ class checklist extends Controller
         $i = 1;
 
         foreach ($data as $item) {
-            $tanggalStr = Carbon::parse($item->date_time)->toDateString();
             $id = $item->no_report;
 
             $lvmdp1 = $this->getChecklistData('report_lvmdp1', 'id_report_lvmdp1', $id);
@@ -115,21 +265,13 @@ class checklist extends Controller
             $DialyChecklist[$i]['total_it_load'] = number_format($total_it_load, 2) ?: null;
             $DialyChecklist[$i]['load_facility'] = number_format($load_facility, 2) ?: null;
 
-            if ($DialyChecklist[$i]['total_it_load'] != 0 && $DialyChecklist[$i]['total_it_load'] !== null) {
-                $DialyChecklist[$i]['pue'] = number_format($DialyChecklist[$i]['total_load_pln'] / $DialyChecklist[$i]['total_it_load'], 2);
-            } else {
-                $DialyChecklist[$i]['pue'] = 'N/A';
-            }
+            $DialyChecklist[$i]['pue'] = ($DialyChecklist[$i]['total_it_load'] != 0 && $DialyChecklist[$i]['total_it_load'] !== null)
+                ? number_format($DialyChecklist[$i]['total_load_pln'] / $DialyChecklist[$i]['total_it_load'], 2)
+                : 'N/A';
 
-            if (
-                $DialyChecklist[$i]['faktor_daya'] != 0 && $DialyChecklist[$i]['faktor_daya'] !== null
-                && $DialyChecklist[$i]['total_load_pln'] !== null
-            ) {
-                $occupancy = ($DialyChecklist[$i]['total_load_pln'] / ($DialyChecklist[$i]['faktor_daya'] * 555)) * 100;
-                $DialyChecklist[$i]['occupancy_pln'] = number_format($occupancy, 2) . ' %';
-            } else {
-                $DialyChecklist[$i]['occupancy_pln'] = 'N/A';
-            }
+            $DialyChecklist[$i]['occupancy_pln'] = ($DialyChecklist[$i]['faktor_daya'] != 0 && $DialyChecklist[$i]['faktor_daya'] !== null && $DialyChecklist[$i]['total_load_pln'] !== null)
+                ? number_format(($DialyChecklist[$i]['total_load_pln'] / ($DialyChecklist[$i]['faktor_daya'] * 555)) * 100, 2) . ' %'
+                : 'N/A';
 
             $DialyChecklist[$i]['core'] = $suhu?->RCore ?? null;
             $DialyChecklist[$i]['transmissi'] = $suhu?->RTransmissi ?? null;
@@ -143,13 +285,14 @@ class checklist extends Controller
         return response()->json($DialyChecklist);
     }
 
+    // Ambil data dari table sesuai kolom
     public function getDivisionData($table_name, $kolom_name, $value)
-{
-    $data = DB::table($table_name)
-        ->where($kolom_name, $value)
-        ->get();
+    {
+        $data = DB::connection($this->connection)
+            ->table($table_name)
+            ->where($kolom_name, $value)
+            ->get();
 
-    return response()->json($data);
-}
-
+        return response()->json($data);
+    }
 }

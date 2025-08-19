@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="main.css" />
+    <title>CHECKLIST</title>
+</head>
+
+<body>
+    <main>
+        <img src="../asset/logo-telkomsel-baru.DYhv_uL8_1T5nit-removebg-preview.png" alt="Logo Telkomsel" class="logo">
+        <h1>Form Checklist</h1>
+        <div id="body">
+            <form id="myForm" class="form_power">
+
+            </form>
+        </div>
+    </main>
+
+
+    <!-- `http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
+`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${item}`
+`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList` -->
+    <script src="loder.js"></script>
+    <script>
+const ttc = localStorage.getItem('ttc');
+const jenisReport = sessionStorage.getItem('jenisReport');
+console.log(jenisReport);
+
+fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
+  .then(res => res.json())
+  .then(async data => {
+    const form = document.getElementById("myForm");
+    const suhuItems = data.power;
+
+    for (const item of suhuItems) {
+      const div = document.createElement("div");
+      div.id = item;
+
+      const heading = document.createElement("h2");
+      heading.textContent = formatLabel(item);
+      div.appendChild(heading);
+
+      form.appendChild(div);
+
+      // generate input
+      await generateInputRow(item);
+
+      // >>> hanya untuk parent trafo_c & load_trafo ambil value dari API
+      if (["trafof_c", "load_trafo"].includes(item)) {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/${item}/id`);
+          const detailData = await response.json();
+
+          console.log(`Data perangkat [${item}] :`, detailData);
+
+          // isi input sesuai value API
+          Object.keys(detailData).forEach(key => {
+            const el = div.querySelector(`[name="${key}"]`);
+            if (el) {
+              el.value = detailData[key];
+            }
+          });
+        } catch (err) {
+          console.error(`Gagal fetch data perangkat [${item}]:`, err);
+        }
+      }
+    }
+
+    appendButton("myForm", "Kirim Data", () => submitFormDataNested("myForm"));
+  })
+  .catch(err => console.error("Error:", err));
+
+
+// ================== fungsi ==================
+
+function getInputType(dataType) {
+  switch (dataType) {
+    case "date": return "date";
+    case "time": return "time";
+    case "datetime": return "datetime-local";
+    case "int": return "number";
+    case "float": return "number";
+    case "varchar":
+    default: return "text";
+  }
+}
+
+function formatLabel(text) {
+  return text.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
+async function generateInputRow(idParent) {
+  try {
+    const form = document.getElementById(idParent);
+    const resCols = await fetch(`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${idParent}`);
+    const columns = await resCols.json();
+
+    columns.forEach(col => {
+      if (["no_report","status","id","liter_harian","liter_bulanan","id_report_suhu","Date","id_report_kwh","date_time","dokumentasi","indikator","id_report_lvmdp2","id_report_lvmdp1"].includes(col.COLUMN_NAME)) return;
+
+      const label = document.createElement("label");
+      label.setAttribute("for", col.COLUMN_NAME);
+      label.className = "form-label";
+      label.textContent = formatLabel(col.COLUMN_NAME);
+
+      let inputElement;
+
+      // === khusus cuaca jadi select ===
+      if (col.COLUMN_NAME === "cuaca") {
+        inputElement = document.createElement("select");
+        inputElement.name = col.COLUMN_NAME;
+        inputElement.id = col.COLUMN_NAME;
+        inputElement.className = "form-select";
+
+        ["Cerah", "Hujan", "Mendung"].forEach(optValue => {
+          const opt = document.createElement("option");
+          opt.value = optValue;
+          opt.textContent = optValue;
+          inputElement.appendChild(opt);
+        });
+
+      } else if (col.COLUMN_NAME === "prosses") {
+        inputElement = document.createElement("select");
+        inputElement.name = col.COLUMN_NAME;
+        inputElement.id = col.COLUMN_NAME;
+        inputElement.className = "form-select";
+
+        const defaultOpt = document.createElement("option");
+        defaultOpt.value = "";
+        defaultOpt.textContent = "-- Pilih Jenis Report --";
+        inputElement.appendChild(defaultOpt);
+
+        ["PLN Off", "Auto Reharsal", "Manual Reharsal"].forEach(optValue => {
+          const opt = document.createElement("option");
+          opt.value = optValue;
+          opt.textContent = optValue;
+          inputElement.appendChild(opt);
+        });
+
+      } else {
+        inputElement = document.createElement("input");
+        inputElement.type = getInputType(col.DATA_TYPE);
+        inputElement.name = col.COLUMN_NAME;
+        inputElement.id = col.COLUMN_NAME;
+        inputElement.className = "form-control";
+
+        if (col.DATA_TYPE === "float") {
+          inputElement.step = "any";
+        }
+      }
+
+      const div = document.createElement("div");
+      div.className = "mb-3";
+      div.appendChild(label);
+      div.appendChild(inputElement);
+
+      form.appendChild(div);
+    });
+
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+function appendButton(idParent, buttonText = "Submit", onClickHandler = null) {
+  const form = document.getElementById(idParent);
+  if (!form) {
+    console.error("Form not found:", idParent);
+    return;
+  }
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.textContent = buttonText;
+  btn.className = "btn btn-primary w-100";
+
+  if (typeof onClickHandler === "function") {
+    btn.addEventListener("click", onClickHandler);
+  }
+
+  form.appendChild(btn);
+}
+
+function submitFormDataNested(formId) {
+  const form = document.getElementById(formId);
+  if (!form) return console.error("Form not found:", formId);
+
+  const formData = {};
+  const sections = form.querySelectorAll(":scope > div");
+
+  sections.forEach(section => {
+    const sectionId = section.id;
+    if (!sectionId) return;
+
+    const sectionData = {};
+    section.querySelectorAll("input, select, textarea").forEach(el => {
+      if (!el.name) return;
+      sectionData[el.name] = el.value;
+    });
+
+    formData[sectionId] = sectionData;
+  });
+
+  console.log("Nested Form Data:", formData);
+
+  fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/sendInfoReport`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData)
+  })
+    .then(res => res.json())
+    .then(response => {
+      console.log("Response from API:", response);
+      const receivedObj = response.received;
+      sessionStorage.setItem('power', JSON.stringify(receivedObj));
+      if(response.error=='success'){
+          window.location.href = "it.html";
+      }
+    })
+    .catch(err => console.error("Error sending data:", err));
+}
+</script>
+
+</body>
+</html>

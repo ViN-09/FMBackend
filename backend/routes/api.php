@@ -17,6 +17,8 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/ChecklistPUE', [CheckListTeling::class, 'checklistPUE']);
         Route::get('/tableReportList', [CheckListTeling::class, 'tableReportList']);
         Route::get('/list_dp_tables/{table_name}/{kolom_name}/{value}', [CheckListTeling::class, 'getDivisionData']);
+        Route::post('/sendInfoReport', [CheckListTeling::class, 'reciveReportInfo']);
+        Route::get('/{table}/{kolom}', [CheckListTeling::class, 'getChecklistDataToJSON']);
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);
