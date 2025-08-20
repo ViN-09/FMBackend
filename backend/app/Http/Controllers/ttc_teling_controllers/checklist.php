@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+Carbon::setLocale('id');
 
 class checklist extends Controller
 {
@@ -51,6 +52,7 @@ class checklist extends Controller
                 'rec9',
                 'ups1',
                 'ups2',
+                'pm_it',
                 'dcpdu_1',
                 'dcpdu_2',
                 'dcpdu_3',
@@ -150,6 +152,9 @@ class checklist extends Controller
                     case 'load_trafo':
                         $columns['id'] = $id;
                         break;
+                    case 'pm_it':
+                        $columns['id_report'] = $id;
+                        break;
                     case 'rec1':
                     case 'rec2':
                     case 'rec3':
@@ -205,17 +210,17 @@ class checklist extends Controller
     }
 
     public function updateLatestReportStatus()
-{
-    DB::table('report_info')
-        ->orderByDesc('no_report')
-        ->limit(1)
-        ->update(['status' => 1]);
+    {
+        DB::table('report_info')
+            ->orderByDesc('no_report')
+            ->limit(1)
+            ->update(['status' => 1]);
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Status pada record terbaru berhasil diupdate menjadi 3'
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'message' => 'Status pada record terbaru berhasil diupdate menjadi 3'
+        ]);
+    }
 
 
 
@@ -244,12 +249,37 @@ class checklist extends Controller
 
         foreach ($data as $item) {
             $id = $item->no_report;
+            $me1 = $item->petugasME;
+            $me2 = $item->petugasME2;
+            $me3 = $item->petugasME3;
+            $me4 = $item->petugasME4;
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas2 = $this->getChecklistData('user_bio', 'id', $me2);
+            $Petugas3 = $this->getChecklistData('user_bio', 'id', $me3);
+            $Petugas4 = $this->getChecklistData('user_bio', 'id', $me4);
+
+
 
             $lvmdp1 = $this->getChecklistData('report_lvmdp1', 'id_report_lvmdp1', $id);
             $lvmdp2 = $this->getChecklistData('report_lvmdp2', 'id_report_lvmdp2', $id);
             $it_load = $this->getChecklistData('pm_it', 'id_report', $id);
             $trafo = $this->getChecklistData('load_trafo', 'id', $id);
             $suhu = $this->getChecklistData('report_suhu', 'id_report_suhu', $id);
+            $trafo_c = $this->getChecklistData('trafof_c', 'id', $id);
+            $ups1 = $this->getChecklistData('ups1', 'id', $id);
+            $ups2 = $this->getChecklistData('ups2', 'id', $id);
+            $rec1 = $this->getChecklistData('rec1', 'id', $id);
+            $rec2 = $this->getChecklistData('rec2', 'id', $id);
+            $rec3 = $this->getChecklistData('rec3', 'id', $id);
+            $rec4 = $this->getChecklistData('rec4', 'id', $id);
+            $rec5 = $this->getChecklistData('rec5', 'id', $id);
+            $rec6 = $this->getChecklistData('rec6', 'id', $id);
+            $rec7 = $this->getChecklistData('rec7', 'id', $id);
+            $rec8 = $this->getChecklistData('rec8', 'id', $id);
+            $rec9 = $this->getChecklistData('rec9', 'id', $id);
+
+
 
             $tegangan_lvmdp1 = $lvmdp1 ? [
                 $lvmdp1->L1N,
@@ -284,6 +314,19 @@ class checklist extends Controller
             $load_facility = $total_load_pln - $total_it_load;
 
             $DialyChecklist[$i]['tanggal'] = $item->date_time;
+            $datetime = Carbon::parse($DialyChecklist[$i]['tanggal']);
+            $DialyChecklist[$i]['tanggal_formatted'] = $datetime->translatedFormat('l, d-m-Y');
+            $DialyChecklist[$i]['jam'] = $datetime->format('H:i');
+
+            $DialyChecklist[$i]['Petugas1'] = $Petugas1->Nama ?? null;
+            $DialyChecklist[$i]['Petugas1NO'] = $Petugas1->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas2'] = $Petugas2->Nama ?? null;
+            $DialyChecklist[$i]['Petugas2NO'] = $Petugas2->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas3'] = $Petugas3->Nama ?? null;
+            $DialyChecklist[$i]['Petugas3NO'] = $Petugas3->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas4'] = $Petugas4->Nama ?? null;
+            $DialyChecklist[$i]['Petugas4NO'] = $Petugas4->noTELP ?? null;
+
             $DialyChecklist[$i]['lvmdp1_r'] = $lvmdp1?->R ?? null;
             $DialyChecklist[$i]['lvmdp1_s'] = $lvmdp1?->S ?? null;
             $DialyChecklist[$i]['lvmdp1_t'] = $lvmdp1?->T ?? null;
@@ -320,9 +363,237 @@ class checklist extends Controller
             $DialyChecklist[$i]['genset'] = $suhu?->RGenset ?? null;
             $DialyChecklist[$i]['trafo'] = $suhu?->RTrafo ?? null;
 
+            $DialyChecklist[$i]['ups1'] = $ups1?->kw ?? null;
+            $DialyChecklist[$i]['ups2'] = $ups2?->kw ?? null;
+            $DialyChecklist[$i]['rec1'] = $rec1?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec2'] = $rec2?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec3'] = $rec3?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec4'] = $rec4?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec5'] = $rec5?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec6'] = $rec6?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec7'] = $rec7?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec8'] = $rec8?->TotalLoad ?? null;
+            $DialyChecklist[$i]['rec9'] = $rec9?->TotalLoad ?? null;
+
+            $DialyChecklist[$i]['TrafoCaps'] = $trafo_c?->TrafoCaps ?? null;
+            $DialyChecklist[$i]['GensetTotal'] = $trafo_c?->GensetTotal ?? null;
+            $DialyChecklist[$i]['PACTotal'] = $trafo_c?->PACTotal ?? null;
+            $DialyChecklist[$i]['RECTotal'] = $trafo_c?->RECTotal ?? null;
+            $DialyChecklist[$i]['UPSTotal'] = $trafo_c?->UPSTotal ?? null;
+
+            $DialyChecklist[$i]['GensetF'] = $trafo_c?->GensetF ?? null;
+            $DialyChecklist[$i]['PACF'] = $trafo_c?->PACF ?? null;
+            $DialyChecklist[$i]['RECF'] = $trafo_c?->RECF ?? null;
+            $DialyChecklist[$i]['UPSF'] = $trafo_c?->UPSF ?? null;
+
+            $DialyChecklist[$i]['Cuaca'] = $trafo_c?->Cuaca ?? null;
+
+
+
+
+
             $i++;
         }
 
+        return response()->json($DialyChecklist);
+    }
+
+    public function Genset1(Request $request)
+    {
+        $jenisReport = $request->query('jenis_report');
+        $tanggal = $request->query('tanggal');
+
+        if (!$jenisReport || !$tanggal) {
+            return response()->json(['error' => 'Parameter jenis_report dan tanggal wajib diisi.'], 400);
+        }
+
+        $startOfMonth = Carbon::parse($tanggal)->startOfMonth();
+        $endOfMonth = Carbon::parse($tanggal)->endOfMonth();
+
+        $data = DB::connection($this->connection)
+            ->table('report_info')
+            ->where('jenis_report', $jenisReport)
+            ->whereBetween('date_time', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+            ->orderBy('date_time')
+            ->get();
+
+        $DialyChecklist = [];
+        $i = 1;
+
+        foreach ($data as $item) {
+                        $id = $item->no_report;
+            $me1 = $item->petugasME;
+            $me2 = $item->petugasME2;
+            $me3 = $item->petugasME3;
+            $me4 = $item->petugasME4;
+
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas2 = $this->getChecklistData('user_bio', 'id', $me2);
+            $Petugas3 = $this->getChecklistData('user_bio', 'id', $me3);
+            $Petugas4 = $this->getChecklistData('user_bio', 'id', $me4);
+
+            $genset = $this->getChecklistData('genset1', 'id', $id);
+            $DialyChecklist[$i]['tanggal'] = $item->date_time;
+            $datetime = Carbon::parse($DialyChecklist[$i]['tanggal']);
+            $DialyChecklist[$i]['tanggal_formatted'] = $datetime->translatedFormat('l, d-m-Y');
+            $DialyChecklist[$i]['jam'] = $datetime->format('H:i');
+
+            $DialyChecklist[$i]['Petugas1'] = $Petugas1->Nama ?? null;
+            $DialyChecklist[$i]['Petugas1NO'] = $Petugas1->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas2'] = $Petugas2->Nama ?? null;
+            $DialyChecklist[$i]['Petugas2NO'] = $Petugas2->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas3'] = $Petugas3->Nama ?? null;
+            $DialyChecklist[$i]['Petugas3NO'] = $Petugas3->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas4'] = $Petugas4->Nama ?? null;
+            $DialyChecklist[$i]['Petugas4NO'] = $Petugas4->noTELP ?? null;
+            $DialyChecklist[$i]['proses'] = $genset?->prosses ?? null;
+            $DialyChecklist[$i]['gen_on'] = $genset?->gen_on ?? null;
+            $DialyChecklist[$i]['gen_off'] = $genset?->gen_off ?? null;
+            $DialyChecklist[$i]['tanki_bulanan'] = $genset?->tanki_bulanan ?? null;
+            $DialyChecklist[$i]['tangki_harian'] = $genset?->tangki_harian ?? null;
+            $DialyChecklist[$i]['liter_harian'] = $genset?->liter_harian ?? null;
+            $DialyChecklist[$i]['liter_bulanan'] = $genset?->liter_bulanan ?? null;
+            $DialyChecklist[$i]['suhu'] = $genset?->suhu ?? null;
+            $DialyChecklist[$i]['hours_mater'] = $genset?->hours_mater ?? null;
+            $DialyChecklist[$i]['date'] = $genset?->date ?? null;
+            $i++;
+        }
+
+        return response()->json($DialyChecklist);
+    }
+
+    public function Genset2(Request $request)
+    {
+        $jenisReport = $request->query('jenis_report');
+        $tanggal = $request->query('tanggal');
+
+        if (!$jenisReport || !$tanggal) {
+            return response()->json(['error' => 'Parameter jenis_report dan tanggal wajib diisi.'], 400);
+        }
+
+        $startOfMonth = Carbon::parse($tanggal)->startOfMonth();
+        $endOfMonth = Carbon::parse($tanggal)->endOfMonth();
+
+        $data = DB::connection($this->connection)
+            ->table('report_info')
+            ->where('jenis_report', $jenisReport)
+            ->whereBetween('date_time', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+            ->orderBy('date_time')
+            ->get();
+
+        $DialyChecklist = [];
+        $i = 1;
+
+        foreach ($data as $item) {
+            $id = $item->no_report;
+            $me1 = $item->petugasME;
+            $me2 = $item->petugasME2;
+            $me3 = $item->petugasME3;
+            $me4 = $item->petugasME4;
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas2 = $this->getChecklistData('user_bio', 'id', $me2);
+            $Petugas3 = $this->getChecklistData('user_bio', 'id', $me3);
+            $Petugas4 = $this->getChecklistData('user_bio', 'id', $me4);
+
+            $genset = $this->getChecklistData('genset2', 'id', $id);
+
+            $DialyChecklist[$i]['tanggal'] = $item->date_time;
+            $datetime = Carbon::parse($DialyChecklist[$i]['tanggal']);
+            $DialyChecklist[$i]['tanggal_formatted'] = $datetime->translatedFormat('l, d-m-Y');
+            $DialyChecklist[$i]['jam'] = $datetime->format('H:i');
+
+            $DialyChecklist[$i]['Petugas1'] = $Petugas1->Nama ?? null;
+            $DialyChecklist[$i]['Petugas1NO'] = $Petugas1->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas2'] = $Petugas2->Nama ?? null;
+            $DialyChecklist[$i]['Petugas2NO'] = $Petugas2->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas3'] = $Petugas3->Nama ?? null;
+            $DialyChecklist[$i]['Petugas3NO'] = $Petugas3->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas4'] = $Petugas4->Nama ?? null;
+            $DialyChecklist[$i]['Petugas4NO'] = $Petugas4->noTELP ?? null;
+
+            $DialyChecklist[$i]['proses'] = $genset?->prosses ?? null;
+            $DialyChecklist[$i]['gen_on'] = $genset?->gen_on ?? null;
+            $DialyChecklist[$i]['gen_off'] = $genset?->gen_off ?? null;
+            $DialyChecklist[$i]['tanki_bulanan'] = $genset?->tanki_bulanan ?? null;
+            $DialyChecklist[$i]['tangki_harian'] = $genset?->tangki_harian ?? null;
+            $DialyChecklist[$i]['liter_harian'] = $genset?->liter_harian ?? null;
+            $DialyChecklist[$i]['liter_bulanan'] = $genset?->liter_bulanan ?? null;
+            $DialyChecklist[$i]['suhu'] = $genset?->suhu ?? null;
+            $DialyChecklist[$i]['hours_mater1'] = $genset?->hours_mater1 ?? null;
+            $DialyChecklist[$i]['hours_mater2'] = $genset?->hours_mater2 ?? null;
+            $DialyChecklist[$i]['date'] = $genset?->date ?? null;
+            $i++;
+        }
+
+        return response()->json($DialyChecklist);
+    }
+
+    public function SUKwh(Request $request)
+    {
+        $jenisReport = $request->query('jenis_report');
+        $tanggal = $request->query('tanggal');
+
+        if (!$jenisReport || !$tanggal) {
+            return response()->json(['error' => 'Parameter jenis_report dan tanggal wajib diisi.'], 400);
+        }
+
+        $startOfMonth = Carbon::parse($tanggal)->startOfMonth();
+        $endOfMonth = Carbon::parse($tanggal)->endOfMonth();
+
+        $data = DB::connection($this->connection)
+            ->table('report_info')
+            ->where('jenis_report', $jenisReport)
+            ->whereBetween('date_time', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+            ->orderBy('date_time')
+            ->get();
+
+        $DialyChecklist = [];
+        $i = 1;
+
+        foreach ($data as $item) {
+            $id = $item->no_report;
+            $me1 = $item->petugasME;
+            $me2 = $item->petugasME2;
+            $me3 = $item->petugasME3;
+            $me4 = $item->petugasME4;
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas1 = $this->getChecklistData('user_bio', 'id', $me1);
+            $Petugas2 = $this->getChecklistData('user_bio', 'id', $me2);
+            $Petugas3 = $this->getChecklistData('user_bio', 'id', $me3);
+            $Petugas4 = $this->getChecklistData('user_bio', 'id', $me4);
+
+
+            $suhu = $this->getChecklistData('report_suhu', 'id_report_suhu', $id);
+            $kwh = $this->getChecklistData('report_kwh', 'id_report_kwh', $id);
+
+            $DialyChecklist[$i]['tanggal'] = $item->date_time;
+            $datetime = Carbon::parse($DialyChecklist[$i]['tanggal']);
+            $DialyChecklist[$i]['tanggal_formatted'] = $datetime->translatedFormat('l, d-m-Y');
+            $DialyChecklist[$i]['jam'] = $datetime->format('H:i');
+
+            $DialyChecklist[$i]['Petugas1'] = $Petugas1->Nama ?? null;
+            $DialyChecklist[$i]['Petugas1NO'] = $Petugas1->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas2'] = $Petugas2->Nama ?? null;
+            $DialyChecklist[$i]['Petugas2NO'] = $Petugas2->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas3'] = $Petugas3->Nama ?? null;
+            $DialyChecklist[$i]['Petugas3NO'] = $Petugas3->noTELP ?? null;
+            $DialyChecklist[$i]['Petugas4'] = $Petugas4->Nama ?? null;
+            $DialyChecklist[$i]['Petugas4NO'] = $Petugas4->noTELP ?? null;
+            $DialyChecklist[$i]['RTrafo'] = $suhu?->RTrafo ?? null;
+            $DialyChecklist[$i]['RGenset'] = $suhu?->RGenset ?? null;
+            $DialyChecklist[$i]['RBattery'] = $suhu?->RBattery ?? null;
+            $DialyChecklist[$i]['RKontrol'] = $suhu?->RKontrol ?? null;
+            $DialyChecklist[$i]['RRan'] = $suhu?->RRan ?? null;
+            $DialyChecklist[$i]['RTransmissi'] = $suhu?->RTransmissi ?? null;
+            $DialyChecklist[$i]['RCore'] = $suhu?->RCore ?? null;
+            $DialyChecklist[$i]['bp'] = $kwh?->bp ?? null;
+            $DialyChecklist[$i]['lbp'] = $kwh?->lbp ?? null;
+            $DialyChecklist[$i]['kvar'] = $kwh?->kvar ?? null;
+            $DialyChecklist[$i]['total'] = $kwh?->total ?? null;
+            $i++;
+        }
         return response()->json($DialyChecklist);
     }
 

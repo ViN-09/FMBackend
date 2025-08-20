@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="checklist.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-
     <title>FACILITY MONITORING</title>
 </head>
 
@@ -17,133 +16,276 @@
         <div id="bodychecklist">
             <h1 id="title">CHECKLIST</h1>
             <div id="bodychecklist-header">
-                <input type="date" id="tanggalPicker" name="bulan" class="form-control" />
-                <button class="btn btn-primary" id="btnSearch">
-                    <i class="bi bi-search"></i>
-                </button>
+                <div id="bodychecklist-header-seaerch">
+                    <input type="date" id="tanggalPicker" name="bulan" class="form-control" />
+                    <button class="btn btn-primary" id="btnSearch">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                <div id="bodychecklist-header-SubMenu">
+                    <button class="btn btn-success" id="kwh">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <button class="btn btn-warning" id="pue">
+                        <i class="bi bi-card-checklist"></i>
+                    </button>
+                    <button class="btn btn-warning" id="gen1">
+                        <i class="bi bi-download"></i>
+                    </button>
+                    <button class="btn btn-warning" id="gen2">
+                        <i class="bi bi-download"></i>
+                    </button>
+                </div>
+
                 <div id="bodychecklist-header-extrabutton">
                     <button class="btn btn-success" id="btnCreate">
                         <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <button class="btn btn-warning" id="btnReport">
+                        <i class="bi bi-card-checklist"></i>
                     </button>
                     <button class="btn btn-warning" id="btnExport">
                         <i class="bi bi-download"></i>
                     </button>
                 </div>
+
             </div>
-            <div id="bodychecklist-body"></div>
+
+            <!-- Div untuk tabel utama & sub-tabel -->
+            <div id="bodychecklist-body" class="badan"></div>
+            <div id="bodychecklist-bodyGenset1" class="badan"></div>
+            <div id="bodychecklist-bodyGenset2" class="badan"></div>
+            <div id="bodychecklist-bodySKWH" class="badan"></div>
+        </div>
+
+        <!-- Popup modal -->
+        <div id="popupOverlay" class="popup-overlay"></div>
+        <div id="popupModal" class="popup-modal">
+            <div class="popup-header">
+                <h2>Report</h2>
+                <button class="popup-close">&times;</button>
+            </div>
+            <div id="report-selector"></div>
+            <div class="popup-body">
+                <p>Isi konten report kamu di sini...</p>
+            </div>
         </div>
     </main>
 
     <script src="js/sidebar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/locale/id.js"></script>
     <script>
-        const ttc = localStorage.getItem('ttc');
-        console.log(ttc);
-
-        const container = document.getElementById('bodychecklist-body');
-        const tanggalInput = document.getElementById('tanggalPicker');
-        const btnSearch = document.getElementById('btnSearch');
-
-        function formatDate(date) {
-            const y = date.getFullYear();
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            const d = String(date.getDate()).padStart(2, '0');
-            return `${y}-${m}-${d}`;
-        }
-
-        async function loadChecklistTable(tanggal) {
-            const apiURL = `http://127.0.0.1:8000/api/${ttc}/checklist/ChecklistPUE?jenis_report=Ceklist&tanggal=${tanggal}`;
-            try {
-                const response = await fetch(apiURL);
-                if (!response.ok) throw new Error('Gagal ambil data');
-
-                const data = await response.json();
-
-                if (!data || Object.keys(data).length === 0) {
-                    container.innerHTML = '<p>Tidak ada data untuk tanggal tersebut.</p>';
-                    return;
-                }
-
-                const firstKey = Object.keys(data)[0];
-                const columns = Object.keys(data[firstKey]);
-
-                const table = document.createElement('table');
-                table.style.width = '100%';
-                table.style.borderCollapse = 'collapse';
-                table.border = '1';
-
-                const thead = document.createElement('thead');
-                const headerRow = document.createElement('tr');
-                columns.forEach(col => {
-                    const th = document.createElement('th');
-                    th.innerText = col.replace(/_/g, ' ').toUpperCase();
-                    headerRow.appendChild(th);
-                });
-                thead.appendChild(headerRow);
-                table.appendChild(thead);
-
-                const tbody = document.createElement('tbody');
-                Object.values(data).forEach(rowData => {
-                    const row = document.createElement('tr');
-                    columns.forEach(col => {
-                        const td = document.createElement('td');
-                        td.innerText = rowData[col];
-                        row.appendChild(td);
-                    });
-                    tbody.appendChild(row);
-                });
-                table.appendChild(tbody);
-
-                container.innerHTML = '';
-                container.appendChild(table);
-            } catch (error) {
-                container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
-            }
-        }
-
-        // Set tanggal hari ini
-        const today = new Date();
-        tanggalInput.value = formatDate(today);
-
-        // Load data pertama kali dengan tanggal hari ini
-        loadChecklistTable(tanggalInput.value);
-
-        // Event klik tombol Search
-        btnSearch.addEventListener('click', () => {
-            const tanggal = tanggalInput.value;
-            if (tanggal) {
-                loadChecklistTable(tanggal);
-            } else {
-                alert('Pilih tanggal dulu ya!');
-            }
+    // === Init Hide/Show Body ===
+    function hideAllBadan() {
+        document.querySelectorAll('.badan').forEach(el => {
+            el.classList.add('hide');
         });
+    }
 
-        // Auto load saat tanggal berubah tanpa klik tombol
-        tanggalInput.addEventListener('change', () => {
-            const tanggal = tanggalInput.value;
-            if (tanggal) {
-                loadChecklistTable(tanggal);
-            }
-        });
+    function showBadanById(id) {
+        hideAllBadan();
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hide');
+    }
 
-        document.getElementById('btnExport').addEventListener('click', () => {
-            // Cari elemen tabel yang mau di-export
-            const table = document.querySelector('#bodychecklist-body table');
-            if (!table) {
-                alert('Data tabel belum tersedia untuk diexport!');
+    // Awal load → tampilkan PUE
+    hideAllBadan();
+    showBadanById("bodychecklist-body");
+
+    // === Variabel Global ===
+    let reportCeklist = [];
+    let reportGenset1 = [];
+    let reportGenset2 = [];
+    let reportKWH = [];
+
+    const ttc = localStorage.getItem('ttc');
+    const tanggalInput = document.getElementById('tanggalPicker');
+    const btnSearch = document.getElementById('btnSearch');
+
+    // Format date ke YYYY-MM-DD
+    function formatDate(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    // === Fungsi generic fetch & render tabel ===
+    async function loadChecklistSubTable(apiURL, containerId, addTo) {
+        const container = document.getElementById(containerId);
+        try {
+            const response = await fetch(apiURL);
+            if (!response.ok) throw new Error('Gagal ambil data');
+            const data = await response.json();
+
+            if (!data || Object.keys(data).length === 0) {
+                container.innerHTML = '<p>Tidak ada data untuk tanggal tersebut.</p>';
                 return;
             }
 
-            // Konversi tabel HTML ke workbook SheetJS
-            const workbook = XLSX.utils.table_to_book(table, { sheet: "Checklist" });
+            const firstKey = Object.keys(data)[0];
+            let columns = Object.keys(data[firstKey]);
 
-            // Simpan workbook jadi file Excel dan trigger download
-            XLSX.writeFile(workbook, 'checklist_export_' + new Date().toISOString().slice(0, 10) + '.xlsx');
+            // daftar key yang di-skip
+            const skipKeys = [
+                "ups1","ups2","rec1","rec2","rec3","rec4","rec5","rec6","rec7","rec8","rec9",
+                "TrafoCaps","GensetTotal","PACTotal","RECTotal","UPSTotal",
+                "GensetF","PACF","RECF","UPSF","Cuaca","tanggal_formatted","jam",
+                "Petugas1","Petugas1NO","Petugas2","Petugas2NO","Petugas3","Petugas3NO",
+                "Petugas4","Petugas4NO"
+            ];
+            columns = columns.filter(col => !skipKeys.includes(col));
+
+            // Build table
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.border = '1';
+
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            columns.forEach(col => {
+                const th = document.createElement('th');
+                th.innerText = col.replace(/_/g, ' ').toUpperCase();
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            let indexROW=0;
+            Object.values(data).forEach(rowData => {
+                const row = document.createElement('tr');
+                columns.forEach(col => {
+                    const td = document.createElement('td');
+                    td.innerText = rowData[col];
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+                indexROW++;
+            });
+            table.appendChild(tbody);
+
+            container.innerHTML = '';
+            container.appendChild(table);
+            console.log(indexROW)
+
+            // Simpan ke variabel global
+            switch (addTo) {
+                case 'genset1': reportGenset1 = data[indexROW]; break;
+                case 'genset2': reportGenset2 = data[indexROW]; break;
+                case 'pue': reportCeklist = data[indexROW]; break;
+                case 'kwh': reportKWH = data[indexROW]; break;
+            }
+
+            console.log(reportCeklist)
+
+        } catch (error) {
+            container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+        }
+    }
+
+    // === Load semua tabel berdasarkan tanggal ===
+    async function loadAllTables(tanggal) {
+        const apiMainURL = `http://127.0.0.1:8000/api/${ttc}/checklist/ChecklistPUE?jenis_report=Ceklist&tanggal=${tanggal}`;
+        loadChecklistSubTable(apiMainURL, 'bodychecklist-body', "pue");
+
+        const apiG1URL = `http://127.0.0.1:8000/api/${ttc}/checklist/Genset1?jenis_report=Genset1&tanggal=${tanggal}`;
+        loadChecklistSubTable(apiG1URL, 'bodychecklist-bodyGenset1', "genset1");
+
+        const apiG2URL = `http://127.0.0.1:8000/api/${ttc}/checklist/Genset2?jenis_report=Genset2&tanggal=${tanggal}`;
+        loadChecklistSubTable(apiG2URL, 'bodychecklist-bodyGenset2', "genset2");
+
+        const jenisReport = "KWH & Suhu";
+        const apiKWHURL = `http://127.0.0.1:8000/api/${ttc}/checklist/SKWH?jenis_report=${encodeURIComponent(jenisReport)}&tanggal=${tanggal}`;
+        loadChecklistSubTable(apiKWHURL, 'bodychecklist-bodySKWH', "kwh");
+    }
+
+    // === Inisialisasi tanggal ===
+    const today = new Date();
+    tanggalInput.value = formatDate(today);
+    loadAllTables(tanggalInput.value);
+
+    btnSearch.addEventListener('click', () => {
+        if (tanggalInput.value) loadAllTables(tanggalInput.value);
+    });
+    tanggalInput.addEventListener('change', () => {
+        if (tanggalInput.value) loadAllTables(tanggalInput.value);
+    });
+
+    // === Navigasi Submenu Button ===
+    const subMenuContainer = document.getElementById('bodychecklist-header-SubMenu');
+    if (subMenuContainer) {
+        subMenuContainer.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                switch (btn.id) {
+                    case 'pue': showBadanById("bodychecklist-body"); break;
+                    case 'gen1': showBadanById("bodychecklist-bodyGenset1"); break;
+                    case 'gen2': showBadanById("bodychecklist-bodyGenset2"); break;
+                    case 'kwh': showBadanById("bodychecklist-bodySKWH"); break;
+                }
+            });
+        });
+    }
+
+    // === Export tabel utama (PUE) ===
+    document.getElementById('btnExport').addEventListener('click', () => {
+        const table = document.querySelector('#bodychecklist-body table');
+        if (!table) return alert('Data tabel belum tersedia untuk diexport!');
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Checklist" });
+        XLSX.writeFile(wb, `checklist_export_${new Date().toISOString().slice(0,10)}.xlsx`);
+    });
+
+    // === Tombol navigasi Create ===
+    document.getElementById('btnCreate').addEventListener('click', () => {
+        window.location.href = 'checklist/main.html';
+    });
+
+    // === Popup modal report ===
+    document.addEventListener("DOMContentLoaded", () => {
+        const btnReport = document.getElementById('btnReport');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupModal = document.getElementById('popupModal');
+        const popupClose = document.querySelector('.popup-close');
+
+        btnReport.addEventListener('click', () => {
+            popupOverlay.style.display = 'block';
+            popupModal.style.display = 'block';
+        });
+        popupClose.addEventListener('click', () => {
+            popupOverlay.style.display = 'none';
+            popupModal.style.display = 'none';
+        });
+        popupOverlay.addEventListener('click', () => {
+            popupOverlay.style.display = 'none';
+            popupModal.style.display = 'none';
         });
 
-        document.getElementById('btnCreate').addEventListener('click', () => {
-            window.location.href = 'checklist/main.html';
-        });
-    </script>
+        // Render tombol report
+        const reportSelector = document.getElementById("report-selector");
+        if (ttc === 'ttc_teling') {
+            reportSelector.innerHTML = `
+                <button class="btn btn-warning" id="rep_kwh">KWH & Suhu</button>
+                <button class="btn btn-warning" id="rep_checklist">Checklist</button>
+                <button class="btn btn-warning" id="rep_genset1">Genset1</button>
+                <button class="btn btn-warning" id="rep_genset2">Genset2</button>
+            `;
+            reportSelector.querySelectorAll("button").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    reportSelector.querySelectorAll("button").forEach(b => {
+                        b.classList.remove("btn-primary","active");
+                        if (b.id !== "btnCreate") b.classList.add("btn-warning");
+                    });
+                    btn.classList.remove("btn-warning");
+                    btn.classList.add("btn-primary","active");
+                });
+            });
+        }
+    });
+</script>
+
 </body>
 
 </html>

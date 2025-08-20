@@ -20,7 +20,11 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/list_dp_tables/{table_name}/{kolom_name}/{value}', [CheckListTeling::class, 'getDivisionData']);
         Route::post('/sendInfoReport', [CheckListTeling::class, 'reciveReportInfo']);
         Route::get('/{table}/{kolom}', [CheckListTeling::class, 'getChecklistDataToJSON']);
-       Route::post('/updateStatus', [CheckListTeling::class, 'updateLatestReportStatus']);
+        Route::post('/updateStatus', [CheckListTeling::class, 'updateLatestReportStatus']);
+        Route::get('/Genset1', [CheckListTeling::class, 'Genset1']);
+        Route::get('/Genset2', [CheckListTeling::class, 'Genset2']);
+        Route::get('/SKWH', [CheckListTeling::class, 'SUKwh']);
+
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);
