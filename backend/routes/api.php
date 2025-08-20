@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 
+
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
 
@@ -19,6 +20,7 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/list_dp_tables/{table_name}/{kolom_name}/{value}', [CheckListTeling::class, 'getDivisionData']);
         Route::post('/sendInfoReport', [CheckListTeling::class, 'reciveReportInfo']);
         Route::get('/{table}/{kolom}', [CheckListTeling::class, 'getChecklistDataToJSON']);
+       Route::post('/updateStatus', [CheckListTeling::class, 'updateLatestReportStatus']);
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);

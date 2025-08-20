@@ -143,13 +143,40 @@ class checklist extends Controller
                         break;
                     case 'report_lvmdp2':
                         $columns['id_report_lvmdp2'] = $id;
-                    break;
+                        break;
                     case 'report_lvmdp1':
                         $columns['id_report_lvmdp1'] = $id;
-                    break;
+                        break;
                     case 'load_trafo':
                         $columns['id'] = $id;
-                    break;
+                        break;
+                    case 'rec1':
+                    case 'rec2':
+                    case 'rec3':
+                    case 'rec4':
+                    case 'rec5':
+                    case 'rec6':
+                    case 'rec7':
+                    case 'rec8':
+                    case 'rec9':
+                    case 'dcpdu_1':
+                    case 'dcpdu_2':
+                    case 'dcpdu_3':
+                    case 'dcpdu_4':
+                    case 'ups1':
+                    case 'ups2':
+                    case 'pac1':
+                    case 'pac2':
+                    case 'pac3':
+                    case 'pac4':
+                    case 'pac5':
+                    case 'pac6':
+                    case 'pac7':
+                    case 'pac8':
+                    case 'pac9':
+                    case 'pac10':
+                        $columns['id'] = $id;
+                        break;
                     default:
                         // kalau gak ada perlakuan khusus, biarin aja
                         break;
@@ -176,6 +203,20 @@ class checklist extends Controller
             ], 500);
         }
     }
+
+    public function updateLatestReportStatus()
+{
+    DB::table('report_info')
+        ->orderByDesc('no_report')
+        ->limit(1)
+        ->update(['status' => 1]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Status pada record terbaru berhasil diupdate menjadi 3'
+    ]);
+}
+
 
 
     // Ambil daily checklist PUE

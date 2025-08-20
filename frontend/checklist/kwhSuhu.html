@@ -252,7 +252,27 @@
                                 .catch(err => {
                                     console.error("Error kirim data:", err);
                                 });
-                            window.location.href = "../checklist.html";
+                            fetch('http://127.0.0.1:8000/api/ttc_teling/checklist/updateStatus', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({}) // kosong karena status langsung = 3
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // Redirect ke checklist.html
+                                        window.location.href = "../checklist.html";
+                                    } else {
+                                        console.error("Gagal update status:", data.message);
+                                        alert("Gagal update status: " + data.message);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error("Error fetch:", err);
+                                    alert("Terjadi kesalahan saat menghubungi server.");
+                                });
                             break;
                         case 'Ceklist':
                             window.location.href = "power.html";

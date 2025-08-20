@@ -216,7 +216,7 @@ function submitFormDataNested(formId) {
       console.log("Response from API:", response);
       const receivedObj = response.received;
       sessionStorage.setItem('power', JSON.stringify(receivedObj));
-      if(response.error=='success'){
+      if(response.status=='success'){
           window.location.href = "it.html";
       }
     })
