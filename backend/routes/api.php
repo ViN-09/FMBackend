@@ -13,6 +13,8 @@ use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
 
+use App\Http\Controllers\ttc_paniki_controllers\monitoring as MonitoringPaniki;
+
 Route::prefix('ttc_teling')->group(function () {
     Route::prefix('checklist')->group(function () {
         Route::get('/ChecklistPUE', [CheckListTeling::class, 'checklistPUE']);
@@ -43,5 +45,9 @@ Route::prefix('ttc_paniki')->group(function () {
         Route::get('/list_dp_tables', [DataPotensiPaniki::class, 'listDpTables']);
         Route::post('/update_datapotensi/{table}', [DataPotensiPaniki::class, 'updateDatapotensi']);
     });
+    Route::prefix('monitoring')->group(function () {
+        Route::get('/last-cache-pue', [MonitoringPaniki::class, 'getLastCachePue']);
+        Route::get('/all-pue', [MonitoringPaniki::class, 'getAllPue']);
+});
     Route::get('/hello', [DataPotensiPaniki::class, 'hello']);
 });
