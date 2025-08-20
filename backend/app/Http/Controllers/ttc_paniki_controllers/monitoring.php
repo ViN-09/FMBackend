@@ -9,11 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class DataPueController extends Controller
 {
-    protected $connection = 'mysql3';  // koneksi database ketiga
-
-    /**
-     * Ambil data terakhir dari tabel cache_pue
-     */
+    protected $connection = 'mysql3';
     public function getLastCachePue()
     {
         try {
@@ -32,9 +28,6 @@ class DataPueController extends Controller
         }
     }
 
-    /**
-     * Ambil seluruh data dari tabel pue
-     */
     public function getAllPue()
     {
         try {
