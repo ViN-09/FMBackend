@@ -7,9 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class DataPueController extends Controller
+class monitoring extends Controller
 {
-    protected $connection = 'mysql3';
+    protected $connection = 'mysql2';
     public function getLastCachePue()
     {
         try {
