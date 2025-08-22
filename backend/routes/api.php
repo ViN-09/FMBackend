@@ -52,6 +52,9 @@ Route::prefix('ttc_paniki')->group(function () {
     Route::prefix('monitoring')->group(function () {
         Route::get('/last-cache-pue', [MonitoringPaniki::class, 'getLastCachePue']);
         Route::get('/all-pue', [MonitoringPaniki::class, 'getAllPue']);
+        Route::get('/average-pue', [MonitoringPaniki::class, 'getAverageData']);
+        Route::get('/suhu', [MonitoringPaniki::class, 'getLastSuhu']);
+        Route::get('/bbm', [MonitoringPaniki::class, 'getLastTank']);
 });
     Route::get('/hello', [DataPotensiPaniki::class, 'hello']);
 });
