@@ -8,11 +8,11 @@ use Carbon\Carbon;
 // Alias untuk data_potensi dari dua namespace berbeda
 use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
+use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
 
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
-
 use App\Http\Controllers\ttc_paniki_controllers\monitoring as MonitoringPaniki;
 
 Route::prefix('ttc_teling')->group(function () {
@@ -33,6 +33,12 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/generate_datapotensi/{table}', [DataPotensiTeling::class, 'generateDatapotensi']);
         Route::get('/generate_columns/{table}', [DataPotensiTeling::class, 'generateColumns']);
         Route::post('/update_datapotensi/{table}', [DataPotensiTeling::class, 'updateDatapotensi']);
+    });
+    Route::prefix('datapush')->group(function () {
+        Route::get('/hello', [ReciverTeling::class, 'hello']);
+        Route::post('/reciver', [ReciverTeling::class, 'receiveRawJson']);
+        Route::get('/avgDPM', [ReciverTeling::class, 'avgDPM']);
+        Route::get('/jam', [ReciverTeling::class, 'clock']);
     });
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
     ///
