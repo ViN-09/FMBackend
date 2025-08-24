@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 21, 2025 at 12:17 AM
+-- Generation Time: Aug 24, 2025 at 08:50 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -93,6 +93,52 @@ INSERT INTO `book3` (`COL 1`, `COL 2`, `COL 3`, `COL 4`, `COL 5`, `COL 6`, `COL 
 ('47', 'Jalur kabel instalasi penerangan halaman', 'Jalur kabel instalasi penerangan halaman sudah lama lbh dari 15 tahun ( terpasang dari 2005) dan sudah ada putus', 'Bila terus dibiarkan akan menyebabkan\nkorslet', 'Perlu adanya modernisasi pada jalur\nkabel penerangan halaman', 'Sudah dilakukan modernisasi jalur kabel\npenerangan (10/05/2025)', 'Closed', 'Power'),
 ('48', 'Bocor pada dinding bangunan', 'terdapat beberapa titik kebocoran diantaranya Rg Operator- Lobby disebabkan oleh retakan pada dinding bangunan', 'Bila terus dibiarkan akan membuat\nkerusakan yg lebih parah dan\nmengganggu oprasional', 'Perlu adanya perbaikan pada sumber\nkebocoran', '', 'Open', 'Building '),
 ('49', 'tanggal pada camera eksisting tidak realtime jika Disconnect', 'harus merubah tanggal per ip tiap camera', 'Mengganggu oprasional monitoring cctv', 'Perlu dilakukan perbaikan', '', 'open', 'Power');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache_data_pue`
+--
+
+CREATE TABLE `cache_data_pue` (
+  `kw_node1` int NOT NULL,
+  `kv_node1` int NOT NULL,
+  `kw_node2` int NOT NULL,
+  `kv_node2` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `cache_data_pue`
+--
+
+INSERT INTO `cache_data_pue` (`kw_node1`, `kv_node1`, `kw_node2`, `kv_node2`) VALUES
+(6, 1, 17, 12),
+(3, 3, 15, 11),
+(4, 3, 17, 17),
+(3, 9, 10, 18),
+(5, 8, 15, 17),
+(5, 7, 14, 13),
+(4, 9, 13, 16),
+(2, 5, 17, 12),
+(8, 6, 13, 17),
+(9, 7, 17, 11),
+(5, 4, 18, 10),
+(2, 6, 14, 14),
+(5, 8, 15, 15),
+(1, 4, 15, 18),
+(2, 3, 11, 18),
+(7, 8, 14, 14),
+(7, 8, 16, 14),
+(5, 8, 13, 12),
+(9, 9, 16, 17),
+(6, 4, 11, 14),
+(4, 8, 11, 11),
+(5, 5, 16, 11),
+(4, 7, 12, 17),
+(8, 4, 12, 18),
+(1, 9, 13, 11),
+(6, 1, 11, 12),
+(1, 1, 17, 17);
 
 -- --------------------------------------------------------
 
@@ -380,6 +426,62 @@ CREATE TABLE `ceklist_tahunan_pac10` (
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `data_pue`
+--
+
+CREATE TABLE `data_pue` (
+  `date` datetime NOT NULL,
+  `kw_node1` float NOT NULL,
+  `kv_node1` float NOT NULL,
+  `kw_node2` float NOT NULL,
+  `kv_node2` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `data_pue`
+--
+
+INSERT INTO `data_pue` (`date`, `kw_node1`, `kv_node1`, `kw_node2`, `kv_node2`) VALUES
+('2025-08-23 10:53:49', 5.1318, 4.9743, 13.9534, 13.9582),
+('2025-08-23 11:01:54', 4.8933, 4.9665, 13.8975, 13.9979),
+('2025-08-23 11:01:59', 4.4, 5, 14.2, 12.2),
+('2025-08-23 11:02:04', 6.6, 3.2, 16.2, 14.6),
+('2025-08-23 11:02:09', 5.4, 5.4, 15.2, 14.6),
+('2025-08-23 11:02:14', 3.6, 6.2, 13.4, 15.6),
+('2025-08-23 11:02:19', 4.8, 4.2, 15.4, 13.4),
+('2025-08-23 11:02:24', 5.8, 7, 13.4, 15.4),
+('2025-08-23 11:02:29', 8, 3, 16, 12),
+('2025-08-23 11:02:34', 4.6, 4.4, 15.4, 13.4),
+('2025-08-23 11:03:34', 4.9492, 5.0169, 14.0169, 14.5763),
+('2025-08-23 11:04:35', 4.7627, 4.322, 14.1864, 14.4068),
+('2025-08-23 11:05:34', 4.8136, 5.2712, 14.0339, 13.9831),
+('2025-08-23 11:06:34', 4.8276, 5.2241, 13.1552, 13.9828),
+('2025-08-23 11:07:34', 4.9, 5.0667, 13.8, 13.7),
+('2025-08-23 11:08:35', 4.4576, 4.339, 14.0847, 14.0339),
+('2025-08-23 11:09:34', 4.6102, 4.8983, 13.5763, 14.678),
+('2025-08-23 11:10:34', 4.9831, 4.9661, 14.0508, 13.9322),
+('2025-08-23 11:11:35', 5.4655, 4.9655, 14.0172, 14.2931),
+('2025-08-23 11:12:35', 4.9831, 4.678, 14.3559, 13.8644),
+('2025-08-23 11:13:35', 4.6949, 5.339, 13.7966, 13.7627),
+('2025-08-23 11:14:34', 5.7119, 4.678, 14, 14.2712),
+('2025-08-23 11:15:35', 5.1552, 5.6034, 14, 13.5345),
+('2025-08-23 11:16:35', 4.7797, 5.5593, 14.1864, 13.6949),
+('2025-08-23 11:17:35', 5.1695, 5.2203, 13.9492, 12.9831),
+('2025-08-23 11:18:35', 4.9492, 5.2034, 13.7458, 14.0508),
+('2025-08-23 11:19:35', 5.2373, 4.7966, 14.2712, 13.8475),
+('2025-08-23 11:20:35', 4.7797, 5, 14.4746, 14.339),
+('2025-08-23 14:22:49', 6.1364, 5.1818, 14.9545, 13.6136),
+('2025-08-23 19:17:04', 6, 5.8, 11.8, 16.4),
+('2025-08-23 22:18:41', 5.6923, 5.4615, 13.8462, 13.9231),
+('2025-08-24 16:20:29', 4.3333, 5.6667, 14.6667, 13),
+('2025-08-24 16:45:04', 4.7119, 5.1864, 13.4576, 14.2034),
+('2025-08-24 16:46:59', 4.8522, 4.7304, 13.4174, 14.0522),
+('2025-08-24 16:48:59', 5.1176, 4.8067, 14.2185, 14.3866),
+('2025-08-24 16:49:59', 5.1864, 5.3559, 13.8305, 14.0847);
 
 -- --------------------------------------------------------
 
@@ -20540,7 +20642,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `report_info`
 --
 ALTER TABLE `report_info`
-  MODIFY `no_report` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1281;
+  MODIFY `no_report` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1282;
 
 --
 -- AUTO_INCREMENT for table `sld`
