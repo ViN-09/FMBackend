@@ -20,16 +20,16 @@
     </main>
 
 
-    <!-- `http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
-`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${item}`
-`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList` -->
+    <!-- `http://${host}/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
+`http://${host}/api/${ttc}/data_potensi/generate_columns/${item}`
+`http://${host}/api/${ttc}/checklist/tableReportList` -->
     <script src="loder.js"></script>
     <script>
 const ttc = localStorage.getItem('ttc');
 const jenisReport = sessionStorage.getItem('jenisReport');
 console.log(jenisReport);
 
-fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
+fetch(`http://${host}/api/${ttc}/checklist/tableReportList`)
   .then(res => res.json())
   .then(async data => {
     const form = document.getElementById("myForm");
@@ -51,7 +51,7 @@ fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
       // >>> hanya untuk parent trafo_c & load_trafo ambil value dari API
       if (["trafof_c", "load_trafo"].includes(item)) {
         try {
-          const response = await fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/${item}/id`);
+          const response = await fetch(`http://${host}/api/${ttc}/checklist/${item}/id`);
           const detailData = await response.json();
 
           console.log(`Data perangkat [${item}] :`, detailData);
@@ -95,7 +95,7 @@ function formatLabel(text) {
 async function generateInputRow(idParent) {
   try {
     const form = document.getElementById(idParent);
-    const resCols = await fetch(`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${idParent}`);
+    const resCols = await fetch(`http://${host}/api/${ttc}/data_potensi/generate_columns/${idParent}`);
     const columns = await resCols.json();
 
     columns.forEach(col => {
@@ -206,7 +206,7 @@ function submitFormDataNested(formId) {
 
   console.log("Nested Form Data:", formData);
 
-  fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/sendInfoReport`, {
+  fetch(`http://${host}/api/${ttc}/checklist/sendInfoReport`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData)

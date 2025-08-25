@@ -67,7 +67,7 @@
             </div>
             <div id="report-selector"></div>
             <div class="popup-body">
-                <p>Isi konten report kamu di sini...</p>
+                <pre id="isi_report"></pre>
             </div>
         </div>
     </main>
@@ -77,214 +77,378 @@
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/locale/id.js"></script>
     <script>
-    // === Init Hide/Show Body ===
-    function hideAllBadan() {
-        document.querySelectorAll('.badan').forEach(el => {
-            el.classList.add('hide');
-        });
-    }
-
-    function showBadanById(id) {
-        hideAllBadan();
-        const el = document.getElementById(id);
-        if (el) el.classList.remove('hide');
-    }
-
-    // Awal load → tampilkan PUE
-    hideAllBadan();
-    showBadanById("bodychecklist-body");
-
-    // === Variabel Global ===
-    let reportCeklist = [];
-    let reportGenset1 = [];
-    let reportGenset2 = [];
-    let reportKWH = [];
-
-    const ttc = localStorage.getItem('ttc');
-    const tanggalInput = document.getElementById('tanggalPicker');
-    const btnSearch = document.getElementById('btnSearch');
-
-    // Format date ke YYYY-MM-DD
-    function formatDate(date) {
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, '0');
-        const d = String(date.getDate()).padStart(2, '0');
-        return `${y}-${m}-${d}`;
-    }
-
-    // === Fungsi generic fetch & render tabel ===
-    async function loadChecklistSubTable(apiURL, containerId, addTo) {
-        const container = document.getElementById(containerId);
-        try {
-            const response = await fetch(apiURL);
-            if (!response.ok) throw new Error('Gagal ambil data');
-            const data = await response.json();
-
-            if (!data || Object.keys(data).length === 0) {
-                container.innerHTML = '<p>Tidak ada data untuk tanggal tersebut.</p>';
-                return;
-            }
-
-            const firstKey = Object.keys(data)[0];
-            let columns = Object.keys(data[firstKey]);
-
-            // daftar key yang di-skip
-            const skipKeys = [
-                "ups1","ups2","rec1","rec2","rec3","rec4","rec5","rec6","rec7","rec8","rec9",
-                "TrafoCaps","GensetTotal","PACTotal","RECTotal","UPSTotal",
-                "GensetF","PACF","RECF","UPSF","Cuaca","tanggal_formatted","jam",
-                "Petugas1","Petugas1NO","Petugas2","Petugas2NO","Petugas3","Petugas3NO",
-                "Petugas4","Petugas4NO"
-            ];
-            columns = columns.filter(col => !skipKeys.includes(col));
-
-            // Build table
-            const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.borderCollapse = 'collapse';
-            table.border = '1';
-
-            const thead = document.createElement('thead');
-            const headerRow = document.createElement('tr');
-            columns.forEach(col => {
-                const th = document.createElement('th');
-                th.innerText = col.replace(/_/g, ' ').toUpperCase();
-                headerRow.appendChild(th);
+        // === Init Hide/Show Body ===
+        function hideAllBadan() {
+            document.querySelectorAll('.badan').forEach(el => {
+                el.classList.add('hide');
             });
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
-
-            const tbody = document.createElement('tbody');
-            let indexROW=0;
-            Object.values(data).forEach(rowData => {
-                const row = document.createElement('tr');
-                columns.forEach(col => {
-                    const td = document.createElement('td');
-                    td.innerText = rowData[col];
-                    row.appendChild(td);
-                });
-                tbody.appendChild(row);
-                indexROW++;
-            });
-            table.appendChild(tbody);
-
-            container.innerHTML = '';
-            container.appendChild(table);
-            console.log(indexROW)
-
-            // Simpan ke variabel global
-            switch (addTo) {
-                case 'genset1': reportGenset1 = data[indexROW]; break;
-                case 'genset2': reportGenset2 = data[indexROW]; break;
-                case 'pue': reportCeklist = data[indexROW]; break;
-                case 'kwh': reportKWH = data[indexROW]; break;
-            }
-
-            console.log(reportCeklist)
-
-        } catch (error) {
-            container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
         }
-    }
 
-    // === Load semua tabel berdasarkan tanggal ===
-    async function loadAllTables(tanggal) {
-        const apiMainURL = `http://127.0.0.1:8000/api/${ttc}/checklist/ChecklistPUE?jenis_report=Ceklist&tanggal=${tanggal}`;
-        loadChecklistSubTable(apiMainURL, 'bodychecklist-body', "pue");
+        function showBadanById(id) {
+            hideAllBadan();
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hide');
+        }
 
-        const apiG1URL = `http://127.0.0.1:8000/api/${ttc}/checklist/Genset1?jenis_report=Genset1&tanggal=${tanggal}`;
-        loadChecklistSubTable(apiG1URL, 'bodychecklist-bodyGenset1', "genset1");
+        // Awal load → tampilkan PUE
+        hideAllBadan();
+        showBadanById("bodychecklist-body");
 
-        const apiG2URL = `http://127.0.0.1:8000/api/${ttc}/checklist/Genset2?jenis_report=Genset2&tanggal=${tanggal}`;
-        loadChecklistSubTable(apiG2URL, 'bodychecklist-bodyGenset2', "genset2");
+        // === Variabel Global ===
+        let reportCeklist = [];
+        let reportGenset1 = [];
+        let reportGenset2 = [];
+        let reportKWH = [];
 
-        const jenisReport = "KWH & Suhu";
-        const apiKWHURL = `http://127.0.0.1:8000/api/${ttc}/checklist/SKWH?jenis_report=${encodeURIComponent(jenisReport)}&tanggal=${tanggal}`;
-        loadChecklistSubTable(apiKWHURL, 'bodychecklist-bodySKWH', "kwh");
-    }
+        const ttc = localStorage.getItem('ttc');
+        const host = localStorage.getItem('host');
+        console.log(host)
+        const tanggalInput = document.getElementById('tanggalPicker');
+        const btnSearch = document.getElementById('btnSearch');
 
-    // === Inisialisasi tanggal ===
-    const today = new Date();
-    tanggalInput.value = formatDate(today);
-    loadAllTables(tanggalInput.value);
+        // Format date ke YYYY-MM-DD
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
 
-    btnSearch.addEventListener('click', () => {
-        if (tanggalInput.value) loadAllTables(tanggalInput.value);
-    });
-    tanggalInput.addEventListener('change', () => {
-        if (tanggalInput.value) loadAllTables(tanggalInput.value);
-    });
+        // === Fungsi generic fetch & render tabel ===
+        async function loadChecklistSubTable(apiURL, containerId, addTo) {
+            const container = document.getElementById(containerId);
+            try {
+                const response = await fetch(apiURL);
+                if (!response.ok) throw new Error('Gagal ambil data');
+                const data = await response.json();
 
-    // === Navigasi Submenu Button ===
-    const subMenuContainer = document.getElementById('bodychecklist-header-SubMenu');
-    if (subMenuContainer) {
-        subMenuContainer.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                switch (btn.id) {
-                    case 'pue': showBadanById("bodychecklist-body"); break;
-                    case 'gen1': showBadanById("bodychecklist-bodyGenset1"); break;
-                    case 'gen2': showBadanById("bodychecklist-bodyGenset2"); break;
-                    case 'kwh': showBadanById("bodychecklist-bodySKWH"); break;
+                if (!data || Object.keys(data).length === 0) {
+                    container.innerHTML = '<p>Tidak ada data untuk tanggal tersebut.</p>';
+                    return;
                 }
+
+                const firstKey = Object.keys(data)[0];
+                let columns = Object.keys(data[firstKey]);
+
+                // daftar key yang di-skip
+                const skipKeys = [
+                    "ups1", "ups2", "rec1", "rec2", "rec3", "rec4", "rec5", "rec6", "rec7", "rec8", "rec9",
+                    "TrafoCaps", "GensetTotal", "PACTotal", "RECTotal", "UPSTotal",
+                    "GensetF", "PACF", "RECF", "UPSF", "Cuaca", "tanggal_formatted", "jam",
+                    "Petugas1", "Petugas1NO", "Petugas2", "Petugas2NO", "Petugas3", "Petugas3NO",
+                    "Petugas4", "Petugas4NO"
+                ];
+                columns = columns.filter(col => !skipKeys.includes(col));
+
+                // Build table
+                const table = document.createElement('table');
+                table.style.width = '100%';
+                table.style.borderCollapse = 'collapse';
+                table.border = '1';
+
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                columns.forEach(col => {
+                    const th = document.createElement('th');
+                    th.innerText = col.replace(/_/g, ' ').toUpperCase();
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                const tbody = document.createElement('tbody');
+                let indexROW = 0;
+                Object.values(data).forEach(rowData => {
+                    const row = document.createElement('tr');
+                    columns.forEach(col => {
+                        const td = document.createElement('td');
+                        td.innerText = rowData[col];
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                    indexROW++;
+                });
+                table.appendChild(tbody);
+
+                container.innerHTML = '';
+                container.appendChild(table);
+                console.log(indexROW)
+
+                // Simpan ke variabel global
+                switch (addTo) {
+                    case 'genset1': reportGenset1 = data[indexROW]; break;
+                    case 'genset2': reportGenset2 = data[indexROW]; break;
+                    case 'pue': reportCeklist = data[indexROW]; break;
+                    case 'kwh': reportKWH = data[indexROW]; break;
+                }
+
+                console.log(reportCeklist)
+
+
+                ceklistTeling(reportCeklist)
+
+            } catch (error) {
+                container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+            }
+        }
+
+        // === Load semua tabel berdasarkan tanggal ===
+        async function loadAllTables(tanggal) {
+            const apiMainURL = `http://${host}/api/${ttc}/checklist/ChecklistPUE?jenis_report=Ceklist&tanggal=${tanggal}`;
+            loadChecklistSubTable(apiMainURL, 'bodychecklist-body', "pue");
+
+            const apiG1URL = `http://${host}/api/${ttc}/checklist/Genset1?jenis_report=Genset1&tanggal=${tanggal}`;
+            loadChecklistSubTable(apiG1URL, 'bodychecklist-bodyGenset1', "genset1");
+
+            const apiG2URL = `http://${host}/api/${ttc}/checklist/Genset2?jenis_report=Genset2&tanggal=${tanggal}`;
+            loadChecklistSubTable(apiG2URL, 'bodychecklist-bodyGenset2', "genset2");
+
+            const jenisReport = "KWH & Suhu";
+            const apiKWHURL = `http://${host}/api/${ttc}/checklist/SKWH?jenis_report=${encodeURIComponent(jenisReport)}&tanggal=${tanggal}`;
+            loadChecklistSubTable(apiKWHURL, 'bodychecklist-bodySKWH', "kwh");
+        }
+
+        // === Inisialisasi tanggal ===
+        const today = new Date();
+        tanggalInput.value = formatDate(today);
+        loadAllTables(tanggalInput.value);
+
+        btnSearch.addEventListener('click', () => {
+            if (tanggalInput.value) loadAllTables(tanggalInput.value);
+        });
+        tanggalInput.addEventListener('change', () => {
+            if (tanggalInput.value) loadAllTables(tanggalInput.value);
+        });
+
+        // === Navigasi Submenu Button ===
+        const subMenuContainer = document.getElementById('bodychecklist-header-SubMenu');
+        if (subMenuContainer) {
+            subMenuContainer.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    switch (btn.id) {
+                        case 'pue': showBadanById("bodychecklist-body"); break;
+                        case 'gen1': showBadanById("bodychecklist-bodyGenset1"); break;
+                        case 'gen2': showBadanById("bodychecklist-bodyGenset2"); break;
+                        case 'kwh': showBadanById("bodychecklist-bodySKWH"); break;
+                    }
+                });
             });
-        });
-    }
+        }
 
-    // === Export tabel utama (PUE) ===
-    document.getElementById('btnExport').addEventListener('click', () => {
-        const table = document.querySelector('#bodychecklist-body table');
-        if (!table) return alert('Data tabel belum tersedia untuk diexport!');
-        const wb = XLSX.utils.table_to_book(table, { sheet: "Checklist" });
-        XLSX.writeFile(wb, `checklist_export_${new Date().toISOString().slice(0,10)}.xlsx`);
-    });
-
-    // === Tombol navigasi Create ===
-    document.getElementById('btnCreate').addEventListener('click', () => {
-        window.location.href = 'checklist/main.html';
-    });
-
-    // === Popup modal report ===
-    document.addEventListener("DOMContentLoaded", () => {
-        const btnReport = document.getElementById('btnReport');
-        const popupOverlay = document.getElementById('popupOverlay');
-        const popupModal = document.getElementById('popupModal');
-        const popupClose = document.querySelector('.popup-close');
-
-        btnReport.addEventListener('click', () => {
-            popupOverlay.style.display = 'block';
-            popupModal.style.display = 'block';
-        });
-        popupClose.addEventListener('click', () => {
-            popupOverlay.style.display = 'none';
-            popupModal.style.display = 'none';
-        });
-        popupOverlay.addEventListener('click', () => {
-            popupOverlay.style.display = 'none';
-            popupModal.style.display = 'none';
+        // === Export tabel utama (PUE) ===
+        document.getElementById('btnExport').addEventListener('click', () => {
+            const table = document.querySelector('#bodychecklist-body table');
+            if (!table) return alert('Data tabel belum tersedia untuk diexport!');
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Checklist" });
+            XLSX.writeFile(wb, `checklist_export_${new Date().toISOString().slice(0, 10)}.xlsx`);
         });
 
-        // Render tombol report
-        const reportSelector = document.getElementById("report-selector");
-        if (ttc === 'ttc_teling') {
-            reportSelector.innerHTML = `
+        // === Tombol navigasi Create ===
+        document.getElementById('btnCreate').addEventListener('click', () => {
+            window.location.href = 'checklist/main.html';
+        });
+
+        // === Popup modal report ===
+        document.addEventListener("DOMContentLoaded", () => {
+            const btnReport = document.getElementById('btnReport');
+            const popupOverlay = document.getElementById('popupOverlay');
+            const popupModal = document.getElementById('popupModal');
+            const popupClose = document.querySelector('.popup-close');
+
+            btnReport.addEventListener('click', () => {
+                popupOverlay.style.display = 'block';
+                popupModal.style.display = 'block';
+            });
+            popupClose.addEventListener('click', () => {
+                popupOverlay.style.display = 'none';
+                popupModal.style.display = 'none';
+            });
+            popupOverlay.addEventListener('click', () => {
+                popupOverlay.style.display = 'none';
+                popupModal.style.display = 'none';
+            });
+
+            // Render tombol report
+            const reportSelector = document.getElementById("report-selector");
+            if (ttc === 'ttc_teling') {
+                reportSelector.innerHTML = `
                 <button class="btn btn-warning" id="rep_kwh">KWH & Suhu</button>
                 <button class="btn btn-warning" id="rep_checklist">Checklist</button>
                 <button class="btn btn-warning" id="rep_genset1">Genset1</button>
                 <button class="btn btn-warning" id="rep_genset2">Genset2</button>
             `;
-            reportSelector.querySelectorAll("button").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    reportSelector.querySelectorAll("button").forEach(b => {
-                        b.classList.remove("btn-primary","active");
-                        if (b.id !== "btnCreate") b.classList.add("btn-warning");
+                reportSelector.querySelectorAll("button").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        reportSelector.querySelectorAll("button").forEach(b => {
+                            b.classList.remove("btn-primary", "active");
+                            if (b.id !== "btnCreate") b.classList.add("btn-warning");
+                        });
+                        btn.classList.remove("btn-warning");
+                        btn.classList.add("btn-primary", "active");
                     });
-                    btn.classList.remove("btn-warning");
-                    btn.classList.add("btn-primary","active");
                 });
-            });
+            }
+        });
+
+        function ceklistTeling(data) {
+            function val(x) {
+                return (x === null || x === undefined || x === "") ? "-" : x;
+            }
+
+            // handle petugas (array of objek/nama)
+            let petugasList = "";
+            if (Array.isArray(data.petugas) && data.petugas.length > 0) {
+                petugasList = data.petugas.map(p => ` - ${p}`).join("\n");
+            } else {
+                petugasList = " - Tidak ada petugas standby";
+            }
+
+            let report = `
+Site : TTC TELING
+ME Standby
+${petugasList}
+
+
+Hari/Tanggal: ${val(data.tanggal_formatted)}
+Waktu : ${val(data.jam)} WITA
+PLN ON
+
+BP    : 637.88
+LBP   : 3177.09
+TOTAL : 3814.98
+KVA   : 438.18
+
+
+Capacity Trafo ${val(data.TrafoCaps)} KVA
+Genset Failed/Total : ${val(data.GensetF)}/ ${val(data.GensetTotal)}
+PAC Failled/Total : ${val(data.PACF)}/ ${val(data.PACTotal)}
+Rect Failed /Total : ${val(data.RECF)}/ ${val(data.RECTotal)}
+UPS Failed/Total : ${val(data.UPSF)}/ ${val(data.UPSTotal)}
+---------------------------------------------
+Ruang A3 (Lt1)
+PAC Type : RCG 60 KW 2 UNIT
+RCG 1 : On
+Setpoint : 25
+Suhu :  21.7/59.7 %
+RCG 2 : On
+Setpoint : 23
+Suhu :  24.6/53.8 %
+
+UPS 1.2.01 EATON 75 KVA
+LOAD
+- ${val(data.ups1)} A
+- ${val(data.kw_rec4_9_ups1)} KW
+- -
+- Battery : -
+
+UPS 1.2.02 ABB 40 KVA
+LOAD
+- ${val(data.ups2)} A
+- ${val(data.kw_rec1_ups2)} KW
+- -
+- Battery : -
+
+Update Rectifier :
+Rectifier#1.2.1
+Load Curr : ${val(data.rec1)} A
+Rectifier#1.2.2
+Load Curr : ${val(data.rec2)} A
+Rectifier#1.2.3
+Load Curr : ${val(data.rec3)} A
+Rectifier#1.2.4
+Load Curr : ${val(data.rec4)} A
+Rectifier#1.2.5
+Load Curr : ${val(data.rec5)} A
+Rectifier#1.2.6
+Load Curr : ${val(data.rec6)} A
+Rectifier#1.2.7
+Load Curr : ${val(data.rec7)} A
+Rectifier#1.2.8
+Load Curr : ${val(data.rec8)} A
+Rectifier#1.2.9
+Load Curr : ${val(data.rec9)} A
+
+Suhu Ruangan : ${val(data.core)} °C
+---------------------------------------------
+Ruang Genset
+LVMDP 1
+Load LVMDP 1
+R : ${val(data.lvmdp1_r)} A
+S : ${val(data.lvmdp1_s)} A
+T : ${val(data.lvmdp1_t)} A
+KW : ${val(data.lvmdp1_load)}
+KVA : -
+CosQ : ${val(data.faktor_daya)}
+
+LVMDP 2
+Load LVMDP 2
+R : ${val(data.lvmdp2_r)} A
+S : ${val(data.lvmdp2_s)} A
+T : ${val(data.lvmdp2_t)} A
+KW : ${val(data.lvmdp2_load)}
+KVA : -
+
+Total Load PLN : ${val(data.total_load_pln)} A
+Occupancy PLN : ${val(data.occupancy_pln)}
+
+Suhu Ruangan: ${val(data.genset)} °C
+---------------------------------------------
+AC Portable
+Lantai 1 : - 
+Lantai 2 : - 
+Kondisi Terakhir Rehersal Genset
+Genset 1 : ${val(data.tanggal_formatted)}
+Genset 2 : ${val(data.tanggal_formatted)}
+`;
+
+            document.getElementById("isi_report").textContent = report;
         }
-    });
-</script>
+
+        function kwhTeling(data) {
+            // kumpulin petugas (ada yg bisa null)
+            const petugas = [
+                data.Petugas1,
+                data.Petugas2,
+                data.Petugas3,
+                data.Petugas4
+            ].filter(Boolean); // buang yg null
+
+            const isi = `
+Report Kwh dan Suhu TTC Teling
+Hari/Tanggal: ${data.tanggal_formatted}
+Pukul: ${data.jam} WITA
+
+STATUS
+PLN    : On
+Genset : standby
+
+KWH
+BP    : ${data.bp}
+LBP   : ${data.lbp}
+TOTAL : ${data.total}
+KVA   : ${data.kvar}
+
+Suhu
+R. Trafo         : ${data.RTrafo}
+R. Genset        : ${data.RGenset}
+R. Ran           : ${data.RRan}
+R. Control       : ${data.RKontrol}
+R. Battery       : ${data.RBattery}
+R. Transmissi    : ${data.RTransmissi}
+R. Core          : ${data.RCore}
+
+ME    : 
+${petugas.map(nama => " - " + nama).join("\n")}
+
+Cuaca : Mendung
+Power dan suhu ruangan aman.
+  `;
+
+            document.getElementById("isi_report").textContent = isi;
+        }
+
+
+    </script>
 
 </body>
 

@@ -76,4 +76,4 @@ function createSidebar() {
 
 createSidebar();
 localStorage.setItem('ttc', 'ttc_teling');
-localStorage.setItem('azure-beaver-930369.hostingersite.com', 'host');
+localStorage.setItem('host', '127.0.0.1:8000');

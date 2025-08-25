@@ -20,9 +20,9 @@
     </main>
 
 
-    <!-- `http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
-`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${item}`
-`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList` -->
+    <!-- `http://${host}/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`
+`http://${host}/api/${ttc}/data_potensi/generate_columns/${item}`
+`http://${host}/api/${ttc}/checklist/tableReportList` -->
     <script src="loder.js"></script>
     <script>
         const ttc = localStorage.getItem('ttc');
@@ -41,7 +41,7 @@
         }
 
 
-        fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/tableReportList`)
+        fetch(`http://${host}/api/${ttc}/checklist/tableReportList`)
             .then(res => res.json())
             .then(data => {
                 const genset = data.genset[namaGenset]; // Ambil genset
@@ -98,11 +98,11 @@
                 const form = document.getElementById(idParent);
 
                 // Ambil struktur kolom
-                const resCols = await fetch(`http://127.0.0.1:8000/api/${ttc}/data_potensi/generate_columns/${idParent}`);
+                const resCols = await fetch(`http://${host}/api/${ttc}/data_potensi/generate_columns/${idParent}`);
                 const columns = await resCols.json();
 
                 // Ambil data petugas ME
-                const resUsers = await fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`);
+                const resUsers = await fetch(`http://${host}/api/${ttc}/checklist/list_dp_tables/user_bio/jabatan/ME`);
                 const users = await resUsers.json();
 
                 columns.forEach(col => {
@@ -231,7 +231,7 @@
             console.log("Nested Form Data:", formData);
 
             // Kirim ke API
-            fetch(`http://127.0.0.1:8000/api/${ttc}/checklist/sendInfoReport`, {
+            fetch(`http://${host}/api/${ttc}/checklist/sendInfoReport`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
@@ -258,7 +258,7 @@
                     //         break;
                     // }
 
-                    fetch('http://127.0.0.1:8000/api/ttc_teling/checklist/updateStatus', {
+                    fetch('http://${host}/api/ttc_teling/checklist/updateStatus', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
