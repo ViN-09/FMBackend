@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="main.css" />
     <link rel="stylesheet" href="checklist.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <title>FACILITY MONITORING</title>
 </head>
@@ -23,17 +25,17 @@
                     </button>
                 </div>
                 <div id="bodychecklist-header-SubMenu">
-                    <button class="btn btn-success" id="kwh">
-                        <i class="bi bi-plus-lg"></i>
+                    <button class="btn btn-warning" id="kwh">
+                        <i class="bi bi-speedometer"></i>
                     </button>
                     <button class="btn btn-warning" id="pue">
-                        <i class="bi bi-card-checklist"></i>
+                        <i class="bi bi-clipboard2-data"></i>
                     </button>
                     <button class="btn btn-warning" id="gen1">
-                        <i class="bi bi-download"></i>
+                        <i class="bi bi-building-gear">1</i>
                     </button>
                     <button class="btn btn-warning" id="gen2">
-                        <i class="bi bi-download"></i>
+                        <i class="bi bi-building-gear">2</i>
                     </button>
                 </div>
 
@@ -67,7 +69,10 @@
             </div>
             <div id="report-selector"></div>
             <div class="popup-body">
-                <pre id="isi_report"></pre>
+                <div>
+                    <pre id="isi_report"></pre>
+                    <button id="btnCopy">Copy</button>
+                </div>
             </div>
         </div>
     </main>
@@ -176,16 +181,13 @@
 
                 // Simpan ke variabel global
                 switch (addTo) {
-                    case 'genset1': reportGenset1 = data[indexROW]; break;
-                    case 'genset2': reportGenset2 = data[indexROW]; break;
-                    case 'pue': reportCeklist = data[indexROW]; break;
-                    case 'kwh': reportKWH = data[indexROW]; break;
+                    case 'genset1': reportGenset1 = data[indexROW]; console.log('g1'); console.log(reportGenset1); break;
+                    case 'genset2': reportGenset2 = data[indexROW]; console.log('g2'); console.log(reportGenset2); break;
+                    case 'pue': reportCeklist = data[indexROW]; console.log('reportCeklist'); console.log(reportCeklist); break;
+                    case 'kwh': reportKWH = data[indexROW]; console.log('kwh'); console.log(reportKWH); break;
                 }
 
-                console.log(reportCeklist)
-
-
-                ceklistTeling(reportCeklist)
+                // ceklistTeling(reportCeklist)
 
             } catch (error) {
                 container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
@@ -279,29 +281,164 @@
             `;
                 reportSelector.querySelectorAll("button").forEach(btn => {
                     btn.addEventListener("click", () => {
+                        // Reset semua button
                         reportSelector.querySelectorAll("button").forEach(b => {
                             b.classList.remove("btn-primary", "active");
                             if (b.id !== "btnCreate") b.classList.add("btn-warning");
                         });
+
+                        // Set button yang diklik jadi aktif
                         btn.classList.remove("btn-warning");
                         btn.classList.add("btn-primary", "active");
+
+                        // Ambil ID button yang diklik
+                        console.log("Button diklik ID:", btn.id);
+                        const jenisReport = btn.id;
+
+                        switch (jenisReport) {
+                            case 'rep_checklist':
+                                ceklistTeling(reportCeklist);
+                                break;
+                            case 'rep_kwh':
+                                kwhTeling(reportKWH);
+                                break;
+                            case 'rep_genset1':
+                                gen1Teling(reportGenset1);
+                                break;
+                            case 'rep_genset2':
+                                gen2Teling(reportGenset2);
+                                break;
+                            default:
+                                break;
+                        }
                     });
                 });
             }
         });
+
+        function gen1Teling(data) {
+            // kumpulin petugas (buang yg null)
+            const petugas = [
+                data.Petugas1,
+                data.Petugas2,
+                data.Petugas3,
+                data.Petugas4
+            ].filter(Boolean); // buang yg null
+
+            // Convert tanki dan tangki ke number agar .toFixed bisa dipakai
+            const bulanan = parseFloat(data.tanki_bulanan) || 0;
+            const harian = parseFloat(data.tangki_harian) || 0;
+            const suhu = parseFloat(data.suhu) || 0;
+
+            // Hitung durasi dalam menit
+            let durasiMenit = 0;
+            if (data.gen_on && data.gen_off) {
+                const onTime = new Date("1970-01-01T" + data.gen_on);
+                const offTime = new Date("1970-01-01T" + data.gen_off);
+                durasiMenit = Math.round((offTime - onTime) / 60000);
+            }
+
+            const isi = `
+BERITA ACARA RUNNING GENSET 1
+
+Petugas ME:
+${petugas.join(" / ")}
+
+Proses:
+${data.proses}
+
+Gedung:
+TTC Teling
+
+Hari/Tanggal:
+${data.tanggal_formatted}
+
+Running Time (WITA)
+Genset On: ${data.gen_on}
+Genset Off: ${data.gen_off}
+Durasi: ${durasiMenit} Menit
+
+Level BBM (Liter)
+Tanki Bulanan Genset 1: ${bulanan.toFixed(0)} L
+Tanki Harian Genset 1: ${harian.toFixed(0)} L
+
+Suhu:
+${suhu} °C
+
+Hours Matter:
+${data.hours_mater}
+`;
+
+            document.getElementById("isi_report").textContent = isi;
+        }
+
+        function gen2Teling(data) {
+            // kumpulin petugas (buang yg null)
+            const petugas = [
+                data.Petugas1,
+                data.Petugas2,
+                data.Petugas3,
+                data.Petugas4
+            ].filter(Boolean);
+
+            // Convert liter dan suhu ke number
+            const bulanan = parseFloat(data.liter_bulanan) || 0;
+            const harian = parseFloat(data.liter_harian) || 0;
+            const suhu = parseFloat(data.suhu) || 0;
+
+            // Hitung durasi dalam menit
+            let durasiMenit = 0;
+            if (data.gen_on && data.gen_off) {
+                const onTime = new Date("1970-01-01T" + data.gen_on);
+                const offTime = new Date("1970-01-01T" + data.gen_off);
+                durasiMenit = Math.round((offTime - onTime) / 60000);
+            }
+
+            const isi = `
+BERITA ACARA RUNNING GENSET 2a & 2b
+
+Petugas ME:
+${petugas.join(" / ")}
+
+Proses:
+${data.proses}
+
+Gedung:
+TTC Teling
+
+Hari/Tanggal:
+${data.tanggal_formatted}
+
+Running Time (WITA)
+Genset On: ${data.gen_on}
+Genset Off: ${data.gen_off}
+Durasi: ${durasiMenit} Menit
+
+Level BBM (Liter)
+Tanki Bulanan Genset 2: ${bulanan.toFixed(0)} L
+Tanki Harian Genset 2: ${harian.toFixed(0)} L
+
+Suhu:
+${suhu} °C
+
+Hours Matter 1:
+${data.hours_mater1 || "-"}
+
+Hours Matter 2:
+${data.hours_mater2 || "-"}
+`;
+
+            document.getElementById("isi_report").textContent = isi;
+        }
 
         function ceklistTeling(data) {
             function val(x) {
                 return (x === null || x === undefined || x === "") ? "-" : x;
             }
 
-            // handle petugas (array of objek/nama)
-            let petugasList = "";
-            if (Array.isArray(data.petugas) && data.petugas.length > 0) {
-                petugasList = data.petugas.map(p => ` - ${p}`).join("\n");
-            } else {
-                petugasList = " - Tidak ada petugas standby";
-            }
+            // Handle petugas dari Petugas1..4
+            let petugas = [data.Petugas1, data.Petugas2, data.Petugas3, data.Petugas4].filter(Boolean);
+            let petugasList = petugas.length > 0 ? petugas.map(p => ` - ${p}`).join("\n") : " - Tidak ada petugas standby";
 
             let report = `
 Site : TTC TELING
@@ -313,11 +450,10 @@ Hari/Tanggal: ${val(data.tanggal_formatted)}
 Waktu : ${val(data.jam)} WITA
 PLN ON
 
-BP    : 637.88
-LBP   : 3177.09
-TOTAL : 3814.98
-KVA   : 438.18
-
+BP    : ${val(data.bp)}
+LBP   : ${val(data.lbp)}
+TOTAL : ${val(data.total)}
+KVA   : ${val(data.kvar)}
 
 Capacity Trafo ${val(data.TrafoCaps)} KVA
 Genset Failed/Total : ${val(data.GensetF)}/ ${val(data.GensetTotal)}
@@ -327,66 +463,52 @@ UPS Failed/Total : ${val(data.UPSF)}/ ${val(data.UPSTotal)}
 ---------------------------------------------
 Ruang A3 (Lt1)
 PAC Type : RCG 60 KW 2 UNIT
-RCG 1 : On
-Setpoint : 25
-Suhu :  21.7/59.7 %
-RCG 2 : On
-Setpoint : 23
-Suhu :  24.6/53.8 %
+RCG 1 : ${val(data.pac1_Status)}
+Setpoint : ${val(data.pac1_SetPoint)}
+Suhu :  ${val(data.pac1_Suhu)}/${val(data.pac1_Kelembaban)} %
+RCG 2 : ${val(data.pac2_Status)}
+Setpoint : ${val(data.pac2_SetPoint)}
+Suhu :  ${val(data.pac2_Suhu)}/${val(data.pac2_Kelembaban)} %
 
-UPS 1.2.01 EATON 75 KVA
+UPS 1.2.01 ${val(data.ups1_brand)} ${val(data.ups1_type)} KVA
 LOAD
-- ${val(data.ups1)} A
-- ${val(data.kw_rec4_9_ups1)} KW
-- -
-- Battery : -
+- ${val(data.ups1_kw)} A
+- ${val(data.ups1_kw)} KW
+- ${val(data.ups1_kva)} KVA
+- Battery : ${val(data.ups1_battery)}
 
-UPS 1.2.02 ABB 40 KVA
+UPS 1.2.02 ${val(data.ups2_brand)} ${val(data.ups2_type)} KVA
 LOAD
-- ${val(data.ups2)} A
-- ${val(data.kw_rec1_ups2)} KW
-- -
-- Battery : -
+- ${val(data.ups2_kw)} A
+- ${val(data.ups2_kw)} KW
+- ${val(data.ups2_kva)} KVA
+- Battery : ${val(data.ups2_battery)}
 
 Update Rectifier :
-Rectifier#1.2.1
-Load Curr : ${val(data.rec1)} A
-Rectifier#1.2.2
-Load Curr : ${val(data.rec2)} A
-Rectifier#1.2.3
-Load Curr : ${val(data.rec3)} A
-Rectifier#1.2.4
-Load Curr : ${val(data.rec4)} A
-Rectifier#1.2.5
-Load Curr : ${val(data.rec5)} A
-Rectifier#1.2.6
-Load Curr : ${val(data.rec6)} A
-Rectifier#1.2.7
-Load Curr : ${val(data.rec7)} A
-Rectifier#1.2.8
-Load Curr : ${val(data.rec8)} A
-Rectifier#1.2.9
-Load Curr : ${val(data.rec9)} A
+${[...Array(9)].map((_, idx) => {
+                let r = idx + 1;
+                return `Rectifier#1.2.${r}
+Load Curr : ${val(data[`rec${r}_TotalLoad`])} A
+Occupancy : ${val(data[`rec${r}_Ocupanccy`])} %`;
+            }).join("\n")}
 
 Suhu Ruangan : ${val(data.core)} °C
 ---------------------------------------------
 Ruang Genset
 LVMDP 1
-Load LVMDP 1
 R : ${val(data.lvmdp1_r)} A
 S : ${val(data.lvmdp1_s)} A
 T : ${val(data.lvmdp1_t)} A
 KW : ${val(data.lvmdp1_load)}
-KVA : -
+KVA : ${val(data.lvmdp1_kva)}
 CosQ : ${val(data.faktor_daya)}
 
 LVMDP 2
-Load LVMDP 2
 R : ${val(data.lvmdp2_r)} A
 S : ${val(data.lvmdp2_s)} A
 T : ${val(data.lvmdp2_t)} A
 KW : ${val(data.lvmdp2_load)}
-KVA : -
+KVA : ${val(data.lvmdp2_kva)}
 
 Total Load PLN : ${val(data.total_load_pln)} A
 Occupancy PLN : ${val(data.occupancy_pln)}
@@ -447,7 +569,23 @@ Power dan suhu ruangan aman.
             document.getElementById("isi_report").textContent = isi;
         }
 
+        const btnCopy = document.getElementById("btnCopy");
+        const isiReport = document.getElementById("isi_report");
 
+        // Fungsi copy
+        function copyReport() {
+            // Gunakan Clipboard API
+            navigator.clipboard.writeText(isiReport.textContent)
+                .then(() => {
+                    Swal.fire({ toast: true, position: "top-end", icon: "success", title: "Saved!", showConfirmButton: false, timer: 1500 });
+                })
+                .catch(err => {
+                    console.error("Gagal copy: ", err);
+                });
+        }
+
+        // Pasang event listener ke tombol
+        btnCopy.addEventListener("click", copyReport);
     </script>
 
 </body>

@@ -37,6 +37,48 @@
     gap: 10px;
   }
 
+  /* Styling tombol Copy */
+  #btnCopy {
+    background-color: #535353;
+    /* Warna utama aksen oranye */
+    color: whitesmoke;
+    /* Teks putih */
+    border: none;
+    /* Hilangkan border default */
+    padding: 10px 20px;
+    /* Jarak dalam tombol */
+    font-size: 16px;
+    /* Ukuran font */
+    font-weight: bold;
+    /* Teks tebal */
+    border-radius: 8px;
+    /* Sudut tombol membulat */
+    cursor: pointer;
+    /* Kursor pointer saat hover */
+    transition: all 0.3s ease;
+    /* Animasi transisi smooth */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Shadow tipis */
+  }
+
+  /* Hover effect */
+  #btnCopy:hover {
+    background-color: #0056b3;
+    /* Warna lebih terang saat hover */
+    transform: translateY(-2px);
+    /* Tombol naik sedikit */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    /* Shadow lebih tegas */
+  }
+
+  /* Active / klik effect */
+  #btnCopy:active {
+    transform: translateY(1px);
+    /* Tombol turun sedikit saat klik */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  }
+
+
 
 
   /* Styling input tanggal */

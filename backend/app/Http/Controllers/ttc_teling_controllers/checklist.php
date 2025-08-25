@@ -260,7 +260,7 @@ class checklist extends Controller
             $Petugas4 = $this->getChecklistData('user_bio', 'id', $me4);
 
 
-
+            $kwhPLN = $this->getChecklistData('report_kwh', 'id_report_kwh', $id);
             $lvmdp1 = $this->getChecklistData('report_lvmdp1', 'id_report_lvmdp1', $id);
             $lvmdp2 = $this->getChecklistData('report_lvmdp2', 'id_report_lvmdp2', $id);
             $it_load = $this->getChecklistData('pm_it', 'id_report', $id);
@@ -278,6 +278,18 @@ class checklist extends Controller
             $rec7 = $this->getChecklistData('rec7', 'id', $id);
             $rec8 = $this->getChecklistData('rec8', 'id', $id);
             $rec9 = $this->getChecklistData('rec9', 'id', $id);
+
+            $pac1 = $this->getChecklistData('pac1', 'id', $id);
+            $pac2 = $this->getChecklistData('pac2', 'id', $id);
+            $pac3 = $this->getChecklistData('pac3', 'id', $id);
+            $pac4 = $this->getChecklistData('pac4', 'id', $id);
+            $pac5 = $this->getChecklistData('pac5', 'id', $id);
+            $pac6 = $this->getChecklistData('pac6', 'id', $id);
+            $pac7 = $this->getChecklistData('pac7', 'id', $id);
+            $pac8 = $this->getChecklistData('pac8', 'id', $id);
+            $pac9 = $this->getChecklistData('pac9', 'id', $id);
+            $pac10 = $this->getChecklistData('pac10', 'id', $id);
+
 
 
 
@@ -318,6 +330,10 @@ class checklist extends Controller
             $DialyChecklist[$i]['tanggal_formatted'] = $datetime->translatedFormat('l, d-m-Y');
             $DialyChecklist[$i]['jam'] = $datetime->format('H:i');
 
+            $DialyChecklist[$i]['bp'] = $kwhPLN->bp ?? null;
+            $DialyChecklist[$i]['lbp'] = $kwhPLN->lbp ?? null;
+            $DialyChecklist[$i]['kvar'] = $kwhPLN->kvar ?? null;
+            $DialyChecklist[$i]['total'] = $kwhPLN->total ?? null;
             $DialyChecklist[$i]['Petugas1'] = $Petugas1->Nama ?? null;
             $DialyChecklist[$i]['Petugas1NO'] = $Petugas1->noTELP ?? null;
             $DialyChecklist[$i]['Petugas2'] = $Petugas2->Nama ?? null;
@@ -332,12 +348,14 @@ class checklist extends Controller
             $DialyChecklist[$i]['lvmdp1_t'] = $lvmdp1?->T ?? null;
             $DialyChecklist[$i]['lvmdp1_tegangan'] = $tegangan_lvmdp1_final;
             $DialyChecklist[$i]['lvmdp1_load'] = $lvmdp1_load ?: null;
+            $DialyChecklist[$i]['lvmdp1_kva'] = $lvmdp1?->kva ?? 0;
 
             $DialyChecklist[$i]['lvmdp2_r'] = $lvmdp2?->R ?? null;
             $DialyChecklist[$i]['lvmdp2_s'] = $lvmdp2?->S ?? null;
             $DialyChecklist[$i]['lvmdp2_t'] = $lvmdp2?->T ?? null;
             $DialyChecklist[$i]['lvmdp2_tegangan'] = $tegangan_lvmdp2_final;
             $DialyChecklist[$i]['lvmdp2_load'] = $lvmdp2_load ?: null;
+            $DialyChecklist[$i]['lvmdp2_kva'] = $lvmdp2?->kva ?? 0;
 
             $DialyChecklist[$i]['faktor_daya'] = $trafo?->PF ?? null;
             $DialyChecklist[$i]['total_load_pln'] = $total_load_pln ?: null;
@@ -363,17 +381,51 @@ class checklist extends Controller
             $DialyChecklist[$i]['genset'] = $suhu?->RGenset ?? null;
             $DialyChecklist[$i]['trafo'] = $suhu?->RTrafo ?? null;
 
-            $DialyChecklist[$i]['ups1'] = $ups1?->kw ?? null;
-            $DialyChecklist[$i]['ups2'] = $ups2?->kw ?? null;
-            $DialyChecklist[$i]['rec1'] = $rec1?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec2'] = $rec2?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec3'] = $rec3?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec4'] = $rec4?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec5'] = $rec5?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec6'] = $rec6?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec7'] = $rec7?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec8'] = $rec8?->TotalLoad ?? null;
-            $DialyChecklist[$i]['rec9'] = $rec9?->TotalLoad ?? null;
+            $upsFields = ['no', 'brand', 'type', 'kw', 'kva', 'battery', 'runtime', 'a'];
+            for ($u = 1; $u <= 2; $u++) {
+                $upsVar = ${"ups$u"} ?? null;
+                foreach ($upsFields as $field) {
+                    $DialyChecklist[$i]["ups{$u}_{$field}"] = $upsVar?->{$field} ?? null;
+                }
+            }
+
+            // Loop untuk ups1 & ups2
+            for ($u = 1; $u <= 2; $u++) {
+                $upsVar = ${"ups$u"} ?? null;
+                foreach ($upsFields as $field) {
+                    $DialyChecklist[$i]["ups{$u}_{$field}"] = $upsVar?->{$field} ?? null;
+                }
+            }
+
+            for ($r = 1; $r <= 9; $r++) {
+                $recVar = ${"rec$r"} ?? null;
+
+                $DialyChecklist[$i]["rec{$r}_Nama"] = $recVar?->Nama ?? null;
+                $DialyChecklist[$i]["rec{$r}_Brand"] = $recVar?->Brand ?? null;
+                $DialyChecklist[$i]["rec{$r}_BebanTotal"] = $recVar?->BebanTotal ?? null;
+                $DialyChecklist[$i]["rec{$r}_CapsRec"] = $recVar?->CapsRec ?? null;
+                $DialyChecklist[$i]["rec{$r}_TotalLoad"] = $recVar?->TotalLoad ?? null;
+
+                $totalLoad = is_numeric($DialyChecklist[$i]["rec{$r}_TotalLoad"]) ? $DialyChecklist[$i]["rec{$r}_TotalLoad"] : 0;
+                $bebanTotal = is_numeric($DialyChecklist[$i]["rec{$r}_BebanTotal"]) ? $DialyChecklist[$i]["rec{$r}_BebanTotal"] : 0;
+
+                $DialyChecklist[$i]["rec{$r}_Ocupanccy"] = $bebanTotal != 0 ? ($totalLoad / $bebanTotal) * 100 : 0;
+
+                $DialyChecklist[$i]["rec{$r}_Status"] = $recVar?->Status ?? null;
+            }
+
+
+            for ($p = 1; $p <= 10; $p++) {
+                $pacVar = ${"pac{$p}"} ?? null;
+
+                $DialyChecklist[$i]["pac{$p}_Nama"] = $pacVar?->Nama ?? null;
+                $DialyChecklist[$i]["pac{$p}_Tipe"] = $pacVar?->Tipe ?? null;
+                $DialyChecklist[$i]["pac{$p}_Suhu"] = $pacVar?->Suhu ?? null;
+                $DialyChecklist[$i]["pac{$p}_Kelembaban"] = $pacVar?->Kelembaban ?? null;
+                $DialyChecklist[$i]["pac{$p}_SetPoint"] = $pacVar?->SetPoint ?? null;
+                $DialyChecklist[$i]["pac{$p}_Status"] = $pacVar?->Status ?? null;
+            }
+
 
             $DialyChecklist[$i]['TrafoCaps'] = $trafo_c?->TrafoCaps ?? null;
             $DialyChecklist[$i]['GensetTotal'] = $trafo_c?->GensetTotal ?? null;
@@ -421,7 +473,7 @@ class checklist extends Controller
         $i = 1;
 
         foreach ($data as $item) {
-                        $id = $item->no_report;
+            $id = $item->no_report;
             $me1 = $item->petugasME;
             $me2 = $item->petugasME2;
             $me3 = $item->petugasME3;
