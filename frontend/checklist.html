@@ -569,6 +569,103 @@ Power dan suhu ruangan aman.
             document.getElementById("isi_report").textContent = isi;
         }
 
+        function ceklistPaniki(data) {
+            function val(x) {
+                return (x === null || x === undefined || x === "") ? "-" : x;
+            }
+
+            // Handle petugas dari Petugas1..4
+            let petugas = [data.Petugas1, data.Petugas2, data.Petugas3, data.Petugas4].filter(Boolean);
+            let petugasList = petugas.length > 0 ? petugas.map(p => ` - ${p}`).join("\n") : " - Tidak ada petugas standby";
+
+            let report = `
+Site : TTC TELING
+ME Standby
+${petugasList}
+
+
+Hari/Tanggal: ${val(data.tanggal_formatted)}
+Waktu : ${val(data.jam)} WITA
+PLN ON
+
+BP    : ${val(data.bp)}
+LBP   : ${val(data.lbp)}
+TOTAL : ${val(data.total)}
+KVA   : ${val(data.kvar)}
+
+Capacity Trafo ${val(data.TrafoCaps)} KVA
+Genset Failed/Total : ${val(data.GensetF)}/ ${val(data.GensetTotal)}
+PAC Failled/Total : ${val(data.PACF)}/ ${val(data.PACTotal)}
+Rect Failed /Total : ${val(data.RECF)}/ ${val(data.RECTotal)}
+UPS Failed/Total : ${val(data.UPSF)}/ ${val(data.UPSTotal)}
+---------------------------------------------
+Ruang A3 (Lt1)
+PAC Type : RCG 60 KW 2 UNIT
+RCG 1 : ${val(data.pac1_Status)}
+Setpoint : ${val(data.pac1_SetPoint)}
+Suhu :  ${val(data.pac1_Suhu)}/${val(data.pac1_Kelembaban)} %
+RCG 2 : ${val(data.pac2_Status)}
+Setpoint : ${val(data.pac2_SetPoint)}
+Suhu :  ${val(data.pac2_Suhu)}/${val(data.pac2_Kelembaban)} %
+
+UPS 1.2.01 ${val(data.ups1_brand)} ${val(data.ups1_type)} KVA
+LOAD
+- ${val(data.ups1_kw)} A
+- ${val(data.ups1_kw)} KW
+- ${val(data.ups1_kva)} KVA
+- Battery : ${val(data.ups1_battery)}
+
+UPS 1.2.02 ${val(data.ups2_brand)} ${val(data.ups2_type)} KVA
+LOAD
+- ${val(data.ups2_kw)} A
+- ${val(data.ups2_kw)} KW
+- ${val(data.ups2_kva)} KVA
+- Battery : ${val(data.ups2_battery)}
+
+Update Rectifier :
+${[...Array(9)].map((_, idx) => {
+                let r = idx + 1;
+                return `Rectifier#1.2.${r}
+Load Curr : ${val(data[`rec${r}_TotalLoad`])} A
+Occupancy : ${val(data[`rec${r}_Ocupanccy`])} %`;
+            }).join("\n")}
+
+Suhu Ruangan : ${val(data.core)} °C
+---------------------------------------------
+Ruang Genset
+LVMDP 1
+R : ${val(data.lvmdp1_r)} A
+S : ${val(data.lvmdp1_s)} A
+T : ${val(data.lvmdp1_t)} A
+KW : ${val(data.lvmdp1_load)}
+KVA : ${val(data.lvmdp1_kva)}
+CosQ : ${val(data.faktor_daya)}
+
+LVMDP 2
+R : ${val(data.lvmdp2_r)} A
+S : ${val(data.lvmdp2_s)} A
+T : ${val(data.lvmdp2_t)} A
+KW : ${val(data.lvmdp2_load)}
+KVA : ${val(data.lvmdp2_kva)}
+
+Total Load PLN : ${val(data.total_load_pln)} A
+Occupancy PLN : ${val(data.occupancy_pln)}
+
+Suhu Ruangan: ${val(data.genset)} °C
+---------------------------------------------
+AC Portable
+Lantai 1 : - 
+Lantai 2 : - 
+Kondisi Terakhir Rehersal Genset
+Genset 1 : ${val(data.tanggal_formatted)}
+Genset 2 : ${val(data.tanggal_formatted)}
+`;
+
+            document.getElementById("isi_report").textContent = report;
+        }
+
+
+
         const btnCopy = document.getElementById("btnCopy");
         const isiReport = document.getElementById("isi_report");
 

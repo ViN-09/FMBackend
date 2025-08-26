@@ -26,6 +26,7 @@
     <script src="loder.js"></script>
     <script>
         const ttc = localStorage.getItem('ttc');
+        const host = localStorage.getItem('host');
         const jenisReport = sessionStorage.getItem('jenisReport');
         console.log(jenisReport);
 
@@ -238,41 +239,7 @@
                     sessionStorage.setItem('suhu_kwh', JSON.stringify(receivedObj));
                     switch (jenisReport) {
                         case 'KWH & Suhu':
-                            fetch(`http://${host}/api/${ttc}/checklist/sendInfoReport`, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify(response)
-                            })
-                                .then(res => res.json())
-                                .then(data => {
-                                    console.log("Response dari server:", data);
-                                })
-                                .catch(err => {
-                                    console.error("Error kirim data:", err);
-                                });
-                            fetch('http://${host}/api/ttc_teling/checklist/updateStatus', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({}) // kosong karena status langsung = 3
-                            })
-                                .then(res => res.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        // Redirect ke checklist.html
-                                        window.location.href = "../checklist.html";
-                                    } else {
-                                        console.error("Gagal update status:", data.message);
-                                        alert("Gagal update status: " + data.message);
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error("Error fetch:", err);
-                                    alert("Terjadi kesalahan saat menghubungi server.");
-                                });
+                            window.location.href = "../checklist.html";
                             break;
                         case 'Ceklist':
                             window.location.href = "power.html";
