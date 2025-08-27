@@ -1,0 +1,141 @@
+    * {
+      font-family: 'Outfit', sans-serif;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+    }
+    .menu-button {
+      font-size: 30px;
+      margin-right: 15px;
+      cursor: pointer;
+      color: #b71c1c;
+    }
+    .logo {
+      height: 40px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    h3 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .box h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    canvas {
+      max-width: 100%;
+
+    }
+    #sunburstChart{
+      max-width: 50%;
+      padding: 0px;
+      margin: 0px;;
+      max-width: 100%;
+      max-height: 75%;
+
+    }
+    #lineChart{
+      max-height: 80%;
+    }
+    #table-dialy{
+      max-height: 100%;
+    }
+  
+    .temp-box {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      
+      gap: 10px;
+    }
+    .temp-item {
+      font-size: 25px;
+      background: #b71c1c;
+      color: #fff;
+      max-height: 100%;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .temp-item .info {
+      flex: 1;
+    }
+    .temp-item i {
+      font-size: 24px;
+      margin-left: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 5px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .bbm-logo {
+      height: 24px;
+    }
+
+    .custom-swal-popup {
+      background-color: #b82025 !important;
+      color: #ffffff !important;
+      padding: 1rem;
+  }
+  
+  /* Gaya untuk isi konten (gambar + teks horizontal) */
+  .custom-alert-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+  }
+  
+  /* Gambar */
+  .custom-alert-icon {
+      width: 40px;
+      height: 40px;
+  }
+  
+  /* Judul */
+  .custom-alert-title {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: white;
+  }
