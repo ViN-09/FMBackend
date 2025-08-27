@@ -1,16 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <title>FACILITY MONITORING</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FACILITY MONITORING</title>
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .endpoint {
+      margin-bottom: 30px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      background: #f9f9f9;
+    }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 <body>
-    <main>
-        
-    </main>
-    <script src="js/sidebar.js"></script>
+  <main>
+    <h1>Data API TTC Paniki</h1>
+
+    <div class="endpoint">
+      <h3>Checklist PUE</h3>
+      <pre id="checklistPUE">Loading...</pre>
+    </div>
+
+    <div class="endpoint">
+      <h3>Hello (Data Potensi)</h3>
+      <pre id="hello">Loading...</pre>
+    </div>
+
+    <div class="endpoint">
+      <h3>List Data Potensi Tables</h3>
+      <pre id="listDpTables">Loading...</pre>
+    </div>
+
+    <div class="endpoint">
+      <h3>Generate Columns (Contoh table: your_table)</h3>
+      <pre id="generateColumns">Loading...</pre>
+    </div>
+
+    <div class="endpoint">
+      <h3>Generate Data Potensi (Contoh table: your_table)</h3>
+      <pre id="generateDatapotensi">Loading...</pre>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:80/api/ttc_paniki"; 
+    // ⬆️ ganti sesuai URL project Laravel kamu
+
+    async function fetchData(endpoint, elementId) {
+      try {
+        const response = await fetch(endpoint);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data = await response.json();
+        document.getElementById(elementId).textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById(elementId).textContent = "Error: " + err.message;
+      }
+    }
+
+    // Tarik semua endpoint
+    fetchData(`${API_BASE}/checklist/ChecklistPUE`, "checklistPUE");
+    fetchData(`${API_BASE}/data_potensi/hello`, "hello");
+    fetchData(`${API_BASE}/data_potensi/list_dp_tables`, "listDpTables");
+
+    // contoh generate_columns (ganti `your_table` dengan tabel yang valid di DB)
+    fetchData(`${API_BASE}/data_potensi/generate_columns/your_table`, "generateColumns");
+
+    // contoh generate_datapotensi (ganti `your_table` dengan tabel yang valid di DB)
+    fetchData(`${API_BASE}/data_potensi/generate_datapotensi/your_table`, "generateDatapotensi");
+  </script>
 </body>
 </html>
