@@ -297,7 +297,7 @@
 
                         switch (jenisReport) {
                             case 'rep_checklist':
-                                ceklistTeling(reportCeklist);
+                                ceklistTeling(reportCeklist, reportGenset1, reportGenset2);
                                 break;
                             case 'rep_kwh':
                                 kwhTeling(reportKWH);
@@ -431,15 +431,25 @@ ${data.hours_mater2 || "-"}
             document.getElementById("isi_report").textContent = isi;
         }
 
-        function ceklistTeling(data) {
+        function ceklistTeling(data, data2, data3) {
             function val(x) {
                 return (x === null || x === undefined || x === "") ? "-" : x;
+            }
+
+            function valNum(x) {
+                return Math.round(Number(x) || 0);
             }
 
             // Handle petugas dari Petugas1..4
             let petugas = [data.Petugas1, data.Petugas2, data.Petugas3, data.Petugas4].filter(Boolean);
             let petugasList = petugas.length > 0 ? petugas.map(p => ` - ${p}`).join("\n") : " - Tidak ada petugas standby";
-
+            const totalSolar =
+                Number(data2.liter_bulanan || 0) +
+                Number(data2.liter_harian || 0) +
+                Number(data3.liter_bulanan || 0) +
+                Number(data3.liter_harian || 0);
+            const occBBM = Math.round((totalSolar / 22500) * 100);
+            const backupTime = Math.round(totalSolar / 50);
             let report = `
 Site : TTC TELING
 ME Standby
@@ -463,39 +473,127 @@ UPS Failed/Total : ${val(data.UPSF)}/ ${val(data.UPSTotal)}
 ---------------------------------------------
 Ruang A3 (Lt1)
 PAC Type : RCG 60 KW 2 UNIT
-RCG 1 : ${val(data.pac1_Status)}
+${val(data.pac1_Nama)} : ${val(data.pac1_Status)}
 Setpoint : ${val(data.pac1_SetPoint)}
 Suhu :  ${val(data.pac1_Suhu)}/${val(data.pac1_Kelembaban)} %
-RCG 2 : ${val(data.pac2_Status)}
+${val(data.pac2_Nama)} : ${val(data.pac2_Status)}
 Setpoint : ${val(data.pac2_SetPoint)}
 Suhu :  ${val(data.pac2_Suhu)}/${val(data.pac2_Kelembaban)} %
 
 UPS 1.2.01 ${val(data.ups1_brand)} ${val(data.ups1_type)} KVA
 LOAD
 - ${val(data.ups1_kw)} A
-- ${val(data.ups1_kw)} KW
+- ${val(data.ups1_kw)} KW / ${val(data.ups1_occ)}%
 - ${val(data.ups1_kva)} KVA
 - Battery : ${val(data.ups1_battery)}
 
 UPS 1.2.02 ${val(data.ups2_brand)} ${val(data.ups2_type)} KVA
 LOAD
 - ${val(data.ups2_kw)} A
-- ${val(data.ups2_kw)} KW
+- ${val(data.ups2_kw)} KW / ${val(data.ups2_occ)}
 - ${val(data.ups2_kva)} KVA
 - Battery : ${val(data.ups2_battery)}
 
 Update Rectifier :
 ${[...Array(9)].map((_, idx) => {
                 let r = idx + 1;
-                return `Rectifier#1.2.${r}
+                return `${val(data[`rec${r}_Nama`])}
 Load Curr : ${val(data[`rec${r}_TotalLoad`])} A
 Occupancy : ${val(data[`rec${r}_Ocupanccy`])} %`;
             }).join("\n")}
+Total modul 24
+Tekanan FM200
+Tabung 1 : 25 Bar/360 Psi/70 °F
 
-Suhu Ruangan : ${val(data.core)} °C
+Suhu Ruangan : ${val(data.battery)} °C
 ---------------------------------------------
+
+Ruang A4 (lt1)
+PAC Type : RCG 60 KW 2 UNIT
+${val(data.pac3_Nama)} : ${val(data.pac3_Status)}
+Setpoint : ${val(data.pac3_SetPoint)}
+Suhu :  ${val(data.pac3_Suhu)}/${val(data.pac3_Kelembaban)} %
+${val(data.pac4_Nama)} : ${val(data.pac2_Status)}
+Setpoint : ${val(data.pac4_SetPoint)}
+Suhu :  ${val(data.pac4_Suhu)}/${val(data.pac4_Kelembaban)} %
+
+Tekanan FM200
+Tabung 1 : 24 Bar/350 Psi/60 °F
+
+${val(data.dcpdu1_noDCPDU)}
+Source : ${val(data.dcpdu1_source)}
+Voltage/Load
+Group A : ${val(data.dcpdu1_aV)}/${val(data.dcpdu1_aA)}
+Group B : ${val(data.dcpdu1_bV)}/${val(data.dcpdu1_bA)}
+Group C : ${val(data.dcpdu1_cV)}/${val(data.dcpdu1_cA)}
+Group D : ${val(data.dcpdu1_dV)}/${val(data.dcpdu1_dA)}
+
+Suhu Ruangan : ${val(data.ran)} °C
+---------------------------------------------
+
+Ruang B2 (lt2)
+PAC Type : RCG 30 KW 2 UNIT
+${val(data.pac9_Nama)} : ${val(data.pac9_Status)}
+Setpoint : ${val(data.pac9_SetPoint)}
+Suhu :  ${val(data.pac9_Suhu)}/${val(data.pac9_Kelembaban)} %
+${val(data.pac10_Nama)} : ${val(data.pac10_Status)}
+Setpoint : ${val(data.pac10_SetPoint)}
+Suhu :  ${val(data.pac10_Suhu)}/${val(data.pac10_Kelembaban)} %
+
+Tekanan FM200
+Tabung 1 : 25 Bar/360 psi/70 °F
+
+Suhu Ruangan : ${val(data.transmissi)} °C
+---------------------------------------------
+
+Ruang B4 (lt2)
+PAC Type : RCG 60 KW 4 UNIT
+${val(data.pac5_Nama)} : ${val(data.pac5_Status)}
+Setpoint : ${val(data.pac5_SetPoint)}
+Suhu :  ${val(data.pac5_Suhu)}/${val(data.pac5_Kelembaban)} %
+${val(data.pac6_Nama)} : ${val(data.pac6_Status)}
+Setpoint : ${val(data.pac6_SetPoint)}
+Suhu :  ${val(data.pac6_Suhu)}/${val(data.pac6_Kelembaban)} %
+${val(data.pac7_Nama)} : ${val(data.pac7_Status)}
+Setpoint : ${val(data.pac7_SetPoint)}
+Suhu :  ${val(data.pac7_Suhu)}/${val(data.pac7_Kelembaban)} %
+${val(data.pac8_Nama)} : ${val(data.pac8_Status)}
+Setpoint : ${val(data.pac8_SetPoint)}
+Suhu :  ${val(data.pac8_Suhu)}/${val(data.pac8_Kelembaban)} %
+
+Tekanan FM200
+Tabung 1 : 25 Bar/360 psi/70 °F
+Tabung 2 : 25 Bar/360 psi/70 °F
+
+${val(data.dcpdu2_noDCPDU)}
+Source : ${val(data.dcpdu2_source)}
+Voltage/Load
+Group A : ${val(data.dcpdu2_aV)}/${val(data.dcpdu2_aA)}
+Group B : ${val(data.dcpdu2_bV)}/${val(data.dcpdu2_bA)}
+${val(data.dcpdu3_noDCPDU)}
+Source : ${val(data.dcpdu3_source)}
+Voltage/Load
+Group A : ${val(data.dcpdu3_aV)}/${val(data.dcpdu3_aA)}
+Group B : ${val(data.dcpdu3_bV)}/${val(data.dcpdu3_bA)}
+${val(data.dcpdu4_noDCPDU)}
+Source : ${val(data.dcpdu4_source)}
+Voltage/Load
+Group A : ${val(data.dcpdu4_aV)}/${val(data.dcpdu4_aA)}
+Group B : ${val(data.dcpdu4_bV)}/${val(data.dcpdu4_bA)}
+
+
+
+
+Suhu Ruangan : 21 °C
+---------------------------------------------
+
 Ruang Genset
 LVMDP 1
+R-S/R-N : ${val(data.lvmdp1_load_r_s)}/${val(data.lvmdp1_load_r_n)} V
+R-T/S-N : ${val(data.lvmdp1_load_r_t)}/${val(data.lvmdp1_load_s_n)} V
+S-T/T-N : ${val(data.lvmdp1_load_s_t)}/${val(data.lvmdp1_load_t_n)} V
+Arester : Baik
+Load LVMPD 1
 R : ${val(data.lvmdp1_r)} A
 S : ${val(data.lvmdp1_s)} A
 T : ${val(data.lvmdp1_t)} A
@@ -504,24 +602,46 @@ KVA : ${val(data.lvmdp1_kva)}
 CosQ : ${val(data.faktor_daya)}
 
 LVMDP 2
+R-S/R-N : ${val(data.lvmdp2_load_r_s)}/${val(data.lvmdp2_load_r_n)} V
+R-T/S-N : ${val(data.lvmdp2_load_r_t)}/${val(data.lvmdp2_load_s_n)} V
+S-T/T-N : ${val(data.lvmdp2_load_s_t)}/${val(data.lvmdp2_load_t_n)} V
+Arester : Baik
+Load LVMPD 2
 R : ${val(data.lvmdp2_r)} A
 S : ${val(data.lvmdp2_s)} A
 T : ${val(data.lvmdp2_t)} A
 KW : ${val(data.lvmdp2_load)}
 KVA : ${val(data.lvmdp2_kva)}
 
-Total Load PLN : ${val(data.total_load_pln)} A
-Occupancy PLN : ${val(data.occupancy_pln)}
+Genset
+Genset 01 : 500 KVA
+Genset 02 : 2X350 KVA
+Genset 01 (Standby Auto)
+Genset 02 (Standby Auto)
+SMU Genset 1 : ${val(data2.hours_mater)}
+Suhu Genset 1 :  ${val(data.genset)}
+SMU Genset 2A : ${val(data3.hours_mater1)}
+Suhu Genset 2A:  ${val(data.genset)}
+SMU Genset 2B : ${val(data3.hours_mater2)}
+Suhu Genset 2B: ${val(data.genset)}
+Level Tangki bulanan 1 (10.000L): ${valNum(data2.liter_bulanan)} L
+Level Tangki harian 1 (1500L) :  ${valNum(data2.liter_harian)} L
+Level Tangki bulanan 2 (10.000L): ${valNum(data3.liter_bulanan)} L
+Level Tangki harian 2 (1000L) : ${valNum(data3.liter_harian)} L
+Total Solar : ${valNum(totalSolar)} L
+Occupancy BBM : ${occBBM} %
+Backup time : ${backupTime} Jam
 
 Suhu Ruangan: ${val(data.genset)} °C
 ---------------------------------------------
 AC Portable
-Lantai 1 : - 
-Lantai 2 : - 
+Lantai 1 : 5.1 KW 
+Lantai 2 : 5.1 KW 
 Kondisi Terakhir Rehersal Genset
-Genset 1 : ${val(data.tanggal_formatted)}
-Genset 2 : ${val(data.tanggal_formatted)}
+Genset 1 : ${val(data2.tanggal_formatted)}
+Genset 2 : ${val(data3.tanggal_formatted)}
 `;
+
 
             document.getElementById("isi_report").textContent = report;
         }
@@ -534,6 +654,8 @@ Genset 2 : ${val(data.tanggal_formatted)}
                 data.Petugas3,
                 data.Petugas4
             ].filter(Boolean); // buang yg null
+
+
 
             const isi = `
 Report Kwh dan Suhu TTC Teling
@@ -574,15 +696,14 @@ Power dan suhu ruangan aman.
                 return (x === null || x === undefined || x === "") ? "-" : x;
             }
 
+
             // Handle petugas dari Petugas1..4
             let petugas = [data.Petugas1, data.Petugas2, data.Petugas3, data.Petugas4].filter(Boolean);
             let petugasList = petugas.length > 0 ? petugas.map(p => ` - ${p}`).join("\n") : " - Tidak ada petugas standby";
-
             let report = `
 Site : TTC TELING
 ME Standby
 ${petugasList}
-
 
 Hari/Tanggal: ${val(data.tanggal_formatted)}
 Waktu : ${val(data.jam)} WITA
@@ -612,26 +733,80 @@ UPS 1.2.01 ${val(data.ups1_brand)} ${val(data.ups1_type)} KVA
 LOAD
 - ${val(data.ups1_kw)} A
 - ${val(data.ups1_kw)} KW
-- ${val(data.ups1_kva)} KVA
+- ${val(data.ups1_kva)} KVA/${val(data.ups1_occ)}
 - Battery : ${val(data.ups1_battery)}
 
 UPS 1.2.02 ${val(data.ups2_brand)} ${val(data.ups2_type)} KVA
 LOAD
 - ${val(data.ups2_kw)} A
 - ${val(data.ups2_kw)} KW
-- ${val(data.ups2_kva)} KVA
+- ${val(data.ups2_kva)} KVA/${val(data.ups2_occ)}
 - Battery : ${val(data.ups2_battery)}
 
 Update Rectifier :
-${[...Array(9)].map((_, idx) => {
-                let r = idx + 1;
-                return `Rectifier#1.2.${r}
-Load Curr : ${val(data[`rec${r}_TotalLoad`])} A
-Occupancy : ${val(data[`rec${r}_Ocupanccy`])} %`;
-            }).join("\n")}
+${val(data.rec1_Nama)}
+Bus Voltage : ${val(data.rec1_CapsRec)}
+Load        : ${val(data.rec1_BebanTotal)}
+Occupancy   : ${val(data.rec1_Ocupanccy)}
+${val(data.rec2_Nama)}
+Bus Voltage : ${val(data.rec2_CapsRec)}
+Load        : ${val(data.rec2_BebanTotal)}
+Occupancy   : ${val(data.rec2_Ocupanccy)}
+${val(data.rec3_Nama)}
+Bus Voltage : ${val(data.rec3_CapsRec)}
+Load        : ${val(data.rec3_BebanTotal)}
+Occupancy   : ${val(data.rec3_Ocupanccy)}
+${val(data.rec4_Nama)}
+Bus Voltage : ${val(data.rec4_CapsRec)}
+Load        : ${val(data.rec4_BebanTotal)}
+Occupancy   : ${val(data.rec4_Ocupanccy)}
+${val(data.rec5_Nama)}
+Bus Voltage : ${val(data.rec5_CapsRec)}
+Load        : ${val(data.rec5_BebanTotal)}
+Occupancy   : ${val(data.rec5_Ocupanccy)}
+${data.rec6_Nama}
+Bus Voltage : ${val(data.rec6_CapsRec)}
+Load        : ${val(data.rec6_BebanTotal)}
+Occupancy   : ${val(data.rec6_Ocupanccy)}
+${val(data.rec7_Nama)}
+Bus Voltage : ${val(data.rec7_CapsRec)}
+Load        : ${val(data.rec7_BebanTotal)}
+Occupancy   : ${val(data.rec7_Ocupanccy)}
+${val(data.rec8_Nama)}
+Bus Voltage : ${val(data.rec8_CapsRec)}
+Load        : ${val(data.rec8_BebanTotal)}
+Occupancy   : ${val(data.rec8_Ocupanccy)}
+${val(data.rec9_Nama)}
+Bus Voltage : ${val(data.rec9_CapsRec)}
+Load        : ${val(data.rec9_BebanTotal)}
+Occupancy   : ${val(data.rec9_Ocupanccy)}  
 
 Suhu Ruangan : ${val(data.core)} °C
 ---------------------------------------------
+
+Ruang A4 (lt1)
+PAC Type : RCG 60 KW 2 UNIT
+RCG 1 : ${val(data.pac1_Status)}
+Setpoint : ${val(data.pac1_SetPoint)}
+Suhu :  ${val(data.pac1_Suhu)}/${val(data.pac1_Kelembaban)} %
+RCG 2 : ${val(data.pac2_Status)}
+Setpoint : ${val(data.pac2_SetPoint)}
+Suhu :  ${val(data.pac2_Suhu)}/${val(data.pac2_Kelembaban)} %
+
+Tekanan FM200
+Tabung 1 : 24 Bar/350 Psi/60 °F
+
+DCPDU 1.3.1
+Source
+Voltage/Load
+Group A : 51.9/64.6
+Group B : 51.9/59.8
+Group C : 51.9/85.7
+Group D : 52/68.9
+
+Suhu Ruangan : 24 °C
+---------------------------------------------
+
 Ruang Genset
 LVMDP 1
 R : ${val(data.lvmdp1_r)} A

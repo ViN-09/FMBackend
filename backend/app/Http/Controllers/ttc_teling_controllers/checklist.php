@@ -278,6 +278,12 @@ class checklist extends Controller
             $rec7 = $this->getChecklistData('rec7', 'id', $id);
             $rec8 = $this->getChecklistData('rec8', 'id', $id);
             $rec9 = $this->getChecklistData('rec9', 'id', $id);
+            $dcpdu1 = $this->getChecklistData('dcpdu_1', 'id', $id);
+            $dcpdu2 = $this->getChecklistData('dcpdu_2', 'id', $id);
+            $dcpdu3 = $this->getChecklistData('dcpdu_3', 'id', $id);
+            $dcpdu4 = $this->getChecklistData('dcpdu_4', 'id', $id);
+
+
 
             $pac1 = $this->getChecklistData('pac1', 'id', $id);
             $pac2 = $this->getChecklistData('pac2', 'id', $id);
@@ -348,11 +354,24 @@ class checklist extends Controller
             $DialyChecklist[$i]['lvmdp1_t'] = $lvmdp1?->T ?? null;
             $DialyChecklist[$i]['lvmdp1_tegangan'] = $tegangan_lvmdp1_final;
             $DialyChecklist[$i]['lvmdp1_load'] = $lvmdp1_load ?: null;
-            $DialyChecklist[$i]['lvmdp1_kva'] = $lvmdp1?->kva ?? 0;
+            $DialyChecklist[$i]['lvmdp1_load_r_s'] = $lvmdp1?->R1N ?? 0;
+            $DialyChecklist[$i]['lvmdp1_load_r_t'] = $lvmdp1?->R2N ?? 0;
+            $DialyChecklist[$i]['lvmdp1_load_s_t'] = $lvmdp1?->R3N ?? 0;
+            $DialyChecklist[$i]['lvmdp1_load_r_n'] = $lvmdp1?->L1N ?? 0;
+            $DialyChecklist[$i]['lvmdp1_load_s_n'] = $lvmdp1?->L2N ?? 0;
+            $DialyChecklist[$i]['lvmdp1_load_t_n'] = $lvmdp1?->L3N ?? 0;
+            $DialyChecklist[$i]['lvmdp1_load_lvmdp1_kva'] = $lvmdp1?->kva ?? 0;
 
             $DialyChecklist[$i]['lvmdp2_r'] = $lvmdp2?->R ?? null;
             $DialyChecklist[$i]['lvmdp2_s'] = $lvmdp2?->S ?? null;
             $DialyChecklist[$i]['lvmdp2_t'] = $lvmdp2?->T ?? null;
+            $DialyChecklist[$i]['lvmdp2_load_r_s'] = $lvmdp2?->R1N ?? 0;
+            $DialyChecklist[$i]['lvmdp2_load_r_t'] = $lvmdp2?->R2N ?? 0;
+            $DialyChecklist[$i]['lvmdp2_load_s_t'] = $lvmdp2?->R3N ?? 0;
+            $DialyChecklist[$i]['lvmdp2_load_r_n'] = $lvmdp2?->L1N ?? 0;
+            $DialyChecklist[$i]['lvmdp2_load_s_n'] = $lvmdp2?->L2N ?? 0;
+            $DialyChecklist[$i]['lvmdp2_load_t_n'] = $lvmdp2?->L3N ?? 0;
+
             $DialyChecklist[$i]['lvmdp2_tegangan'] = $tegangan_lvmdp2_final;
             $DialyChecklist[$i]['lvmdp2_load'] = $lvmdp2_load ?: null;
             $DialyChecklist[$i]['lvmdp2_kva'] = $lvmdp2?->kva ?? 0;
@@ -376,6 +395,7 @@ class checklist extends Controller
                 : 'N/A';
 
             $DialyChecklist[$i]['core'] = $suhu?->RCore ?? null;
+            $DialyChecklist[$i]['battery'] = $suhu?->RBattery ?? null;
             $DialyChecklist[$i]['transmissi'] = $suhu?->RTransmissi ?? null;
             $DialyChecklist[$i]['ran'] = $suhu?->RRan ?? null;
             $DialyChecklist[$i]['genset'] = $suhu?->RGenset ?? null;
@@ -395,7 +415,44 @@ class checklist extends Controller
                 foreach ($upsFields as $field) {
                     $DialyChecklist[$i]["ups{$u}_{$field}"] = $upsVar?->{$field} ?? null;
                 }
+
+                // pastikan jadi number
+                $upstype = (int) ($DialyChecklist[$i]["ups{$u}_type"] ?? 0);
+                $upskva = (float) ($DialyChecklist[$i]["ups{$u}_kva"] ?? 0);
+
+                if ($upstype > 0) {
+                    $upsOcc = number_format(($upskva / $upstype) * 100, 2);
+                } else {
+                    $upsOcc = null; // atau 0 kalau mau default
+                }
+
+                // debug simpan variabel
+                $DialyChecklist[$i]["ups{$u}_occ"] = $upsOcc;
             }
+
+            $dcpduFields = ['noDCPDU', 'source', 'aV', 'aA', 'bV', 'bA', 'cV', 'cA', 'dV', 'dA',];
+            for ($u = 1; $u <= 4; $u++) {
+                $dcpduvar = ${"dcpdu$u"} ?? null;
+                foreach ($dcpduFields as $field) {
+                    $DialyChecklist[$i]["dcpdu{$u}_{$field}"] = $dcpduvar?->{$field} ?? null;
+                }
+
+                // pastikan jadi number
+                $upstype = (int) ($DialyChecklist[$i]["ups{$u}_type"] ?? 0);
+                $upskva = (float) ($DialyChecklist[$i]["ups{$u}_kva"] ?? 0);
+
+                if ($upstype > 0) {
+                    $upsOcc = number_format(($upskva / $upstype) * 100, 2);
+                } else {
+                    $upsOcc = null; // atau 0 kalau mau default
+                }
+
+                // debug simpan variabel
+                $DialyChecklist[$i]["ups{$u}_occ"] = $upsOcc;
+            }
+
+
+
 
             for ($r = 1; $r <= 9; $r++) {
                 $recVar = ${"rec$r"} ?? null;
@@ -409,7 +466,7 @@ class checklist extends Controller
                 $totalLoad = is_numeric($DialyChecklist[$i]["rec{$r}_TotalLoad"]) ? $DialyChecklist[$i]["rec{$r}_TotalLoad"] : 0;
                 $bebanTotal = is_numeric($DialyChecklist[$i]["rec{$r}_BebanTotal"]) ? $DialyChecklist[$i]["rec{$r}_BebanTotal"] : 0;
 
-                $DialyChecklist[$i]["rec{$r}_Ocupanccy"] = $bebanTotal != 0 ? ($totalLoad / $bebanTotal) * 100 : 0;
+                $DialyChecklist[$i]["rec{$r}_Ocupanccy"] = $bebanTotal != 0 ? number_format(($totalLoad / $bebanTotal) * 100, 2) : 0;
 
                 $DialyChecklist[$i]["rec{$r}_Status"] = $recVar?->Status ?? null;
             }
