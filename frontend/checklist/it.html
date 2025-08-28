@@ -124,7 +124,7 @@ async function generateInputRow(idParent) {
         const users = await resUsers.json();
 
         columns.forEach(col => {
-            if (["no_report", "status", "id" , "liter_harian", "liter_bulanan","id_report_suhu","id_report_kwh","date_time","dokumentasi","indikator", "id_report_lvmdp2","id_report_lvmdp1","dateTime","Time","date"].includes(col.COLUMN_NAME)) return;
+            if (["no_report", "status", "id" , "liter_harian", "liter_bulanan","id_report_suhu","id_report_kwh","date_time","dokumentasi","indikator", "id_report_lvmdp2","id_report_lvmdp1","dateTime","Time","date","id_report"].includes(col.COLUMN_NAME)) return;
 
             const label = document.createElement("label");
             label.setAttribute("for", col.COLUMN_NAME);

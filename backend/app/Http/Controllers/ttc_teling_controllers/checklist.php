@@ -240,6 +240,7 @@ class checklist extends Controller
         $data = DB::connection($this->connection)
             ->table('report_info')
             ->where('jenis_report', $jenisReport)
+            ->where('status', 1)
             ->whereBetween('date_time', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
             ->orderBy('date_time')
             ->get();
@@ -319,8 +320,8 @@ class checklist extends Controller
             ] : [];
             $tegangan_lvmdp2_final = count($tegangan_lvmdp2) ? max($tegangan_lvmdp2) : null;
 
-            $lvmdp1_load = $lvmdp1?->kv ?? 0;
-            $lvmdp2_load = $lvmdp2?->kv ?? 0;
+            $lvmdp1_load = $lvmdp1?->kw ?? 0;
+            $lvmdp2_load = $lvmdp2?->kw ?? 0;
             $total_load_pln = $lvmdp1_load + $lvmdp2_load;
 
             $kw1 = $it_load?->kw_rec1_2_ups1 ?? 0;

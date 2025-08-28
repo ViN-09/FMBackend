@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 24, 2025 at 08:50 AM
+-- Generation Time: Aug 28, 2025 at 03:09 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -97,52 +97,6 @@ INSERT INTO `book3` (`COL 1`, `COL 2`, `COL 3`, `COL 4`, `COL 5`, `COL 6`, `COL 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cache_data_pue`
---
-
-CREATE TABLE `cache_data_pue` (
-  `kw_node1` int NOT NULL,
-  `kv_node1` int NOT NULL,
-  `kw_node2` int NOT NULL,
-  `kv_node2` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `cache_data_pue`
---
-
-INSERT INTO `cache_data_pue` (`kw_node1`, `kv_node1`, `kw_node2`, `kv_node2`) VALUES
-(6, 1, 17, 12),
-(3, 3, 15, 11),
-(4, 3, 17, 17),
-(3, 9, 10, 18),
-(5, 8, 15, 17),
-(5, 7, 14, 13),
-(4, 9, 13, 16),
-(2, 5, 17, 12),
-(8, 6, 13, 17),
-(9, 7, 17, 11),
-(5, 4, 18, 10),
-(2, 6, 14, 14),
-(5, 8, 15, 15),
-(1, 4, 15, 18),
-(2, 3, 11, 18),
-(7, 8, 14, 14),
-(7, 8, 16, 14),
-(5, 8, 13, 12),
-(9, 9, 16, 17),
-(6, 4, 11, 14),
-(4, 8, 11, 11),
-(5, 5, 16, 11),
-(4, 7, 12, 17),
-(8, 4, 12, 18),
-(1, 9, 13, 11),
-(6, 1, 11, 12),
-(1, 1, 17, 17);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `ceklist_harian_hk_indor`
 --
 
@@ -159,7 +113,7 @@ CREATE TABLE `ceklist_harian_hk_indor` (
   `plafon` varchar(5) NOT NULL,
   `rumah_lampu` varchar(3) DEFAULT NULL,
   `keteranagn` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ceklist_harian_hk_indor`
@@ -185,7 +139,7 @@ CREATE TABLE `ceklist_harian_hk_toilet` (
   `saluran_air` varchar(5) NOT NULL,
   `tissue_toilet` varchar(5) NOT NULL,
   `keteranagn` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ceklist_harian_hk_toilet`
@@ -214,7 +168,7 @@ CREATE TABLE `ceklist_tahunan_pac1` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ceklist_tahunan_pac1`
@@ -244,7 +198,7 @@ CREATE TABLE `ceklist_tahunan_pac2` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -264,7 +218,7 @@ CREATE TABLE `ceklist_tahunan_pac3` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ceklist_tahunan_pac3`
@@ -291,7 +245,7 @@ CREATE TABLE `ceklist_tahunan_pac4` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -311,7 +265,7 @@ CREATE TABLE `ceklist_tahunan_pac5` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ceklist_tahunan_pac5`
@@ -338,7 +292,7 @@ CREATE TABLE `ceklist_tahunan_pac6` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -358,7 +312,7 @@ CREATE TABLE `ceklist_tahunan_pac7` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ceklist_tahunan_pac7`
@@ -385,7 +339,7 @@ CREATE TABLE `ceklist_tahunan_pac8` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -405,7 +359,7 @@ CREATE TABLE `ceklist_tahunan_pac9` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -425,63 +379,7 @@ CREATE TABLE `ceklist_tahunan_pac10` (
   `termostat` tinyint(1) NOT NULL,
   `pembuangan_air` tinyint(1) NOT NULL,
   `petugas` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `data_pue`
---
-
-CREATE TABLE `data_pue` (
-  `date` datetime NOT NULL,
-  `kw_node1` float NOT NULL,
-  `kv_node1` float NOT NULL,
-  `kw_node2` float NOT NULL,
-  `kv_node2` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `data_pue`
---
-
-INSERT INTO `data_pue` (`date`, `kw_node1`, `kv_node1`, `kw_node2`, `kv_node2`) VALUES
-('2025-08-23 10:53:49', 5.1318, 4.9743, 13.9534, 13.9582),
-('2025-08-23 11:01:54', 4.8933, 4.9665, 13.8975, 13.9979),
-('2025-08-23 11:01:59', 4.4, 5, 14.2, 12.2),
-('2025-08-23 11:02:04', 6.6, 3.2, 16.2, 14.6),
-('2025-08-23 11:02:09', 5.4, 5.4, 15.2, 14.6),
-('2025-08-23 11:02:14', 3.6, 6.2, 13.4, 15.6),
-('2025-08-23 11:02:19', 4.8, 4.2, 15.4, 13.4),
-('2025-08-23 11:02:24', 5.8, 7, 13.4, 15.4),
-('2025-08-23 11:02:29', 8, 3, 16, 12),
-('2025-08-23 11:02:34', 4.6, 4.4, 15.4, 13.4),
-('2025-08-23 11:03:34', 4.9492, 5.0169, 14.0169, 14.5763),
-('2025-08-23 11:04:35', 4.7627, 4.322, 14.1864, 14.4068),
-('2025-08-23 11:05:34', 4.8136, 5.2712, 14.0339, 13.9831),
-('2025-08-23 11:06:34', 4.8276, 5.2241, 13.1552, 13.9828),
-('2025-08-23 11:07:34', 4.9, 5.0667, 13.8, 13.7),
-('2025-08-23 11:08:35', 4.4576, 4.339, 14.0847, 14.0339),
-('2025-08-23 11:09:34', 4.6102, 4.8983, 13.5763, 14.678),
-('2025-08-23 11:10:34', 4.9831, 4.9661, 14.0508, 13.9322),
-('2025-08-23 11:11:35', 5.4655, 4.9655, 14.0172, 14.2931),
-('2025-08-23 11:12:35', 4.9831, 4.678, 14.3559, 13.8644),
-('2025-08-23 11:13:35', 4.6949, 5.339, 13.7966, 13.7627),
-('2025-08-23 11:14:34', 5.7119, 4.678, 14, 14.2712),
-('2025-08-23 11:15:35', 5.1552, 5.6034, 14, 13.5345),
-('2025-08-23 11:16:35', 4.7797, 5.5593, 14.1864, 13.6949),
-('2025-08-23 11:17:35', 5.1695, 5.2203, 13.9492, 12.9831),
-('2025-08-23 11:18:35', 4.9492, 5.2034, 13.7458, 14.0508),
-('2025-08-23 11:19:35', 5.2373, 4.7966, 14.2712, 13.8475),
-('2025-08-23 11:20:35', 4.7797, 5, 14.4746, 14.339),
-('2025-08-23 14:22:49', 6.1364, 5.1818, 14.9545, 13.6136),
-('2025-08-23 19:17:04', 6, 5.8, 11.8, 16.4),
-('2025-08-23 22:18:41', 5.6923, 5.4615, 13.8462, 13.9231),
-('2025-08-24 16:20:29', 4.3333, 5.6667, 14.6667, 13),
-('2025-08-24 16:45:04', 4.7119, 5.1864, 13.4576, 14.2034),
-('2025-08-24 16:46:59', 4.8522, 4.7304, 13.4174, 14.0522),
-('2025-08-24 16:48:59', 5.1176, 4.8067, 14.2185, 14.3866),
-('2025-08-24 16:49:59', 5.1864, 5.3559, 13.8305, 14.0847);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -501,7 +399,7 @@ CREATE TABLE `dcpdu_1` (
   `cA` float NOT NULL,
   `dV` float NOT NULL,
   `dA` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `dcpdu_1`
@@ -997,7 +895,8 @@ INSERT INTO `dcpdu_1` (`id`, `noDCPDU`, `source`, `aV`, `aA`, `bV`, `bA`, `cV`, 
 (1264, '1.3.1', 'Recti 9 & Recti 1', 51.9, 64.5, 51.9, 59.6, 51.9, 85.7, 52, 69),
 (1266, '1.3.1', 'Recti 9 & Recti 1', 51.9, 62.6, 51.9, 61.6, 51.9, 85.8, 52, 68.3),
 (1276, '1.3.1', 'Recti 9 & Recti 1', 51.9, 62.6, 51.9, 61.6, 51.9, 85.8, 52, 68.3),
-(1280, '1.3.1', 'Recti 9 & Recti 1', 51.9, 62.6, 51.9, 61.6, 51.9, 85.8, 52, 68.3);
+(1280, '1.3.1', 'Recti 9 & Recti 1', 51.9, 62.6, 51.9, 61.6, 51.9, 85.8, 52, 68.3),
+(1283, '1.3.1', 'Recti 9 & Recti 1', 51.9, 62.6, 51.9, 61.6, 51.9, 85.8, 52, 68.3);
 
 -- --------------------------------------------------------
 
@@ -1013,7 +912,7 @@ CREATE TABLE `dcpdu_2` (
   `aA` varchar(10) NOT NULL,
   `bV` varchar(10) NOT NULL,
   `bA` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `dcpdu_2`
@@ -1509,7 +1408,8 @@ INSERT INTO `dcpdu_2` (`id`, `noDCPDU`, `source`, `aV`, `aA`, `bV`, `bA`) VALUES
 (1264, '2.5.01', 'Recti 9 & Recti 11', '52', '136', '52.3', '32'),
 (1266, '2.5.01', 'Recti 9 & Recti 11', '52', '137', '52.3', '32'),
 (1276, '2.5.01', 'Recti 9 & Recti 11', '52', '137', '52.3', '32'),
-(1280, '2.5.01', 'Recti 9 & Recti 11', '52', '137', '52.3', '32');
+(1280, '2.5.01', 'Recti 9 & Recti 11', '52', '137', '52.3', '32'),
+(1283, '2.5.01', 'Recti 9 & Recti 11', '52', '137', '52.3', '32');
 
 -- --------------------------------------------------------
 
@@ -1525,7 +1425,7 @@ CREATE TABLE `dcpdu_3` (
   `aA` varchar(10) NOT NULL,
   `bV` varchar(10) NOT NULL,
   `bA` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `dcpdu_3`
@@ -2021,7 +1921,8 @@ INSERT INTO `dcpdu_3` (`id`, `noDCPDU`, `source`, `aV`, `aA`, `bV`, `bA`) VALUES
 (1264, '2.5.02', 'Recti 10 & Recti 12', '36.9', '174.1', '53.54', '109.3'),
 (1266, '2.5.02', 'Recti 10 & Recti 12', '36.9', '174', '53.54', '108.7'),
 (1276, '2.5.02', 'Recti 10 & Recti 12', '36.9', '174', '53.54', '108.7'),
-(1280, '2.5.02', 'Recti 10 & Recti 12', '36.9', '174', '53.54', '108.7');
+(1280, '2.5.02', 'Recti 10 & Recti 12', '36.9', '174', '53.54', '108.7'),
+(1283, '2.5.02', 'Recti 10 & Recti 12', '36.9', '174', '53.54', '108.7');
 
 -- --------------------------------------------------------
 
@@ -2037,7 +1938,7 @@ CREATE TABLE `dcpdu_4` (
   `aA` varchar(10) NOT NULL,
   `bV` varchar(10) NOT NULL,
   `bA` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `dcpdu_4`
@@ -2533,7 +2434,8 @@ INSERT INTO `dcpdu_4` (`id`, `noDCPDU`, `source`, `aV`, `aA`, `bV`, `bA`) VALUES
 (1264, '2.5.03', 'Recti 12 & Recti 13', '53.8', '4', '53.9', '9'),
 (1266, '2.5.03', 'Recti 12 & Recti 13', '53.8', '4', '53.9', '9'),
 (1276, '2.5.03', 'Recti 12 & Recti 13', '53.8', '4', '53.9', '9'),
-(1280, '2.5.03', 'Recti 12 & Recti 13', '53.8', '4', '53.9', '9');
+(1280, '2.5.03', 'Recti 12 & Recti 13', '53.8', '4', '53.9', '9'),
+(1283, '2.5.03', 'Recti 12 & Recti 13', '53.8', '4', '53.9', '9');
 
 -- --------------------------------------------------------
 
@@ -2618,7 +2520,7 @@ CREATE TABLE `dp_accescontrol` (
   `Pingger_Print` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `Total` varchar(99) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `Mulai_beroperasi` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `dp_accescontrol`
@@ -3454,7 +3356,7 @@ CREATE TABLE `dp_space` (
   `tidakterpakai_m2` varchar(99) DEFAULT NULL,
   `occ_ruang` varchar(99) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `occ_ttc` varchar(99) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `dp_space`
@@ -3620,7 +3522,7 @@ CREATE TABLE `dp_ttc` (
   `email` varchar(99) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `cellphone` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `No_tlp` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `dp_ttc`
@@ -3740,7 +3642,7 @@ CREATE TABLE `genset1` (
   `suhu` varchar(1500) NOT NULL,
   `hours_mater` varchar(1500) NOT NULL,
   `date` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `genset1`
@@ -3796,7 +3698,7 @@ CREATE TABLE `genset2` (
   `hours_mater1` varchar(1500) NOT NULL,
   `hours_mater2` varchar(1500) NOT NULL,
   `date` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `genset2`
@@ -3835,14 +3737,14 @@ INSERT INTO `genset2` (`id`, `prosses`, `gen_on`, `gen_off`, `tanki_bulanan`, `t
 
 CREATE TABLE `issues` (
   `id` int NOT NULL,
-  `issue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `analisa` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `risk` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `solution` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `issue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `analisa` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `risk` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `solution` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `status` varchar(550) DEFAULT NULL,
   `profile_affected` varchar(550) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `issues`
@@ -3909,7 +3811,7 @@ CREATE TABLE `load_trafo` (
   `id` int NOT NULL,
   `NG` varchar(20) NOT NULL,
   `PF` varchar(99) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `load_trafo`
@@ -4409,7 +4311,9 @@ INSERT INTO `load_trafo` (`id`, `NG`, `PF`) VALUES
 (1264, '0.5', '0.99'),
 (1266, '0.5', '0.98'),
 (1276, '0.5', '0.98'),
-(1280, '0.5', '0.98');
+(1280, '0.5', '0.98'),
+(1281, '0.5', '0.98'),
+(1283, '0.5', '0.98');
 
 -- --------------------------------------------------------
 
@@ -4444,10 +4348,10 @@ CREATE TABLE `pac1` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac1`
@@ -4944,7 +4848,8 @@ INSERT INTO `pac1` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 1', '60', '25', '25.1', '48.8', 'On'),
 (1276, 'RCG 1', '60', '25', '25.1', '48.8', 'On'),
 (1277, 'RCG 1', '60', '25', '25.1', '48.8', 'On'),
-(1280, 'RCG 1', '60', '25', '25.1', '48.8', 'On');
+(1280, 'RCG 1', '60', '25', '25.1', '48.8', 'On'),
+(1283, 'RCG 1', '60', '25', '25.1', '48.8', 'On');
 
 -- --------------------------------------------------------
 
@@ -4957,10 +4862,10 @@ CREATE TABLE `pac2` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac2`
@@ -5457,7 +5362,8 @@ INSERT INTO `pac2` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 2', '60', '23', '26.4', '47.9', 'On'),
 (1276, 'RCG 2', '60', '23', '26.4', '47.9', 'On'),
 (1277, 'RCG 2', '60', '23', '26.4', '47.9', 'On'),
-(1280, 'RCG 2', '60', '23', '26.4', '47.9', 'On');
+(1280, 'RCG 2', '60', '23', '26.4', '47.9', 'On'),
+(1283, 'RCG 2', '60', '23', '26.4', '47.9', 'On');
 
 -- --------------------------------------------------------
 
@@ -5470,10 +5376,10 @@ CREATE TABLE `pac3` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac3`
@@ -5970,7 +5876,8 @@ INSERT INTO `pac3` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 3', '60', '25', '23.7', '52.8', 'On'),
 (1276, 'RCG 3', '60', '25', '23.7', '52.8', 'On'),
 (1277, 'RCG 3', '60', '25', '23.7', '52.8', 'On'),
-(1280, 'RCG 3', '60', '25', '23.7', '52.8', 'On');
+(1280, 'RCG 3', '60', '25', '23.7', '52.8', 'On'),
+(1283, 'RCG 3', '60', '25', '23.7', '52.8', 'On');
 
 -- --------------------------------------------------------
 
@@ -5983,10 +5890,10 @@ CREATE TABLE `pac4` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac4`
@@ -6483,7 +6390,8 @@ INSERT INTO `pac4` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 4', '60', '25', '24.2', '48.8', 'On'),
 (1276, 'RCG 4', '60', '25', '24.2', '48.8', 'On'),
 (1277, 'RCG 4', '60', '25', '24.2', '48.8', 'On'),
-(1280, 'RCG 4', '60', '25', '24.2', '48.8', 'On');
+(1280, 'RCG 4', '60', '25', '24.2', '48.8', 'On'),
+(1283, 'RCG 4', '60', '25', '24.2', '48.8', 'On');
 
 -- --------------------------------------------------------
 
@@ -6496,10 +6404,10 @@ CREATE TABLE `pac5` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac5`
@@ -6996,7 +6904,8 @@ INSERT INTO `pac5` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 5', '60', '23', '25', '58', 'StandBy'),
 (1276, 'RCG 5', '60', '23', '25', '58', 'StandBy'),
 (1277, 'RCG 5', '60', '23', '25', '58', 'StandBy'),
-(1280, 'RCG 5', '60', '23', '25', '58', 'StandBy');
+(1280, 'RCG 5', '60', '23', '25', '58', 'StandBy'),
+(1283, 'RCG 5', '60', '23', '25', '58', 'StandBy');
 
 -- --------------------------------------------------------
 
@@ -7009,10 +6918,10 @@ CREATE TABLE `pac6` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac6`
@@ -7509,7 +7418,8 @@ INSERT INTO `pac6` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 6', '60', '22', '24.1', '56', 'On'),
 (1276, 'RCG 6', '60', '22', '24.1', '56', 'On'),
 (1277, 'RCG 6', '60', '22', '24.1', '56', 'On'),
-(1280, 'RCG 6', '60', '22', '24.1', '56', 'On');
+(1280, 'RCG 6', '60', '22', '24.1', '56', 'On'),
+(1283, 'RCG 6', '60', '22', '24.1', '56', 'On');
 
 -- --------------------------------------------------------
 
@@ -7522,10 +7432,10 @@ CREATE TABLE `pac7` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac7`
@@ -8022,7 +7932,8 @@ INSERT INTO `pac7` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 7', '60', '23', '24.0', '54.8', 'StandBy'),
 (1276, 'RCG 7', '60', '23', '24.0', '54.8', 'StandBy'),
 (1277, 'RCG 7', '60', '23', '24.0', '54.8', 'StandBy'),
-(1280, 'RCG 7', '60', '23', '24.0', '54.8', 'StandBy');
+(1280, 'RCG 7', '60', '23', '24.0', '54.8', 'StandBy'),
+(1283, 'RCG 7', '60', '23', '24.0', '54.8', 'StandBy');
 
 -- --------------------------------------------------------
 
@@ -8035,10 +7946,10 @@ CREATE TABLE `pac8` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac8`
@@ -8535,7 +8446,8 @@ INSERT INTO `pac8` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 8', '60', '23', '24.4', '54.4', 'On'),
 (1276, 'RCG 8', '60', '23', '24.4', '54.4', 'On'),
 (1277, 'RCG 8', '60', '23', '24.4', '54.4', 'On'),
-(1280, 'RCG 8', '60', '23', '24.4', '54.4', 'On');
+(1280, 'RCG 8', '60', '23', '24.4', '54.4', 'On'),
+(1283, 'RCG 8', '60', '23', '24.4', '54.4', 'On');
 
 -- --------------------------------------------------------
 
@@ -8548,10 +8460,10 @@ CREATE TABLE `pac9` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac9`
@@ -9048,7 +8960,8 @@ INSERT INTO `pac9` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `Sta
 (1266, 'RCG 10', '30', '23', '21.8', '55.9', 'On'),
 (1276, 'RCG 10', '30', '23', '21.8', '55.9', 'On'),
 (1277, 'RCG 10', '30', '23', '21.8', '55.9', 'On'),
-(1280, 'RCG 10', '30', '23', '21.8', '55.9', 'On');
+(1280, 'RCG 10', '30', '23', '21.8', '55.9', 'On'),
+(1283, 'RCG 10', '30', '23', '21.8', '55.9', 'On');
 
 -- --------------------------------------------------------
 
@@ -9061,10 +8974,10 @@ CREATE TABLE `pac10` (
   `Nama` varchar(190) NOT NULL,
   `Tipe` varchar(190) NOT NULL,
   `SetPoint` varchar(190) NOT NULL,
-  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Suhu` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Kelembaban` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pac10`
@@ -9561,7 +9474,8 @@ INSERT INTO `pac10` (`id`, `Nama`, `Tipe`, `SetPoint`, `Suhu`, `Kelembaban`, `St
 (1266, 'RCG 11', '30', '23', '24', '51', 'On'),
 (1276, 'RCG 11', '30', '23', '24', '51', 'On'),
 (1277, 'RCG 11', '30', '23', '24', '51', 'On'),
-(1280, 'RCG 11', '30', '23', '24', '51', 'On');
+(1280, 'RCG 11', '30', '23', '24', '51', 'On'),
+(1283, 'RCG 11', '30', '23', '24', '51', 'On');
 
 -- --------------------------------------------------------
 
@@ -9587,7 +9501,7 @@ CREATE TABLE `perangkat_ttc_teling` (
   `jenis_perangkat` varchar(100) NOT NULL,
   `brand` varchar(100) NOT NULL,
   `age` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9624,7 +9538,7 @@ CREATE TABLE `pm_it` (
   `kva_rec3_5` float NOT NULL,
   `kw_rec9_10_11_12` float NOT NULL,
   `kva_rec9_10_11_12` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pm_it`
@@ -9747,7 +9661,8 @@ INSERT INTO `pm_it` (`id_report`, `kw_rec1_2_ups1`, `kva_rec1_2_ups1`, `kw_rec4_
 (1258, 5.9, 7.7, 25.1, 26.1, 7.6, 9, 44, 44.3),
 (1261, 6.36, 7.25, 9.46, 11.68, 7.63, 8.96, 53.39, 53.98),
 (1264, 6.36, 7.25, 9.46, 11.68, 7.63, 8.96, 53.39, 53.98),
-(1266, 6.13, 6.89, 25.44, 27.2, 7.65, 9.01, 42.41, 42.79);
+(1266, 6.13, 6.89, 25.44, 27.2, 7.65, 9.01, 42.41, 42.79),
+(1283, 3, 3, 26, 26, 7, 7, 43, 43);
 
 -- --------------------------------------------------------
 
@@ -9763,7 +9678,7 @@ CREATE TABLE `rec1` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec1`
@@ -10261,7 +10176,8 @@ INSERT INTO `rec1` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.1', 'Huawei', '1280', '53.9', '11.9', 'On'),
 (1266, 'Rectifier#1.2.1', 'Huawei', '1280', '53.9', '13.3', 'On'),
 (1276, 'Rectifier#1.2.1', 'Huawei', '1280', '53.9', '13.3', 'On'),
-(1280, 'Rectifier#1.2.1', 'Huawei', '1280', '53.9', '13.3', 'On');
+(1280, 'Rectifier#1.2.1', 'Huawei', '1280', '53.9', '13.3', 'On'),
+(1283, 'Rectifier#1.2.1', 'Huawei', '1280', '53.9', '13.3', 'On');
 
 -- --------------------------------------------------------
 
@@ -10277,7 +10193,7 @@ CREATE TABLE `rec2` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec2`
@@ -10775,7 +10691,8 @@ INSERT INTO `rec2` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.2', 'Huawei', '1280', '53.4', '0', 'On'),
 (1266, 'Rectifier#1.2.2', 'Huawei', '1280', '53.4', '0.0', 'On'),
 (1276, 'Rectifier#1.2.2', 'Huawei', '1280', '53.4', '0.0', 'On'),
-(1280, 'Rectifier#1.2.2', 'Huawei', '1280', '53.4', '0.0', 'On');
+(1280, 'Rectifier#1.2.2', 'Huawei', '1280', '53.4', '0.0', 'On'),
+(1283, 'Rectifier#1.2.2', 'Huawei', '1280', '53.4', '0.0', 'On');
 
 -- --------------------------------------------------------
 
@@ -10791,7 +10708,7 @@ CREATE TABLE `rec3` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec3`
@@ -11289,7 +11206,8 @@ INSERT INTO `rec3` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.13', 'Huawei', '1580', '54.0', '10.7', 'On'),
 (1266, 'Rectifier#1.2.13', 'Huawei', '1580', '54.0', '10.7', 'On'),
 (1276, 'Rectifier#1.2.13', 'Huawei', '1580', '54.0', '10.7', 'On'),
-(1280, 'Rectifier#1.2.13', 'Huawei', '1580', '54.0', '10.7', 'On');
+(1280, 'Rectifier#1.2.13', 'Huawei', '1580', '54.0', '10.7', 'On'),
+(1283, 'Rectifier#1.2.13', 'Huawei', '1580', '54.0', '10.7', 'On');
 
 -- --------------------------------------------------------
 
@@ -11305,7 +11223,7 @@ CREATE TABLE `rec4` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec4`
@@ -11803,7 +11721,8 @@ INSERT INTO `rec4` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.4', 'Huawei', '1580', '53.9', '143.5', 'On'),
 (1266, 'Rectifier#1.2.4', 'Huawei', '1580', '53.9', '141.9', 'On'),
 (1276, 'Rectifier#1.2.4', 'Huawei', '1580', '53.9', '141.9', 'On'),
-(1280, 'Rectifier#1.2.4', 'Huawei', '1580', '53.9', '141.9', 'On');
+(1280, 'Rectifier#1.2.4', 'Huawei', '1580', '53.9', '141.9', 'On'),
+(1283, 'Rectifier#1.2.4', 'Huawei', '1580', '53.9', '141.9', 'On');
 
 -- --------------------------------------------------------
 
@@ -11819,7 +11738,7 @@ CREATE TABLE `rec5` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec5`
@@ -12317,7 +12236,8 @@ INSERT INTO `rec5` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.5', 'Huawei', '1580', '53.8', '116.0', 'On'),
 (1266, 'Rectifier#1.2.5', 'Huawei', '1580', '53.8', '118.7', 'On'),
 (1276, 'Rectifier#1.2.5', 'Huawei', '1580', '53.8', '118.7', 'On'),
-(1280, 'Rectifier#1.2.5', 'Huawei', '1580', '53.8', '118.7', 'On');
+(1280, 'Rectifier#1.2.5', 'Huawei', '1580', '53.8', '118.7', 'On'),
+(1283, 'Rectifier#1.2.5', 'Huawei', '1580', '53.8', '118.7', 'On');
 
 -- --------------------------------------------------------
 
@@ -12333,7 +12253,7 @@ CREATE TABLE `rec6` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec6`
@@ -12831,7 +12751,8 @@ INSERT INTO `rec6` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.9', 'Huawei', '1280', '52.5', '247.7', 'On'),
 (1266, 'Rectifier#1.2.9', 'Huawei', '1280', '52.5', '250.3', 'On'),
 (1276, 'Rectifier#1.2.9', 'Huawei', '1280', '52.5', '250.3', 'On'),
-(1280, 'Rectifier#1.2.9', 'Huawei', '1280', '52.5', '250.3', 'On');
+(1280, 'Rectifier#1.2.9', 'Huawei', '1280', '52.5', '250.3', 'On'),
+(1283, 'Rectifier#1.2.9', 'Huawei', '1280', '52.5', '250.3', 'On');
 
 -- --------------------------------------------------------
 
@@ -12847,7 +12768,7 @@ CREATE TABLE `rec7` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec7`
@@ -13345,7 +13266,8 @@ INSERT INTO `rec7` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.10', 'Huawei', '1280', '54', '181.0', 'On'),
 (1266, 'Rectifier#1.2.10', 'Huawei', '1280', '54', '281.9', 'On'),
 (1276, 'Rectifier#1.2.10', 'Huawei', '1280', '54', '281.9', 'On'),
-(1280, 'Rectifier#1.2.10', 'Huawei', '1280', '54', '281.9', 'On');
+(1280, 'Rectifier#1.2.10', 'Huawei', '1280', '54', '281.9', 'On'),
+(1283, 'Rectifier#1.2.10', 'Huawei', '1280', '54', '281.9', 'On');
 
 -- --------------------------------------------------------
 
@@ -13361,7 +13283,7 @@ CREATE TABLE `rec8` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec8`
@@ -13859,7 +13781,8 @@ INSERT INTO `rec8` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.11', 'Huawei', '1280', '52.5', '281.9', 'On'),
 (1266, 'Rectifier#1.2.11', 'Huawei', '1280', '52.5', '179.3', 'On'),
 (1276, 'Rectifier#1.2.11', 'Huawei', '1280', '52.5', '179.3', 'On'),
-(1280, 'Rectifier#1.2.11', 'Huawei', '1280', '52.5', '179.3', 'On');
+(1280, 'Rectifier#1.2.11', 'Huawei', '1280', '52.5', '179.3', 'On'),
+(1283, 'Rectifier#1.2.11', 'Huawei', '1280', '52.5', '179.3', 'On');
 
 -- --------------------------------------------------------
 
@@ -13875,7 +13798,7 @@ CREATE TABLE `rec9` (
   `CapsRec` varchar(1500) NOT NULL,
   `TotalLoad` varchar(1500) NOT NULL,
   `Status` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec9`
@@ -14373,7 +14296,8 @@ INSERT INTO `rec9` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 (1264, 'Rectifier#1.2.12', 'Huawei', '1280', '53.9', '226.2', 'On'),
 (1266, 'Rectifier#1.2.12', 'Huawei', '1280', '53.9', '224.7', 'On'),
 (1276, 'Rectifier#1.2.12', 'Huawei', '1280', '53.9', '224.7', 'On'),
-(1280, 'Rectifier#1.2.12', 'Huawei', '1280', '53.9', '224.7', 'On');
+(1280, 'Rectifier#1.2.12', 'Huawei', '1280', '53.9', '224.7', 'On'),
+(1283, 'Rectifier#1.2.12', 'Huawei', '1280', '53.9', '224.7', 'On');
 
 -- --------------------------------------------------------
 
@@ -14384,13 +14308,13 @@ INSERT INTO `rec9` (`id`, `Nama`, `Brand`, `BebanTotal`, `CapsRec`, `TotalLoad`,
 CREATE TABLE `report_info` (
   `no_report` int NOT NULL,
   `petugasME` varchar(1500) NOT NULL,
-  `petugasME2` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `petugasME2` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `petugasME3` varchar(99) DEFAULT NULL,
   `petugasME4` varchar(99) DEFAULT NULL,
   `jenis_report` varchar(1500) NOT NULL,
   `date_time` datetime NOT NULL,
   `status` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `report_info`
@@ -15535,19 +15459,22 @@ INSERT INTO `report_info` (`no_report`, `petugasME`, `petugasME2`, `petugasME3`,
 (1256, 'MND22084311045', 'MND24014311047', '000', '-', 'Ceklist', '2025-08-08 06:41:00', 1),
 (1257, 'MND24074311051', 'MND22074311007', 'MND24024311049', 'MND22084311043', 'KWH & Suhu', '2025-08-08 12:00:00', 1),
 (1258, 'MND22074311007', 'MND24074311051', 'MND22084311043', 'MND24024311049', 'Ceklist', '2025-08-08 14:00:00', 1),
-(1259, 'MND22074311006', 'MND22084311046', 'MND22084311043', 'MND24024311049', '', '2025-08-08 18:00:00', 1),
-(1260, 'MND24024311049', 'MND22084311043', 'MND22074311006', 'MND22084311046', 'KWH & Suhu', '2025-08-08 06:03:00', 1),
-(1261, 'MND22084311046', 'MND22074311006', '000', '-', 'Ceklist', '2025-08-08 20:00:00', 1),
-(1262, 'MND22074311006', 'MND22084311046', '000', '-', 'KWH & Suhu', '2025-08-08 22:09:00', 1),
-(1263, 'MND22074311006', 'MND22084311046', '000', '-', 'KWH & Suhu', '2025-08-09 00:01:00', 1),
-(1264, 'MND22084311046', 'MND22074311006', '000', '-', 'Ceklist', '2025-08-09 07:48:00', 1),
-(1265, 'MND-22074311006', 'MND24014311048', 'MND24074311060', '-', 'KWH & Suhu', '2025-08-09 12:04:00', 1),
-(1266, 'MND-22074311006', 'MND24014311048', 'MND24074311060', '-', 'Ceklist', '2025-08-09 14:00:00', 1),
-(1274, 'MND24024311049', 'MND24024311049', 'MND24024311049', 'MND24024311049', 'Ceklist', '2025-08-18 10:42:00', 1),
+(1259, 'MND22074311006', 'MND22084311046', 'MND22084311043', 'MND24024311049', '', '2025-08-08 18:00:00', 0),
+(1260, 'MND24024311049', 'MND22084311043', 'MND22074311006', 'MND22084311046', 'KWH & Suhu', '2025-08-08 06:03:00', 0),
+(1261, 'MND22084311046', 'MND22074311006', '000', '-', 'Ceklist', '2025-08-08 20:00:00', 0),
+(1262, 'MND22074311006', 'MND22084311046', '000', '-', 'KWH & Suhu', '2025-08-08 22:09:00', 0),
+(1263, 'MND22074311006', 'MND22084311046', '000', '-', 'KWH & Suhu', '2025-08-09 00:01:00', 0),
+(1264, 'MND22084311046', 'MND22074311006', '000', '-', 'Ceklist', '2025-08-09 07:48:00', 0),
+(1265, 'MND-22074311006', 'MND24014311048', 'MND24074311060', '-', 'KWH & Suhu', '2025-08-09 12:04:00', 0),
+(1266, 'MND-22074311006', 'MND24014311048', 'MND24074311060', '-', 'Ceklist', '2025-08-09 14:00:00', 0),
+(1274, 'MND24024311049', 'MND24024311049', 'MND24024311049', 'MND24024311049', 'Ceklist', '2025-08-18 10:42:00', 0),
 (1275, 'MND24024311049', 'MND24024311049', 'MND24024311049', 'MND-22074311006', 'KWH & Suhu', '2025-08-19 22:10:00', 0),
 (1276, 'MND24024311049', 'MND24024311049', 'MND24024311049', 'MND24024311049', 'Ceklist', '2025-08-19 22:12:00', 0),
-(1279, 'MND22084311045', 'MND24024311049', 'MND24014311047', NULL, 'KWH & Suhu', '2025-08-20 00:08:00', 1),
-(1280, 'MND24024311049', 'MND22084311045', 'MND24014311047', NULL, 'Ceklist', '2025-08-20 06:45:00', 1);
+(1279, 'MND22084311045', 'MND24024311049', 'MND24014311047', NULL, 'KWH & Suhu', '2025-08-20 00:08:00', 0),
+(1280, 'MND24024311049', 'MND22084311045', 'MND24014311047', NULL, 'Ceklist', '2025-08-20 06:45:00', 0),
+(1281, 'MND24024311049', 'MND-22074311006', 'MND24014311048', NULL, 'Ceklist', '2025-08-28 20:54:00', NULL),
+(1282, 'MND24024311049', 'MND-22074311006', 'MND24014311048', NULL, 'KWH & Suhu', '2025-08-28 22:20:00', NULL),
+(1283, 'MND-22074311006', 'MND24024311049', 'MND22074311006', NULL, 'Ceklist', '2025-08-28 22:21:00', 1);
 
 -- --------------------------------------------------------
 
@@ -15561,7 +15488,7 @@ CREATE TABLE `report_kwh` (
   `lbp` varchar(1500) NOT NULL,
   `kvar` varchar(1500) NOT NULL,
   `total` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `report_kwh`
@@ -16611,7 +16538,10 @@ INSERT INTO `report_kwh` (`id_report_kwh`, `bp`, `lbp`, `kvar`, `total`) VALUES
 (1266, '627.85', '3128.69', '433.78', '3756.54'),
 (1276, '123', '123', '123', '123'),
 (1279, '635.76', '3165.28', '437.22', '3801.05'),
-(1280, '635.76', '3166.37', '437.29', '3802.13');
+(1280, '635.76', '3166.37', '437.29', '3802.13'),
+(1281, '622.02', '3098.40', '430.19', '3720.41'),
+(1282, '123', '123', '123', '123'),
+(1283, '123', '123', '123', '123');
 
 -- --------------------------------------------------------
 
@@ -16630,15 +16560,15 @@ CREATE TABLE `report_lvmdp1` (
   `R1N` float NOT NULL,
   `R2N` float NOT NULL,
   `R3N` float NOT NULL,
-  `kv` varchar(1500) NOT NULL,
+  `kw` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `kva` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `report_lvmdp1`
 --
 
-INSERT INTO `report_lvmdp1` (`id_report_lvmdp1`, `R`, `S`, `T`, `L1N`, `L2N`, `L3N`, `R1N`, `R2N`, `R3N`, `kv`, `kva`) VALUES
+INSERT INTO `report_lvmdp1` (`id_report_lvmdp1`, `R`, `S`, `T`, `L1N`, `L2N`, `L3N`, `R1N`, `R2N`, `R3N`, `kw`, `kva`) VALUES
 (103, '94', '93', '74', 391, 389, 390, 226, 225, 225, '55', '56'),
 (105, '94', '101', '86', 224, 224, 223, 390, 387, 387, '62', '63'),
 (109, '87', '90', '87', 389, 387, 387, 224, 224, 223, '57', '58'),
@@ -17130,7 +17060,9 @@ INSERT INTO `report_lvmdp1` (`id_report_lvmdp1`, `R`, `S`, `T`, `L1N`, `L2N`, `L
 (1264, '126', '130', '115', 226, 226, 225, 393, 391, 391, '83', '84'),
 (1266, '131', '130', '127', 227, 227, 226, 394, 392, 392, '87', '88'),
 (1276, '123', '123', '123', 123, 123, 123, 123, 123, 123, '123', '123'),
-(1280, '129', '129', '124', 393, 390, 391, 226, 226, 225, '85', '86');
+(1280, '129', '129', '124', 393, 390, 391, 226, 226, 225, '85', '86'),
+(1281, '132', '132', '135', 394, 390, 395, 226, 226, 212, '93', '95'),
+(1283, '92', '99', '82', 226, 225, 224, 392, 390, 390, '90', '90');
 
 -- --------------------------------------------------------
 
@@ -17149,15 +17081,15 @@ CREATE TABLE `report_lvmdp2` (
   `R1N` float NOT NULL,
   `R2N` float NOT NULL,
   `R3N` float NOT NULL,
-  `kv` varchar(1500) NOT NULL,
+  `kw` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `kva` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `report_lvmdp2`
 --
 
-INSERT INTO `report_lvmdp2` (`id_report_lvmdp2`, `R`, `S`, `T`, `L1N`, `L2N`, `L3N`, `R1N`, `R2N`, `R3N`, `kv`, `kva`) VALUES
+INSERT INTO `report_lvmdp2` (`id_report_lvmdp2`, `R`, `S`, `T`, `L1N`, `L2N`, `L3N`, `R1N`, `R2N`, `R3N`, `kw`, `kva`) VALUES
 (103, '105', '110', '103', 391, 389, 390, 226, 225, 225, '71', '71'),
 (105, '93', '92', '92', 225, 225, 223, 391, 388, 389, '61', '62'),
 (109, '94', '92', '94', 390, 388, 388, 225, 225, 223, '63', '63'),
@@ -17648,7 +17580,8 @@ INSERT INTO `report_lvmdp2` (`id_report_lvmdp2`, `R`, `S`, `T`, `L1N`, `L2N`, `L
 (1264, '65', '64', '65', 227, 227, 226, 394, 392, 392, '57', '57'),
 (1266, '81', '89', '82', 228, 227, 226, 395, 393, 393, '57', '58'),
 (1276, '123', '123', '123', 123, 123, 123, 123, 123, 123, '123', '123'),
-(1280, '95', '97', '89', 394, 391, 391, 227, 227, 225, '69', '64');
+(1280, '95', '97', '89', 394, 391, 391, 227, 227, 225, '69', '64'),
+(1283, '92', '99', '82', 226, 225, 224, 392, 390, 390, '80', '80');
 
 -- --------------------------------------------------------
 
@@ -17665,7 +17598,7 @@ CREATE TABLE `report_suhu` (
   `RRan` varchar(1500) NOT NULL,
   `RTransmissi` varchar(1500) NOT NULL,
   `RCore` varchar(1500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `report_suhu`
@@ -18717,7 +18650,10 @@ INSERT INTO `report_suhu` (`id_report_suhu`, `RTrafo`, `RGenset`, `RBattery`, `R
 (1266, '33', '29', '25', '24', '23', '23', '22'),
 (1276, '321', '321', '321', '321', '321', '321', '321'),
 (1279, '27.0', '28.1', '25.7', '23.4', '24.4', '23.0', '23.0'),
-(1280, '27.8', '27.9', '25.6', '25.0', '24.5', '23.1', '22.9');
+(1280, '27.8', '27.9', '25.6', '25.0', '24.5', '23.1', '22.9'),
+(1281, '29', '30', '25', '23', '23', '23', '21'),
+(1282, '321', '321', '321', '321', '321', '321', '321'),
+(1283, '321', '321', '321', '321', '321', '321', '321');
 
 -- --------------------------------------------------------
 
@@ -18766,7 +18702,7 @@ CREATE TABLE `trafof_c` (
   `RECF` varchar(3) NOT NULL,
   `UPSF` varchar(3) NOT NULL,
   `Cuaca` varchar(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `trafof_c`
@@ -18775,7 +18711,9 @@ CREATE TABLE `trafof_c` (
 INSERT INTO `trafof_c` (`id`, `TrafoCaps`, `GensetTotal`, `PACTotal`, `RECTotal`, `UPSTotal`, `GensetF`, `PACF`, `RECF`, `UPSF`, `Cuaca`) VALUES
 (0, '555', '3', '10', '9', '2', '0', '0', '0', '0', 'Cerah'),
 (1276, '555', '3', '10', '9', '2', '0', '0', '0', '0', 'Cerah'),
-(1280, '555', '3', '10', '9', '2', '0', '0', '0', '0', 'Cerah');
+(1280, '555', '3', '10', '9', '2', '0', '0', '0', '0', 'Cerah'),
+(1281, '555', '3', '10', '9', '2', '0', '0', '0', '0', 'Cerah'),
+(1283, '555', '3', '10', '9', '2', '0', '0', '0', '0', 'Cerah');
 
 -- --------------------------------------------------------
 
@@ -19302,7 +19240,8 @@ INSERT INTO `ups1` (`id`, `no`, `brand`, `type`, `kw`, `kva`, `battery`, `runtim
 (1264, '1.2.01', 'Eaton', '75', 2.4, 2.7, 274, 62, 6.7),
 (1266, '1.2.01', 'Eaton', '75', 2.4, 2.7, 274, 62, 6.7),
 (1276, '1.2.01', 'Eaton', '75', 2.4, 2.7, 274, 62, 6.7),
-(1280, '1.2.01', 'Eaton', '75', 2.4, 2.7, 274, 62, 6.7);
+(1280, '1.2.01', 'Eaton', '75', 2.4, 2.7, 274, 62, 6.7),
+(1283, '1.2.01', 'Eaton', '75', 2.4, 2.7, 274, 62, 6.7);
 
 -- --------------------------------------------------------
 
@@ -19829,7 +19768,8 @@ INSERT INTO `ups2` (`id`, `no`, `brand`, `type`, `kw`, `kva`, `battery`, `runtim
 (1264, '1.2.02', 'Vektor', '30', 3.4, 3.7, 326, 120, 1.5),
 (1266, '1.2.02', 'Vektor', '30', 3.5, 3.9, 326, 120, 1.5),
 (1276, '1.2.02', 'Vektor', '30', 3.5, 3.9, 326, 120, 1.5),
-(1280, '1.2.02', 'Vektor', '30', 3.5, 3.9, 326, 120, 1.5);
+(1280, '1.2.02', 'Vektor', '30', 3.5, 3.9, 326, 120, 1.5),
+(1283, '1.2.02', 'Vektor', '30', 3.5, 3.9, 326, 120, 1.5);
 
 -- --------------------------------------------------------
 
@@ -19890,7 +19830,7 @@ CREATE TABLE `users` (
 --
 
 CREATE TABLE `user_bio` (
-  `id` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `id` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Nama` varchar(900) NOT NULL,
   `jabatan` varchar(99) NOT NULL,
   `tl` varchar(1500) DEFAULT NULL,
@@ -19899,7 +19839,7 @@ CREATE TABLE `user_bio` (
   `email` varchar(1500) DEFAULT NULL,
   `gambar` varchar(900) NOT NULL,
   `idx` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_bio`
@@ -20642,7 +20582,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `report_info`
 --
 ALTER TABLE `report_info`
-  MODIFY `no_report` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1282;
+  MODIFY `no_report` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1284;
 
 --
 -- AUTO_INCREMENT for table `sld`

@@ -271,51 +271,26 @@
                 .then(response => {
                     console.log("Response from API:", response);
 
-                    setTimeout(() => {
-                        document.getElementById("loader").style.display = "none";
-                    }, 5000);
-                    const receivedObj = response.received;
-                    // Kirim ke API
-                    fetch(`http://${host}/api/${ttc}/checklist/sendInfoReport`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(response)
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            console.log("Response dari server:", data);
-                        })
-                        .catch(err => {
-                            console.error("Error kirim data:", err);
-                        });
+                    // matiin loader pas request selesai
+                    document.getElementById("loader").style.display = "none";
 
-                    fetch('http://${host}/api/ttc_teling/checklist/updateStatus', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({}) // kosong karena status langsung = 3
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            window.location.href = "../checklist.html";
-                        })
-                        .catch(err => {
-                            console.error("Error fetch:", err);
-                            alert("Terjadi kesalahan saat menghubungi server.");
-                        });
-                    // switch (jenisReport) {
-                    //     case 'KWH & Suhu':
-                    //         window.location.href = "../checklist.html";
-                    //         break;
-                    //     case 'Ceklist':
-                    //         window.location.href = "power.html";
-                    //         break;
-                    // }
+                    // update status langsung
+                    return fetch(`http://${host}/api/ttc_teling/checklist/updateStatus`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({})
+                    });
                 })
-                .catch(err => console.error("Error sending data:", err));
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Update status response:", data);
+                    window.location.href = "../checklist.html";
+                })
+                .catch(err => {
+                    console.error("Error fetch:", err);
+                    alert("Terjadi kesalahan saat menghubungi server.");
+                    document.getElementById("loader").style.display = "none";
+                });
         }
 
 
