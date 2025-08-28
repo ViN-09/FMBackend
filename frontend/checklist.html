@@ -363,8 +363,8 @@
             ].filter(Boolean); // buang yg null
 
             // Convert tanki dan tangki ke number agar .toFixed bisa dipakai
-            const bulanan = parseFloat(data.tanki_bulanan) || 0;
-            const harian = parseFloat(data.tangki_harian) || 0;
+            const bulanan = parseFloat(data.liter_bulanan) || 0;
+            const harian = parseFloat(data.liter_harian) || 0;
             const suhu = parseFloat(data.suhu) || 0;
 
             // Hitung durasi dalam menit

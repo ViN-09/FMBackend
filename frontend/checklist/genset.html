@@ -259,7 +259,7 @@
                     //         break;
                     // }
 
-                    fetch('http://${host}/api/ttc_teling/checklist/updateStatus', {
+                    fetch(`http://${host}/api/ttc_teling/checklist/updateStatus`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -268,13 +268,7 @@
                     })
                         .then(res => res.json())
                         .then(data => {
-                            if (data.success) {
-                                // Redirect ke checklist.html
-                                window.location.href = "../checklist.html";
-                            } else {
-                                console.error("Gagal update status:", data.message);
-                                alert("Gagal update status: " + data.message);
-                            }
+                            window.location.href = "../checklist.html";
                         })
                         .catch(err => {
                             console.error("Error fetch:", err);
