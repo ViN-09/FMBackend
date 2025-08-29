@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
+use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
 
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
@@ -39,6 +40,9 @@ Route::prefix('ttc_teling')->group(function () {
         Route::post('/reciver', [ReciverTeling::class, 'receiveRawJson']);
         Route::get('/avgDPM', [ReciverTeling::class, 'avgDPM']);
         Route::get('/jam', [ReciverTeling::class, 'clock']);
+    });
+    Route::prefix('login')->group(function () {
+        Route::post('/try', [LoginTeling::class, 'cekLogin']);
     });
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
     ///
