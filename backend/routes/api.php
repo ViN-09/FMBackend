@@ -10,6 +10,7 @@ use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTelin
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
 use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
+use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
 
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
@@ -43,6 +44,9 @@ Route::prefix('ttc_teling')->group(function () {
     });
     Route::prefix('login')->group(function () {
         Route::post('/try', [LoginTeling::class, 'cekLogin']);
+    });
+    Route::prefix('monitoring')->group(function () {
+        Route::get('/data', [MonitoringTeling::class, 'dataMonitoring']);
     });
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
     ///
