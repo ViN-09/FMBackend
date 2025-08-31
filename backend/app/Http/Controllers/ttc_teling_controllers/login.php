@@ -65,7 +65,7 @@ class login extends Controller
     $request->validate([
         'username' => 'required|string',
         'password' => 'required|string'
-    ]);
+    ]); 
 
     $username = $request->input('username');
     $password = $request->input('password');
