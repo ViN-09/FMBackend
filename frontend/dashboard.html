@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Monitoring Dashboard</title>
   <link rel="stylesheet" href="src/Font-Awesome-6.4.0/css/all.min.css" />
-  <script src="src/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="src/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
-  <script src="src/node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <link href="src/bootstrap-5.3.6-dist/bootstrap-5.3.6-dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/sidebar.css" />
@@ -97,8 +97,7 @@
     </table>
   </div>
 
-  <script src="css/sidebar.js"></script>
-  <script src="DB_Utility/db_utility.js"></script>
+  <script src="frontend/js/sidebar.js"></script>
 
   <script>
     const hours = [...Array(24).keys()].map(h => h.toString().padStart(2, '0') + ':00');
@@ -132,7 +131,7 @@
     });
     async function updatePUE() {
       try {
-        const response = await fetch('/ttc_paniki/monitoring/last-cache-pue');
+        const response = await fetch('/api/ttc_paniki/monitoring/last-cache-pue');
         const data = await response.json();
         const usedValue = parseFloat(data.pue);
         const remainingValue = Math.max(0, 4 - usedValue);
@@ -156,7 +155,7 @@
     });
     async function fetchDataAndUpdateChartPUE() {
       try {
-        const response = await fetch('/ttc_paniki/monitoring/all-pue');
+        const response = await fetch('/api/ttc_paniki/monitoring/all-pue');
         const data = await response.json();
         const labels = data.map(item => `${item.jam.toString().padStart(2,'0')}:00`);
         const pueValues = data.map(item => item.pue);
@@ -176,7 +175,7 @@
       options: { responsive:true, plugins:{ legend:{ position:'top' } } }
     });
     function fetchDataAndUpdateLineLoad() {
-      fetch('/ttc_paniki/monitoring/all-pue')
+      fetch('/api/ttc_paniki/monitoring/all-pue')
         .then(r => r.json())
         .then(data => {
           chartLOAD.data.labels = data.map(i => i.jam);
@@ -199,7 +198,7 @@
     });
     async function updateChartBBM() {
       try {
-        const response = await fetch('/ttc_paniki/monitoring/bbm');
+        const response = await fetch('/api/ttc_paniki/monitoring/bbm');
         const data = await response.json();
         bbmChart.data.datasets[0].data = [parseFloat(data.tank_harian1), parseFloat(data.tank_bulanan), parseFloat(data.tank_harian2)];
         bbmChart.update();
@@ -220,7 +219,7 @@
       plugins:[ChartDataLabels]
     });
     function updateChartLoad() {
-      fetch('/ttc_paniki/monitoring/last-cache-pue')
+      fetch('/api/ttc_paniki/monitoring/last-cache-pue')
         .then(r=>r.json())
         .then(d=>{
           loadTTCChart.data.datasets[0].data = [d.pln,d.facility,d.it];
@@ -233,7 +232,7 @@
 
     // === Suhu ===
     function updateSuhu() {
-      fetch('/ttc_paniki/monitoring/suhu')
+      fetch('/api/ttc_paniki/monitoring/suhu')
         .then(r=>r.json())
         .then(d=>{
           const suhuData = {
@@ -260,7 +259,7 @@
 
     // === Table Latest 7 Day ===
     function fetchAndUpdateTable() {
-      fetch('/ttc_paniki/monitoring/average-pue')
+      fetch('/api/ttc_paniki/monitoring/average-pue')
         .then(r=>r.json())
         .then(data=>{
           const tbody = document.querySelector('#table-dialy tbody');
@@ -294,7 +293,7 @@
 
     // === Alarm ===
     function cekAlarm(){
-      fetch('/ttc_paniki/monitoring/all-pue')
+      fetch('/api/ttc_paniki/monitoring/all-pue')
         .then(r=>r.json())
         .then(data=>{
           data.forEach(item=>{
