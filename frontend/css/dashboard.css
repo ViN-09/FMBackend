@@ -1,0 +1,217 @@
+/* Reset & Font */
+* {
+  font-family: 'Outfit', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f7f7f7;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.menu-button {
+  font-size: 30px;
+  margin-right: 15px;
+  cursor: pointer;
+  color: #ba0a0a;
+}
+
+header .logo {
+  height: 40px;
+}
+
+/* Sidebar */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  background-color: #b71c1c;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  color: #fff;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.sidebar-header .logo {
+  height: 50px;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 36px;
+  cursor: pointer;
+}
+
+.sidebar ul.menu {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar ul.menu li {
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar ul.menu li:hover {
+  background: #8b0000;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 900;
+}
+
+/* Titles */
+h1 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+h3 {
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Dashboard grid */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Box */
+.box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.box h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+canvas {
+  max-width: 100%;
+}
+
+#sunburstChart {
+  max-width: 50%;
+  max-height: 75%;
+  margin: 0 auto;
+}
+
+#lineChart, #plnLineChart, #loadTTCChart, #bbmChart {
+  max-height: 250px;
+}
+
+/* Temperature boxes */
+.temp-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.temp-item {
+  background: #b71c1c;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.temp-item .info {
+  flex: 1;
+}
+
+.temp-item i {
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+/* Table */
+#table-dialy table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+#table-dialy th, #table-dialy td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
+}
+
+#table-dialy th {
+  background-color: #f2f2f2;
+}
+
+/* BBM logo */
+.bbm-logo {
+  height: 24px;
+}
+
+/* SweetAlert custom */
+.custom-swal-popup {
+  background-color: #b82025 !important;
+  color: #ffffff !important;
+  padding: 1rem;
+}
+
+.custom-alert-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+}
+
+.custom-alert-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.custom-alert-title {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: white;
+}
