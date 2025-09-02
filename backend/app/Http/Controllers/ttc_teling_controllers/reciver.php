@@ -29,7 +29,7 @@ class reciver extends Controller
         try {
             // Gunakan connection khusus
             \DB::connection($this->connection)
-                ->table('cache_data_pue')
+                ->table('cacepue')
                 ->insert($data); // insert langsung, key JSON = kolom, value = value
 
             return response()->json([
@@ -46,36 +46,50 @@ class reciver extends Controller
     }
 
     public function avgDPM(Request $request)
-    {
-        // 1. Ambil semua kolom numerik dari tabel cache_data_pue
-        $columns = DB::connection($this->connection)
-            ->table('information_schema.columns')
-            ->select('COLUMN_NAME')
-            ->where('table_schema', 'db_ttc_teling') // ganti sesuai DB
-            ->where('table_name', 'cache_data_pue')
-            ->whereIn('DATA_TYPE', ['int', 'decimal', 'float', 'double'])
-            ->pluck('COLUMN_NAME')
-            ->toArray();
+{
+    // 1. Daftar kolom numerik secara manual
+    $columns = [
+        'kw_lv1',
+        'kva_lv1',
+        'kw_lv2',
+        'kva_lv2',
+        'total_kva_pln',
+        'total_load_pln',
+        'kw_rec1_2_ups1',
+        'kva_rec1_2_ups1',
+        'kw_rec4_ups2',
+        'kva_rec4_ups2',
+        'kw_rec3_5',
+        'kva_rec3_5',
+        'kw_rec9_10_11_12',
+        'kva_rec9_10_11_12',
+        'total_kva_it_telco',
+        'total_load_it_telco',
+        'pue'
+    ];
 
-        if (empty($columns)) {
-            return response()->json(['error' => 'No numeric columns found']);
-        }
-
-        // 2. Buat query dinamis AVG
-        $avgColumns = collect($columns)->map(fn($col) => "AVG(`$col`) AS $col")->implode(', ');
-
-        $query = "SELECT $avgColumns FROM cache_data_pue";
-
-        // 3. Jalankan query
-        $result = DB::connection($this->connection)->select($query);
-
-        $row = $result[0] ?? null;
-        if ($row) {
-            $row = (array) $row;   // convert object -> array
-            $this->pushDPM($row);
-        }
-        return response()->json($row);
+    if (empty($columns)) {
+        return response()->json(['error' => 'No numeric columns found']);
     }
+
+    // 2. Buat query dinamis AVG
+    $avgColumns = collect($columns)
+        ->map(fn($col) => "AVG(`$col`) AS `$col`")
+        ->implode(', ');
+
+    $query = "SELECT $avgColumns FROM cacepue";
+
+    // 3. Jalankan query
+    $result = DB::connection($this->connection)->select($query);
+
+    $row = $result[0] ?? null;
+    if ($row) {
+        $row = (array) $row;   // convert object -> array
+        $this->pushDPM($row);
+    }
+
+    return response()->json($row);
+}
 
     public function pushDPM($data)
     {
@@ -88,8 +102,8 @@ class reciver extends Controller
                 ->table('data_pue')
                 ->insert($data);
 
-            // Jika insert berhasil, kosongkan tabel cache_data_pue
-            $this->removeCacheData('cache_data_pue');
+            // Jika insert berhasil, kosongkan tabel cacepue
+            $this->removeCacheData('cacepue');
 
             return true;
         } catch (\Exception $e) {
@@ -116,7 +130,7 @@ class reciver extends Controller
     {
         try {
             // Validasi supaya user tidak bisa sembarangan menghapus tabel sistem
-            $allowedTables = ['cache_data_pue', 'per_minute_table']; // daftar tabel yang diizinkan
+            $allowedTables = ['cacepue', 'per_minute_table']; // daftar tabel yang diizinkan
             if (!in_array($tableName, $allowedTables)) {
                 return response()->json([
                     'status' => 'error',

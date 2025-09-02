@@ -47,6 +47,7 @@ Route::prefix('ttc_teling')->group(function () {
     });
     Route::prefix('monitoring')->group(function () {
         Route::get('/data', [MonitoringTeling::class, 'dataMonitoring']);
+        Route::get('/test', [MonitoringTeling::class, 'generateDailyPUE']);
     });
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
     ///
