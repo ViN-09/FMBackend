@@ -156,8 +156,13 @@ class reciver extends Controller
 
 
 
+
+
     public function hello()
     {
         return response()->json(['message' => 'Hello from Reciver!']);
     }
+
+    
+    
 }

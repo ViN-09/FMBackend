@@ -35,6 +35,7 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/generate_datapotensi/{table}', [DataPotensiTeling::class, 'generateDatapotensi']);
         Route::get('/generate_columns/{table}', [DataPotensiTeling::class, 'generateColumns']);
         Route::post('/update_datapotensi/{table}', [DataPotensiTeling::class, 'updateDatapotensi']);
+        Route::get('/puedashboard/{tanggal}/{jenis}', [DataPotensiTeling::class, 'puedatadashboard']);
     });
     Route::prefix('datapush')->group(function () {
         Route::get('/hello', [ReciverTeling::class, 'hello']);
