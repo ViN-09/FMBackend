@@ -12,7 +12,6 @@ use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
 use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
 use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
 
-
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\monitoring as MonitoringPaniki;
@@ -28,7 +27,6 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/Genset1', [CheckListTeling::class, 'Genset1']);
         Route::get('/Genset2', [CheckListTeling::class, 'Genset2']);
         Route::get('/SKWH', [CheckListTeling::class, 'SUKwh']);
-
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);
