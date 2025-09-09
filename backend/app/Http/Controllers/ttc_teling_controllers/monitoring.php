@@ -119,7 +119,7 @@ class Monitoring extends Controller
     // =====================
     public function suhu(): array
     {
-        $rooms = ['Trafo', 'Genset', 'Battery', 'Transmissi', 'RAN', 'Core', 'CRoom'];
+        $rooms = ['Trafo', 'Genset', 'Battery', 'Transmissi', 'RAN', 'Core', 'CRoom','NVR'];
         $SuhuTemp = [];
 
         foreach ($rooms as $room) {

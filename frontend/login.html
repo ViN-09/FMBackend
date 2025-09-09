@@ -22,15 +22,15 @@
       <h2 class="title">Login</h2>
       <p class="subtitle">Masukkan username dan password Anda</p>
 
-      <form action="#" method="POST">
+      <form id="loginForm">
         <div class="input-box">
           <i class="fa fa-user"></i>
-          <input type="text" placeholder="Username" required>
+          <input type="text" id="username" placeholder="Username" required>
         </div>
 
         <div class="input-box">
           <i class="fa fa-lock"></i>
-          <input type="password" placeholder="Password" required>
+          <input type="password" id="password" placeholder="Password" required>
         </div>
 
         <button type="submit" class="btn-login">
@@ -39,9 +39,30 @@
       </form>
 
       <a href="#" class="forgot-password">Lupa Password?</a>
-
-      
     </div>
   </div>
+
+  <script>
+    // === LOGIN HANDLER ===
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+
+      // ⚠️ Demo: hardcode login (nanti bisa disambung API auth)
+      if ((username === "paniki" && password === "1234") ||
+          (username === "teling" && password === "1234")) {
+
+        // Simpan site ke localStorage
+        localStorage.setItem("site", username);
+
+        // Redirect ke dashboard
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Username atau password salah!");
+      }
+    });
+  </script>
 </body>
 </html>
