@@ -40,6 +40,7 @@ Route::prefix('ttc_teling')->group(function () {
         Route::post('/reciver', [ReciverTeling::class, 'receiveRawJson']);
         Route::get('/avgDPM', [ReciverTeling::class, 'avgDPM']);
         Route::get('/jam', [ReciverTeling::class, 'clock']);
+        Route::post('/temprec', [ReciverTeling::class, 'temporaryReceiver']);
     });
     Route::prefix('login')->group(function () {
         Route::post('/try', [LoginTeling::class, 'cekLogin']);
