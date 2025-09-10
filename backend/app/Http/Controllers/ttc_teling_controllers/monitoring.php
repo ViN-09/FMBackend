@@ -119,7 +119,7 @@ class Monitoring extends Controller
     // =====================
     public function suhu(): array
     {
-        $rooms = ['Trafo', 'Genset', 'Battery', 'Transmissi', 'RAN', 'Core', 'CRoom','NVR'];
+        $rooms = ['Trafo', 'Genset', 'Battery', 'Transmissi', 'RAN', 'Core', 'CRoom', 'NVR'];
         $SuhuTemp = [];
 
         foreach ($rooms as $room) {
@@ -133,8 +133,8 @@ class Monitoring extends Controller
     }
 
     public function weeklyPUE(): array
-{
-    $results = DB::select("
+    {
+        $results = DB::select("
         SELECT 
             DATE(`date`) AS tgl,
             AVG(kw_lv1) AS avg_kw_lv1,
@@ -143,10 +143,10 @@ class Monitoring extends Controller
             AVG(kva_lv2) AS avg_kva_lv2,
             AVG(total_kva_pln) AS avg_total_kva_pln,
             AVG(total_load_pln) AS avg_total_load_pln,
-            AVG(kw_rec1_2_ups1) AS avg_kw_rec1_2_ups1,
-            AVG(kva_rec1_2_ups1) AS avg_kva_rec1_2_ups1,
-            AVG(kw_rec4_ups2) AS avg_kw_rec4_ups2,
-            AVG(kva_rec4_ups2) AS avg_kva_rec4_ups2,
+            AVG(kw_rec1_2_ups2) AS avg_kw_rec1_2_ups2,
+            AVG(kva_rec1_2_ups2) AS avg_kva_rec1_2_ups2,
+            AVG(kw_rec4_ups1) AS avg_kw_rec4_ups1,
+            AVG(kva_rec4_ups1) AS avg_kva_rec4_ups1,
             AVG(kw_rec3_5) AS avg_kw_rec3_5,
             AVG(kva_rec3_5) AS avg_kva_rec3_5,
             AVG(kw_rec9_10_11_12) AS avg_kw_rec9_10_11_12,
@@ -160,38 +160,38 @@ class Monitoring extends Controller
         ORDER BY tgl ASC
     ");
 
-    $weeklyData = [];
-    $i=1;
-    foreach ($results as $row) {
-        $pln=round((float) $row->avg_total_kva_pln, 2);
-        $it=round((float) $row->avg_total_kva_it_telco, 2);
-        $loadFacility=$pln-$it;
-        $weeklyData[$i] = [
-            'tanggal' => $row->tgl,
-            'kw_lv1' => round((float) $row->avg_kw_lv1, 2),
-            'kva_lv1' => round((float) $row->avg_kva_lv1, 2),
-            'kw_lv2' => round((float) $row->avg_kw_lv2, 2),
-            'kva_lv2' => round((float) $row->avg_kva_lv2, 2),
-            'total_kva_pln' => round((float) $row->avg_total_kva_pln, 2),
-            'total_load_pln' => round((float) $row->avg_total_load_pln, 2),
-            'kw_rec1_2_ups1' => round((float) $row->avg_kw_rec1_2_ups1, 2),
-            'kva_rec1_2_ups1' => round((float) $row->avg_kva_rec1_2_ups1, 2),
-            'kw_rec4_ups2' => round((float) $row->avg_kw_rec4_ups2, 2),
-            'kva_rec4_ups2' => round((float) $row->avg_kva_rec4_ups2, 2),
-            'kw_rec3_5' => round((float) $row->avg_kw_rec3_5, 2),
-            'kva_rec3_5' => round((float) $row->avg_kva_rec3_5, 2),
-            'kw_rec9_10_11_12' => round((float) $row->avg_kw_rec9_10_11_12, 2),
-            'kva_rec9_10_11_12' => round((float) $row->avg_kva_rec9_10_11_12, 2),
-            'total_kva_it_telco' => round((float) $row->avg_total_kva_it_telco, 2),
-            'total_load_it_telco' => round((float) $row->avg_total_load_it_telco, 2),
-            'load_facility'=> round($loadFacility,2),
-            'pue' => round((float) $row->avg_pue, 3), // PUE gue kasih presisi 3 digit biar lebih detail
-        ];
-        $i++;
-    }
+        $weeklyData = [];
+        $i = 1;
+        foreach ($results as $row) {
+            $pln = round((float) $row->avg_total_load_pln, 2);
+            $it = round((float) $row->avg_total_load_it_telco, 2);
+            $loadFacility = $pln - $it;
+            $weeklyData[$i] = [
+                'tanggal' => $row->tgl,
+                'kw_lv1' => round((float) $row->avg_kw_lv1, 2),
+                // 'kva_lv1' => round((float) $row->avg_kva_lv1, 2),
+                'kw_lv2' => round((float) $row->avg_kw_lv2, 2),
+                // 'kva_lv2' => round((float) $row->avg_kva_lv2, 2),
+                // 'total_kva_pln' => round((float) $row->avg_total_kva_pln, 2),
+                'total_load_pln' => round((float) $row->avg_total_load_pln, 2),
+                'kw_rec1_2_ups2' => round((float) $row->avg_kw_rec1_2_ups2, 2),
+                // 'kva_rec1_2_ups2' => round((float) $row->avg_kva_rec1_2_ups2, 2),
+                'kw_rec4_ups1' => round((float) $row->avg_kw_rec4_ups1, 2),
+                // 'kva_rec4_ups1' => round((float) $row->avg_kva_rec4_ups1, 2),
+                'kw_rec3_5' => round((float) $row->avg_kw_rec3_5, 2),
+                // 'kva_rec3_5' => round((float) $row->avg_kva_rec3_5, 2),
+                'kw_rec9_10_11_12' => round((float) $row->avg_kw_rec9_10_11_12, 2),
+                // 'kva_rec9_10_11_12' => round((float) $row->avg_kva_rec9_10_11_12, 2),
+                // 'total_kva_it_telco' => round((float) $row->avg_total_kva_it_telco, 2),
+                'total_load_it_telco' => round((float) $row->avg_total_load_it_telco, 2),
+                'load_facility' => round($loadFacility, 2),
+                'pue' => round((float) $row->avg_pue, 3), // PUE gue kasih presisi 3 digit biar lebih detail
+            ];
+            $i++;
+        }
 
-    return $weeklyData;
-}
+        return $weeklyData;
+    }
 
     // =====================
     // Public Endpoints
