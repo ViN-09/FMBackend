@@ -57,8 +57,8 @@ class reciver extends Controller
         'total_load_pln',
         'kw_rec1_2_ups1',
         'kva_rec1_2_ups1',
-        'kw_rec4_ups2',
-        'kva_rec4_ups2',
+        'kw_rec4_ups1',
+        'kva_rec4_ups1',
         'kw_rec3_5',
         'kva_rec3_5',
         'kw_rec9_10_11_12',
@@ -175,19 +175,19 @@ class reciver extends Controller
     $kv_lv2 = 1;
 
     $kw_rec1_2_ups2 = $data['kw_rec1_2_ups2'] ?? 0;
-    $kw_rec4_ups2    = $data['kw_rec4_ups2'] ?? 0;
+    $kw_rec4_ups1    = $data['kw_rec4_ups1'] ?? 0;
     $kw_rec3_5       = $data['kw_rec3_5'] ?? 0;
     $kw_rec9_10_11_12= $data['kw_rec9_10_11_12'] ?? 0;
 
     // 2. Hitung total & PUE
     $total_kva_pln      = $kv_lv1 + $kv_lv2;
     $total_load_pln     = $kw_lv1 + $kw_lv2;
-    $total_load_it_telco= $kw_rec1_2_ups2 + $kw_rec4_ups2 + $kw_rec3_5 + $kw_rec9_10_11_12;
+    $total_load_it_telco= $kw_rec1_2_ups2 + $kw_rec4_ups1 + $kw_rec3_5 + $kw_rec9_10_11_12;
     $pue                = $total_load_it_telco > 0 ? round($total_load_pln / $total_load_it_telco, 2) : null;
 
     // 3. Nilai KVA IT default 0
     $kva_rec1_2_ups2   = 0;
-    $kva_rec4_ups2     = 0;
+    $kva_rec4_ups1     = 0;
     $kva_rec3_5        = 0;
     $kva_rec9_10_11_12 = 0;
     $total_kva_it_telco= 0;
@@ -202,8 +202,8 @@ class reciver extends Controller
         'total_load_pln'       => $total_load_pln,
         'kw_rec1_2_ups2'       => $kw_rec1_2_ups2,
         'kva_rec1_2_ups2'      => $kva_rec1_2_ups2,
-        'kw_rec4_ups2'         => $kw_rec4_ups2,
-        'kva_rec4_ups2'        => $kva_rec4_ups2,
+        'kw_rec4_ups1'         => $kw_rec4_ups1,
+        'kva_rec4_ups1'        => $kva_rec4_ups1,
         'kw_rec3_5'            => $kw_rec3_5,
         'kva_rec3_5'           => $kva_rec3_5,
         'kw_rec9_10_11_12'     => $kw_rec9_10_11_12,
