@@ -12,6 +12,7 @@ use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
 use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
 use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
 use App\Http\Controllers\ttc_teling_controllers\visitor as VisitorTeling;
+use App\Http\Controllers\ttc_teling_controllers\bankpassword as bankpasswordTeling;
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
@@ -52,8 +53,19 @@ Route::prefix('ttc_teling')->group(function () {
     });
     Route::prefix('visitor')->group(function () {
         Route::post('/registry', [VisitorTeling::class, 'registvisitor']);
-        Route::get('/hello', [DataPotensiTeling::class, 'hello']);
+        Route::get('/visitors/recent', [VisitorTeling::class, 'getRecentVisitors']);
     });
+    Route::prefix('bank_password')->group(function () {
+    Route::get('/', [bankpasswordTeling::class, 'index']); 
+    Route::get('/list', [bankpasswordTeling::class, 'list']); 
+    Route::get('/{id}', [bankpasswordTeling::class, 'show']);
+    Route::get('/{id}/decrypt', [bankpasswordTeling::class, 'decryptPassword']);
+    Route::post('/add', [bankpasswordTeling::class, 'store']); 
+    Route::put('/{id}', [bankpasswordTeling::class, 'update']);       // ← update/edit
+    Route::delete('/{id}', [bankpasswordTeling::class, 'destroy']);   // ← hapus
+    Route::get('/hello/hello', [bankpasswordTeling::class, 'hello']);
+});
+
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
     ///
 });
@@ -75,6 +87,6 @@ Route::prefix('ttc_paniki')->group(function () {
         Route::get('/average-pue', [MonitoringPaniki::class, 'getAverageData']);
         Route::get('/suhu', [MonitoringPaniki::class, 'getLastSuhu']);
         Route::get('/bbm', [MonitoringPaniki::class, 'getLastTank']);
-});
+    });
     Route::get('/hello', [DataPotensiPaniki::class, 'hello']);
 });

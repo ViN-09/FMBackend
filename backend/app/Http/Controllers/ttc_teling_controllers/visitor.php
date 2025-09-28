@@ -15,23 +15,22 @@ class visitor extends Controller
     public function registvisitor(Request $request)
     {
         try {
-            // Validasi minimal
+            // Validasi input
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'company' => 'required|string|max:255',
                 'phone' => 'required|string|max:20',
-                'purpose' => 'nullable|string|max:255',
                 'idType' => 'required|string|max:50',
                 'idNumber' => 'required|string|max:100',
                 'visitId' => 'required|string|max:50',
                 'activity' => 'required|string',
+                'workspace' => 'required|string|max:255', // tambahan field
                 'signature' => 'required|string', // base64 PNG
             ]);
 
             // Simpan signature ke storage/app/public/signatures
             $signatureData = str_replace('data:image/png;base64,', '', $validated['signature']);
             $signatureData = str_replace(' ', '+', $signatureData);
-
             $decoded = base64_decode($signatureData, true);
             if ($decoded === false) {
                 return response()->json([
@@ -39,11 +38,10 @@ class visitor extends Controller
                     'message' => 'Signature invalid'
                 ], 400);
             }
-
             $signatureName = 'signature_' . time() . '.png';
             Storage::disk('public')->put('signatures/' . $signatureName, $decoded);
 
-            // Simpan data ke database dengan status 'pending'
+            // Simpan data ke database
             $id = DB::connection($this->connection)->table('visitors')->insertGetId([
                 'name' => $validated['name'],
                 'company' => $validated['company'],
@@ -52,12 +50,14 @@ class visitor extends Controller
                 'id_number' => $validated['idNumber'],
                 'visit_id' => $validated['visitId'],
                 'activity' => $validated['activity'],
+                'ruang_kerja' => $validated['workspace'], // simpan workspace
                 'signature' => $signatureName,
                 'status' => 'pending',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
 
+            // Return data visitor
             return response()->json([
                 'success' => true,
                 'message' => 'Visitor registered successfully',
@@ -70,15 +70,13 @@ class visitor extends Controller
                     'id_number' => $validated['idNumber'],
                     'visit_id' => $validated['visitId'],
                     'activity' => $validated['activity'],
+                    'ruang_kerja' => $validated['workspace'], // return workspace
                     'signature' => $signatureName,
                     'status' => 'pending',
-                    'created_at' => Carbon::now()->toDateTimeString(),
-                    'updated_at' => Carbon::now()->toDateTimeString(),
                 ]
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Return error validasi
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
@@ -86,7 +84,6 @@ class visitor extends Controller
             ], 422);
 
         } catch (\Exception $e) {
-            // Return semua error lain
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
@@ -95,4 +92,29 @@ class visitor extends Controller
         }
     }
 
+    public function getRecentVisitors()
+{
+    try {
+        $twoMonthsAgo = Carbon::now()->subMonths(2);
+
+        $visitors = DB::connection($this->connection)
+            ->table('visitors')
+            ->where('created_at', '>=', $twoMonthsAgo)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Recent visitors (last 2 months)',
+            'data' => $visitors
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Server error',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 }
