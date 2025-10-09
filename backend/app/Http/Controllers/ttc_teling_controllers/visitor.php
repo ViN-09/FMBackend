@@ -24,7 +24,7 @@ class visitor extends Controller
                 'idNumber' => 'required|string|max:100',
                 'visitId' => 'required|string|max:50',
                 'activity' => 'required|string',
-                'workspace' => 'required|string|max:255', // tambahan field
+                'workspace' => 'required|string|max:255',
                 'signature' => 'required|string', // base64 PNG
             ]);
 
@@ -32,12 +32,14 @@ class visitor extends Controller
             $signatureData = str_replace('data:image/png;base64,', '', $validated['signature']);
             $signatureData = str_replace(' ', '+', $signatureData);
             $decoded = base64_decode($signatureData, true);
+
             if ($decoded === false) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Signature invalid'
                 ], 400);
             }
+
             $signatureName = 'signature_' . time() . '.png';
             Storage::disk('public')->put('signatures/' . $signatureName, $decoded);
 
@@ -50,14 +52,13 @@ class visitor extends Controller
                 'id_number' => $validated['idNumber'],
                 'visit_id' => $validated['visitId'],
                 'activity' => $validated['activity'],
-                'ruang_kerja' => $validated['workspace'], // simpan workspace
+                'ruang_kerja' => $validated['workspace'],
                 'signature' => $signatureName,
                 'status' => 'pending',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
 
-            // Return data visitor
             return response()->json([
                 'success' => true,
                 'message' => 'Visitor registered successfully',
@@ -70,7 +71,7 @@ class visitor extends Controller
                     'id_number' => $validated['idNumber'],
                     'visit_id' => $validated['visitId'],
                     'activity' => $validated['activity'],
-                    'ruang_kerja' => $validated['workspace'], // return workspace
+                    'ruang_kerja' => $validated['workspace'],
                     'signature' => $signatureName,
                     'status' => 'pending',
                 ]
@@ -82,7 +83,6 @@ class visitor extends Controller
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -93,28 +93,123 @@ class visitor extends Controller
     }
 
     public function getRecentVisitors()
-{
-    try {
-        $twoMonthsAgo = Carbon::now()->subMonths(2);
+    {
+        try {
+            $twoMonthsAgo = Carbon::now()->subMonths(2);
 
-        $visitors = DB::connection($this->connection)
-            ->table('visitors')
-            ->where('created_at', '>=', $twoMonthsAgo)
-            ->orderBy('created_at', 'desc')
-            ->get();
+            $visitors = DB::connection($this->connection)
+                ->table('visitors')
+                ->where('created_at', '>=', $twoMonthsAgo)
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Recent visitors (last 2 months)',
-            'data' => $visitors
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Recent visitors (last 2 months)',
+                'data' => $visitors
+            ]);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Server error',
-            'error' => $e->getMessage()
-        ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-}
+
+    public function getWaitingApproval()
+    {
+        try {
+            $waitingVisitors = DB::connection($this->connection)
+                ->table('visitors')
+                ->whereIn('status', ['pending', 'approved'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'List of visitors waiting for approval',
+                'data' => $waitingVisitors
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateVisitorStatus(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'status' => 'required|in:approved,rejected,selesai',
+                'dukumentasi_in'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'dukumentasi_out' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ]);
+
+            $updateData = [
+                'status'     => $request->status,
+                'updated_at' => now(),
+            ];
+
+            // Upload dokumentasi_in ke storage/app/public/visitors
+            if ($request->hasFile('dukumentasi_in')) {
+                $file = $request->file('dukumentasi_in');
+                $filename = 'visitor_' . $id . '_in_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('visitors', $filename, 'public');
+                $updateData['dukumentasi_in'] = $filename;
+                $updateData['status'] = 'approved';
+            }
+
+            // Upload dokumentasi_out ke storage/app/public/visitors
+            if ($request->hasFile('dukumentasi_out')) {
+                $file = $request->file('dukumentasi_out');
+                $filename = 'visitor_' . $id . '_out_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('visitors', $filename, 'public');
+                $updateData['dukumentasi_out'] = $filename;
+                $updateData['status'] = 'selesai';
+                $updateData['updated_at'] = Carbon::now('Asia/Makassar');
+            }
+
+            DB::connection($this->connection)->table('visitors')->where('id', $id)->update($updateData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Visitor status updated successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCompletedVisitors()
+    {
+        try {
+            $visitors = DB::connection($this->connection)
+                ->table('visitors')
+                ->where('status', 'selesai')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $visitors
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Fetch Completed Visitors Error: '.$e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

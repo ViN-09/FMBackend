@@ -7,12 +7,14 @@ use Carbon\Carbon;
 
 // Alias untuk data_potensi dari dua namespace berbeda
 use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
+use App\Http\Controllers\ttc_teling_controllers\data_potensi2 as DataPotensi2Teling;
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
 use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
 use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
 use App\Http\Controllers\ttc_teling_controllers\visitor as VisitorTeling;
 use App\Http\Controllers\ttc_teling_controllers\bankpassword as bankpasswordTeling;
+use App\Http\Controllers\ttc_teling_controllers\ActivityLog as ActivityLogTeling;
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
@@ -37,6 +39,9 @@ Route::prefix('ttc_teling')->group(function () {
         Route::post('/update_datapotensi/{table}', [DataPotensiTeling::class, 'updateDatapotensi']);
         Route::get('/puedashboard/{tanggal}/{jenis}', [DataPotensiTeling::class, 'puedatadashboard']);
     });
+    Route::prefix('data_potensi2')->group(function () {
+        Route::get('/fullDapot', [DataPotensi2Teling::class, 'fullDapot']);
+    });
     Route::prefix('datapush')->group(function () {
         Route::get('/hello', [ReciverTeling::class, 'hello']);
         Route::post('/reciver', [ReciverTeling::class, 'receiveRawJson']);
@@ -54,17 +59,25 @@ Route::prefix('ttc_teling')->group(function () {
     Route::prefix('visitor')->group(function () {
         Route::post('/registry', [VisitorTeling::class, 'registvisitor']);
         Route::get('/visitors/recent', [VisitorTeling::class, 'getRecentVisitors']);
+        Route::get('/waiting', [VisitorTeling::class, 'getWaitingApproval']); 
+        Route::post('/visitors/{id}/update-status', [VisitorTeling::class, 'updateVisitorStatus']); 
+        Route::get('/visitors/completed', [VisitorTeling::class, 'getCompletedVisitors']);
+
     });
     Route::prefix('bank_password')->group(function () {
-    Route::get('/', [bankpasswordTeling::class, 'index']); 
-    Route::get('/list', [bankpasswordTeling::class, 'list']); 
-    Route::get('/{id}', [bankpasswordTeling::class, 'show']);
-    Route::get('/{id}/decrypt', [bankpasswordTeling::class, 'decryptPassword']);
-    Route::post('/add', [bankpasswordTeling::class, 'store']); 
-    Route::put('/{id}', [bankpasswordTeling::class, 'update']);       // ← update/edit
-    Route::delete('/{id}', [bankpasswordTeling::class, 'destroy']);   // ← hapus
-    Route::get('/hello/hello', [bankpasswordTeling::class, 'hello']);
-});
+        Route::get('/', [bankpasswordTeling::class, 'index']);
+        Route::get('/list', [bankpasswordTeling::class, 'list']);
+        Route::get('/{id}', [bankpasswordTeling::class, 'show']);
+        Route::get('/{id}/decrypt', [bankpasswordTeling::class, 'decryptPassword']);
+        Route::post('/add', [bankpasswordTeling::class, 'store']);
+        Route::put('/{id}', [bankpasswordTeling::class, 'update']);       // ← update/edit
+        Route::delete('/{id}', [bankpasswordTeling::class, 'destroy']);   // ← hapus
+        Route::get('/hello/hello', [bankpasswordTeling::class, 'hello']);
+    });
+    Route::prefix('activitylog')->group(function () {
+        Route::get('/', [ActivityLogTeling::class, 'getAllLogs']);
+         Route::get('/user-bio/{id}', [ActivityLogTeling::class, 'getUserBio']);
+    });
 
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
     ///
