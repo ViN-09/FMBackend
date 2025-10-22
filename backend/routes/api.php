@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
 use App\Http\Controllers\ttc_teling_controllers\data_potensi2 as DataPotensi2Teling;
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
+use App\Http\Controllers\ttc_teling_controllers\Checklist2 as CheckListTeling2;
 use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
 use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
 use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
@@ -32,6 +33,9 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/Genset2', [CheckListTeling::class, 'Genset2']);
         Route::get('/SKWH', [CheckListTeling::class, 'SUKwh']);
     });
+    Route::prefix('checklist2')->group(function () {
+        Route::get('/dialyActivityList', [CheckListTeling2::class, 'showDialyActivity']);
+    });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);
         Route::get('/generate_datapotensi/{table}', [DataPotensiTeling::class, 'generateDatapotensi']);
@@ -41,6 +45,7 @@ Route::prefix('ttc_teling')->group(function () {
     });
     Route::prefix('data_potensi2')->group(function () {
         Route::get('/fullDapot', [DataPotensi2Teling::class, 'fullDapot']);
+        Route::post('/crudDapot', [DataPotensi2Teling::class, 'crudDapot']);
     });
     Route::prefix('datapush')->group(function () {
         Route::get('/hello', [ReciverTeling::class, 'hello']);
