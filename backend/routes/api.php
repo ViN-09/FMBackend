@@ -11,6 +11,7 @@ use App\Http\Controllers\ttc_teling_controllers\data_potensi2 as DataPotensi2Tel
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
 use App\Http\Controllers\ttc_teling_controllers\Checklist2 as CheckListTeling2;
 use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
+use App\Http\Controllers\ttc_teling_controllers\reciver2 as Reciver2Teling;
 use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
 use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
 use App\Http\Controllers\ttc_teling_controllers\visitor as VisitorTeling;
@@ -35,6 +36,8 @@ Route::prefix('ttc_teling')->group(function () {
     });
     Route::prefix('checklist2')->group(function () {
         Route::get('/dialyActivityList', [CheckListTeling2::class, 'showDialyActivity']);
+        Route::get('/pullreport/{id}/{type}', [CheckListTeling2::class, 'getReport']);
+        Route::get('/requestTableStructure/{table}', [CheckListTeling2::class, 'requestTableStructure']);
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);
@@ -53,6 +56,13 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/avgDPM', [ReciverTeling::class, 'avgDPM']);
         Route::get('/jam', [ReciverTeling::class, 'clock']);
         Route::post('/temprec', [ReciverTeling::class, 'temporaryReceiver']);
+    });
+    Route::prefix('datapush2')->group(function () {
+        Route::get('/hello', [Reciver2Teling::class, 'hello']);
+        Route::post('/reciver', [Reciver2Teling::class, 'receiveRawJson']);
+        Route::get('/avgDPM', [Reciver2Teling::class, 'avgDPM']);
+        Route::get('/jam', [Reciver2Teling::class, 'clock']);
+        Route::post('/temprec', [Reciver2Teling::class, 'temporaryReceiver']);
     });
     Route::prefix('login')->group(function () {
         Route::post('/try', [LoginTeling::class, 'cekLogin']);
