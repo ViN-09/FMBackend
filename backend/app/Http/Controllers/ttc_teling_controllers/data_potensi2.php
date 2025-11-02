@@ -42,19 +42,35 @@ class data_potensi2 extends Controller
      * Daftar semua tabel dp_*
      */
     private function listDatapotensi()
-    {
-        $results = DB::select("
-            SELECT 
-                TABLE_NAME AS nama_tabel,
-                TABLE_ROWS AS lenght
-            FROM information_schema.TABLES
-            WHERE TABLE_SCHEMA = 'db_ttc_teling'
-              AND LEFT(TABLE_NAME, 3) = 'dp_'
-            ORDER BY TABLE_ROWS DESC
-        ");
+{
+    // Ambil semua tabel dengan prefix "dp_"
+    $tables = DB::select("SHOW TABLES LIKE 'dp_%'");
 
-        return $results;
+    $data = [];
+
+    foreach ($tables as $tableObj) {
+        // Ambil nama tabel dari object hasil SHOW TABLES
+        $tableName = array_values((array)$tableObj)[0];
+
+        try {
+            // Hitung jumlah baris di tabel
+            $count = DB::table($tableName)->count();
+        } catch (\Exception $e) {
+            // Kalau tabel kosong / error (misal view), tetap kasih 0
+            $count = 0;
+        }
+
+        $data[] = [
+            'nama_tabel' => $tableName,
+            'length' => $count
+        ];
     }
+
+    // Urutkan dari tabel dengan jumlah data terbanyak ke paling sedikit
+    usort($data, fn($a, $b) => $b['length'] <=> $a['length']);
+
+    return $data;
+}
 
     /**
      * Ambil semua data dari satu tabel

@@ -9,14 +9,14 @@ use Carbon\Carbon;
 use App\Http\Controllers\ttc_teling_controllers\data_potensi as DataPotensiTeling;
 use App\Http\Controllers\ttc_teling_controllers\data_potensi2 as DataPotensi2Teling;
 use App\Http\Controllers\ttc_teling_controllers\checklist as CheckListTeling;
-use App\Http\Controllers\ttc_teling_controllers\Checklist2 as CheckListTeling2;
+use App\Http\Controllers\ttc_teling_controllers\checklist2 as CheckListTeling2;
 use App\Http\Controllers\ttc_teling_controllers\reciver as ReciverTeling;
 use App\Http\Controllers\ttc_teling_controllers\reciver2 as Reciver2Teling;
 use App\Http\Controllers\ttc_teling_controllers\login as LoginTeling;
 use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
 use App\Http\Controllers\ttc_teling_controllers\visitor as VisitorTeling;
 use App\Http\Controllers\ttc_teling_controllers\bankpassword as bankpasswordTeling;
-use App\Http\Controllers\ttc_teling_controllers\ActivityLog as ActivityLogTeling;
+use App\Http\Controllers\ttc_teling_controllers\activitylog as ActivityLogTeling;
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
@@ -38,6 +38,10 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/dialyActivityList', [CheckListTeling2::class, 'showDialyActivity']);
         Route::get('/pullreport/{id}/{type}', [CheckListTeling2::class, 'getReport']);
         Route::get('/requestTableStructure/{table}', [CheckListTeling2::class, 'requestTableStructure']);
+        Route::get('/stafflist/{jabatan}', [CheckListTeling2::class, 'stafflist']);
+        Route::post('/cereateReportID', [CheckListTeling2::class, 'cereateReportID']);
+        Route::post('/cereateReport', [CheckListTeling2::class, 'createReport']);
+
     });
     Route::prefix('data_potensi')->group(function () {
         Route::get('/hello', [DataPotensiTeling::class, 'hello']);

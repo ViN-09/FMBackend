@@ -15,33 +15,36 @@ class ActivityLog extends Controller
      * Ambil semua data activity log + nama & gambar
      */
     public function getAllLogs()
-    {
-        $logs = DB::connection($this->connection)
-            ->table('user_activity')
-            ->select('id', 'username', 'activity', 'time')
-            ->orderBy('id', 'desc')
-            ->get();
+{
+    $logs = DB::connection($this->connection)
+        ->table('user_activity')
+        ->select('id', 'username', 'activity', 'time')
+        ->whereMonth('time', now()->month)
+        ->whereYear('time', now()->year)
+        ->orderBy('id', 'desc')
+        ->get();
 
-        // mapping data logs + info bio
-        $logs = $logs->map(function ($log) {
-            // join pakai username ↔ user_bio.id
-            $bio = $this->fetchUserBio($log->username);
+    // mapping data logs + info bio
+    $logs = $logs->map(function ($log) {
+        // join pakai username ↔ user_bio.id
+        $bio = $this->fetchUserBio($log->username);
 
-            return [
-                'id'       => $log->id,
-                'username' => $log->username,
-                'activity' => $log->activity,
-                'time'     => $log->time,
-                'nama'     => $bio['nama'] ?? null,
-                'gambar'   => $bio['gambar'] ?? null,
-            ];
-        });
+        return [
+            'id'       => $log->id,
+            'username' => $log->username,
+            'activity' => $log->activity,
+            'time'     => $log->time,
+            'nama'     => $bio['nama'] ?? null,
+            'gambar'   => $bio['gambar'] ?? null,
+        ];
+    });
 
-        return response()->json([
-            'status' => 'success',
-            'data'   => $logs
-        ]);
-    }
+    return response()->json([
+        'status' => 'success',
+        'data'   => $logs
+    ]);
+}
+
 
     /**
      * Ambil log berdasarkan username
