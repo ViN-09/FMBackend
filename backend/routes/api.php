@@ -17,6 +17,8 @@ use App\Http\Controllers\ttc_teling_controllers\monitoring as MonitoringTeling;
 use App\Http\Controllers\ttc_teling_controllers\visitor as VisitorTeling;
 use App\Http\Controllers\ttc_teling_controllers\bankpassword as bankpasswordTeling;
 use App\Http\Controllers\ttc_teling_controllers\activitylog as ActivityLogTeling;
+use App\Http\Controllers\ttc_teling_controllers\summary_pue as SummaryPueTeling;
+
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
 use App\Http\Controllers\ttc_paniki_controllers\checklist as CheckListPaniki;
@@ -35,7 +37,7 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/SKWH', [CheckListTeling::class, 'SUKwh']);
     });
     Route::prefix('checklist2')->group(function () {
-        Route::get('/dialyActivityList', [CheckListTeling2::class, 'showDialyActivity']);
+        Route::get('/dialyActivityList/{monthYear?}', [CheckListTeling2::class, 'showDialyActivity']);
         Route::get('/pullreport/{id}/{type}', [CheckListTeling2::class, 'getReport']);
         Route::get('/requestTableStructure/{table}', [CheckListTeling2::class, 'requestTableStructure']);
         Route::get('/stafflist/{jabatan}', [CheckListTeling2::class, 'stafflist']);
@@ -70,6 +72,10 @@ Route::prefix('ttc_teling')->group(function () {
     });
     Route::prefix('login')->group(function () {
         Route::post('/try', [LoginTeling::class, 'cekLogin']);
+    });
+    Route::prefix('summary_pue')->group(function () {
+  Route::get('/data_report/{type}/{startDate?}/{endDate?}', [SummaryPueTeling::class, 'tableReportList']);
+
     });
     Route::prefix('monitoring')->group(function () {
         Route::get('/data', [MonitoringTeling::class, 'dataMonitoring']);

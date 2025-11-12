@@ -16,10 +16,26 @@ class Checklist2 extends Controller
     /**
      * Ambil 200 data terakhir dari tabel report_info
      */
-    private function getDialyActivityList()
-    {
-        return DB::connection($this->connection)->table('report_info')->select('no_report', 'petugasME', 'petugasME2', 'petugasME3', 'petugasME4', 'jenis_report', 'date_time', 'status')->whereIn('jenis_report', ['Ceklist', 'KWH & Suhu', 'Genset1', 'Genset2'])->whereMonth('date_time', now()->month)->whereYear('date_time', now()->year)->orderBy('date_time', 'desc')->limit(200)->get();
+   private function getDialyActivityList($monthYear = null)
+{
+    // Pecah "YYYY-MM" dari parameter kalau ada
+    if ($monthYear && preg_match('/^\d{4}-\d{2}$/', $monthYear)) {
+        [$year, $month] = explode('-', $monthYear);
+    } else {
+        $month = now()->month;
+        $year  = now()->year;
     }
+
+    return DB::connection($this->connection)
+        ->table('report_info')
+        ->select('no_report', 'petugasME', 'petugasME2', 'petugasME3', 'petugasME4', 'jenis_report', 'date_time', 'status')
+        ->whereIn('jenis_report', ['Ceklist', 'KWH & Suhu', 'Genset1', 'Genset2'])
+        ->whereMonth('date_time', $month)
+        ->whereYear('date_time', $year)
+        ->orderBy('date_time', 'desc')
+        ->limit(200)
+        ->get();
+}
 
     private function getUserInfo($id, $field)
     {
@@ -35,25 +51,25 @@ class Checklist2 extends Controller
     /**
      * Endpoint publik untuk ambil data via API
      */
-    public function showDialyActivity()
-    {
-        $data = $this->getDialyActivityList();
-        $dialyActivityList = [];
+    public function showDialyActivity($monthYear = null)
+{
+    $data = $this->getDialyActivityList($monthYear);
+    $dialyActivityList = [];
 
-        foreach ($data as $index => $list) {
-            $dialyActivityList[] = [
-                'no_report' => $list->no_report,
-                'Petugas1' => $this->getUserInfo($list->petugasME, 'Nama'),
-                'Petugas2' => $this->getUserInfo($list->petugasME2, 'Nama'),
-                'Petugas3' => $this->getUserInfo($list->petugasME3, 'Nama'),
-                'Petugas4' => $this->getUserInfo($list->petugasME4, 'Nama'),
-                'Report' => $list->jenis_report,
-                'Date' => $list->date_time,
-            ];
-        }
-
-        return response()->json(['DialyActivityList' => $dialyActivityList]);
+    foreach ($data as $list) {
+        $dialyActivityList[] = [
+            'no_report' => $list->no_report,
+            'Petugas1'  => $this->getUserInfo($list->petugasME, 'Nama'),
+            'Petugas2'  => $this->getUserInfo($list->petugasME2, 'Nama'),
+            'Petugas3'  => $this->getUserInfo($list->petugasME3, 'Nama'),
+            'Petugas4'  => $this->getUserInfo($list->petugasME4, 'Nama'),
+            'Report'    => $list->jenis_report,
+            'Date'      => $list->date_time,
+        ];
     }
+
+    return response()->json(['DialyActivityList' => $dialyActivityList]);
+}
 
     /////////////////CREATING SINGLE REPORT
     private function tableReportList($category = null)
@@ -62,7 +78,7 @@ class Checklist2 extends Controller
             'staffform' => ['report_info'],
             'property' => ['trafof_c'],
             'power' => ['report_lvmdp1', 'report_lvmdp2', 'load_trafo'],
-            'suhu_kwh' => ['report_kwh', 'report_suhu'],
+            'suhu_kwh' => ['report_kwh', 'report_suhu','trafof_c'],
             'it_load' => [
                 'rec1',
                 'rec2',
