@@ -64,6 +64,9 @@ Route::prefix('ttc_teling')->group(function () {
         Route::post('/', [userTeling::class, 'store']);
         Route::put('/{id}', [userTeling::class, 'update']);
         Route::delete('/{id}', [userTeling::class, 'destroy']);
+        Route::post('/cekpass', [userTeling::class, 'cekpass']);
+        Route::post('/{id}/update-password', [userTeling::class, 'updatePassword']);
+
     });
     Route::prefix('datapush')->group(function () {
         Route::get('/hello', [ReciverTeling::class, 'hello']);
