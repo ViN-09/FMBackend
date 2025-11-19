@@ -224,56 +224,50 @@ class summary_pue extends Controller
                         $modify_data = [];
                         $no_report = $row->no_report;
                         $date_report = $row->date_time;
-
-                        // 🔹 Loop tiap tabel dalam kategori
+                    
+                        // ambil data dari semua tabel dalam kategori
                         foreach ($categories[$type] as $table) {
                             $raw = $this->pull_row_table($row->no_report, $table);
-
-                            // kalau null, kasih objek kosong biar gak error
+                    
+                            // fallback aman kalau null
                             if (!$raw) {
                                 $raw = (object) [
-                                    'Nama' => $table,
-                                    'Brand' => '-',
-                                    'BebanTotal' => 0,
-                                    'CapsRec' => 0,
-                                    'TotalLoad' => 0,
-                                    'Status' => '-',
+                                    'no' => $table,
+                                    'brand' => '-',
+                                    'type' => 0,
+                                    'kw' => 0,
+                                    'kva' => 0,
+                                    'battery' => 0,
+                                    'runtime' => 0,
+                                    'A' => 0,
                                 ];
                             }
-
-                            // ambil nilai aman (gunakan fallback kalau null)
-                            $nama = $raw->Nama ?? $table;
-                            $brand = $raw->Brand ?? '-';
-                            $beban_total = isset($raw->BebanTotal) ? floatval($raw->BebanTotal) : 0;
-                            $capacity = isset($raw->CapsRec) ? floatval($raw->CapsRec) : 0;
-                            $load = isset($raw->TotalLoad) ? floatval($raw->TotalLoad) : 0;
-                            $status = $raw->Status ?? '-';
-
-                            // 🔹 hitung occupancy aman (hindari pembagian nol)
-                            $occupancy = $beban_total > 0
-                                ? round(($load * 100) / $beban_total, 2) . '%'
-                                : '0%';
-
-                            // 🔹 simpan ke array
-                            $key = "{$nama} ({$brand})";
-                            $modify_data[$key] = [
-                                'total_beban' => $beban_total,
-                                'capacity' => $capacity,
-                                'load' => $load,
-                                'Power' => $status,
-                                'occupancy' => $occupancy,
+                    
+                            // hitung occupancy aman (hindari bagi nol)
+                            $occupancy = ($raw->type > 0)
+                                ? round(($raw->kw * 100) / $raw->type, 2)
+                                : 0;
+                    
+                            // simpan hasil ke array
+                            $label = "{$raw->no}-{$raw->brand} ({$raw->type}KW)";
+                            $modify_data[$label] = [
+                                'kw' => $raw->kw,
+                                'kva' => $raw->kva,
+                                'occupancy' => $occupancy . '%',
                             ];
-
-                            // simpan juga raw kalau mau debugging
-                            $raw_data[$table] = $raw;
+                    
+                            $raw_data[$table] = $raw; // simpan untuk debug opsional
                         }
-
-                        // 🔹 gabungkan hasil akhir ke array utama
+                    
+                        // gabungkan hasil
                         $data[] = array_merge([
                             'no_report' => $no_report,
                             'date_time' => $date_report,
                         ], $modify_data);
                     }
+                    
+                    
+
                     break;
                 case 'pln':
                     foreach ($report_property as $row) {
