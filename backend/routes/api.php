@@ -18,6 +18,8 @@ use App\Http\Controllers\ttc_teling_controllers\visitor as VisitorTeling;
 use App\Http\Controllers\ttc_teling_controllers\bankpassword as bankpasswordTeling;
 use App\Http\Controllers\ttc_teling_controllers\activitylog as ActivityLogTeling;
 use App\Http\Controllers\ttc_teling_controllers\summary_pue as SummaryPueTeling;
+use App\Http\Controllers\ttc_teling_controllers\visitorlog as VisitorLog;
+use App\Http\Controllers\ttc_teling_controllers\user as userTeling;
 
 
 use App\Http\Controllers\ttc_paniki_controllers\data_potensi as DataPotensiPaniki;
@@ -56,6 +58,13 @@ Route::prefix('ttc_teling')->group(function () {
         Route::get('/fullDapot', [DataPotensi2Teling::class, 'fullDapot']);
         Route::post('/crudDapot', [DataPotensi2Teling::class, 'crudDapot']);
     });
+    Route::prefix('user')->group(function () {
+        Route::get('/', [userTeling::class, 'index']);
+        Route::get('/{id}', [userTeling::class, 'show']);
+        Route::post('/', [userTeling::class, 'store']);
+        Route::put('/{id}', [userTeling::class, 'update']);
+        Route::delete('/{id}', [userTeling::class, 'destroy']);
+    });
     Route::prefix('datapush')->group(function () {
         Route::get('/hello', [ReciverTeling::class, 'hello']);
         Route::post('/reciver', [ReciverTeling::class, 'receiveRawJson']);
@@ -74,7 +83,7 @@ Route::prefix('ttc_teling')->group(function () {
         Route::post('/try', [LoginTeling::class, 'cekLogin']);
     });
     Route::prefix('summary_pue')->group(function () {
-  Route::get('/data_report/{type}/{startDate?}/{endDate?}', [SummaryPueTeling::class, 'tableReportList']);
+        Route::get('/data_report/{type}/{startDate?}/{endDate?}', [SummaryPueTeling::class, 'tableReportList']);
 
     });
     Route::prefix('monitoring')->group(function () {
@@ -84,8 +93,8 @@ Route::prefix('ttc_teling')->group(function () {
     Route::prefix('visitor')->group(function () {
         Route::post('/registry', [VisitorTeling::class, 'registvisitor']);
         Route::get('/visitors/recent', [VisitorTeling::class, 'getRecentVisitors']);
-        Route::get('/waiting', [VisitorTeling::class, 'getWaitingApproval']); 
-        Route::post('/visitors/{id}/update-status', [VisitorTeling::class, 'updateVisitorStatus']); 
+        Route::get('/waiting', [VisitorTeling::class, 'getWaitingApproval']);
+        Route::post('/visitors/{id}/update-status', [VisitorTeling::class, 'updateVisitorStatus']);
         Route::get('/visitors/completed', [VisitorTeling::class, 'getCompletedVisitors']);
 
     });
@@ -101,7 +110,12 @@ Route::prefix('ttc_teling')->group(function () {
     });
     Route::prefix('activitylog')->group(function () {
         Route::get('/', [ActivityLogTeling::class, 'getAllLogs']);
-         Route::get('/user-bio/{id}', [ActivityLogTeling::class, 'getUserBio']);
+        Route::get('/user-bio/{id}', [ActivityLogTeling::class, 'getUserBio']);
+    });
+    Route::prefix('visitorlog')->group(function () {
+        Route::get('/', [VisitorLog::class, 'getAllLogs']);
+        Route::get('/{id}', [VisitorLog::class, 'getLogsByVisitor']);
+        Route::post('/add', [VisitorLog::class, 'addLog']);
     });
 
     Route::get('/hello', [DataPotensiTeling::class, 'hello']);
